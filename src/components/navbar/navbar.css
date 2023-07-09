@@ -4,6 +4,16 @@
   --colorTertiary:#FCF8F4;
 }
 
-nav{
-  background-color: var(--colorPrimary);
+.navbar{
+  background-color: var(--colorTertiary);
+  position: sticky;
+  top: 0;
+}
+.nav-link{
+  width: 10vw;
+  max-width: 20vh;
+}
+.navbar-toggler{
+  width: 3em;
+  /* max-width: 20vh; */
 }

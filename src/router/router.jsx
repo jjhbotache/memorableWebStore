@@ -1,8 +1,10 @@
-// create a router with two routes "about " "home"
 import { createBrowserRouter } from "react-router-dom";
 import React from "react";
 import LandingPage from "../pages/landingPage/landingPage";
 import Catalog from "../pages/catalog/catalog";
+import LoginAndRegister from "../pages/loginAndRegister/loginAndRegister";
+import UserDashboard from "../pages/userDashboard/userDashboard";
+import AdminDashboard from "../pages/adminDashboard/adminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +14,18 @@ const router = createBrowserRouter([
   {
     path: "/catalog",
     element: <Catalog/>,
+  },
+  {
+    path: "/loginAndRegister",
+    element: <LoginAndRegister/>,
+  },
+  {
+    path: "/userDashboard",
+    element: <UserDashboard/>,
+  },
+  {
+    path: "/adminDashboard",
+    element: <AdminDashboard/>,
   },
   {
     path: "*",
