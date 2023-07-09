@@ -1,0 +1,17 @@
+body{
+  background: url("../../assets/imgs/wineAndFlowerbg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+ 
+  color:var(--colorTertiary)
+}
+main{
+  min-height: 100vh;
+}
+button,a{
+  transition: all 0.2s ease-in-out !important;
+  width: 80vw;
+  max-width: 25vh;
+}
