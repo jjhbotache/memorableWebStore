@@ -1,0 +1,14 @@
+#customiseBottle-container img{
+  border-radius: 0.7em;
+  width: 100%;
+  background: var(--colorSecondary);
+  padding: 0.2em;
+  border: var(--colorPrimary) solid 2px;
+}
+
+#customiseBottle-container .input-group-text{
+  background: var(--colorSecondary);
+  border: var(--colorPrimary) solid 2px;
+  border-radius: 0.7em 0 0 0.7em;
+  color: var(--colorPrimary);
+}

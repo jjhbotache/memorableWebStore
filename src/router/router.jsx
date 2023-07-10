@@ -5,6 +5,7 @@ import Catalog from "../pages/catalog/catalog";
 import LoginAndRegister from "../pages/loginAndRegister/loginAndRegister";
 import UserDashboard from "../pages/userDashboard/userDashboard";
 import AdminDashboard from "../pages/adminDashboard/adminDashboard";
+import CustomiseBottle from "../pages/customiseBottle/customiseBottle";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/adminDashboard",
     element: <AdminDashboard/>,
+  },
+  {
+    path: "/customiseBottle",
+    element: <CustomiseBottle/>,
   },
   {
     path: "*",

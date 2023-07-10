@@ -5,7 +5,7 @@
 }
 
 .navbar{
-  background-color: var(--colorTertiary);
+  background-color: var(--colorSecondary);
   position: sticky;
   top: 0;
 }

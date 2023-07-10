@@ -27,3 +27,17 @@ body{
   --bs-btn-bg: var(--colorSecondary) !important;
   border-radius: 9999px !important;
 }
+.btn-white{
+  --bs-btn-color: var(--colorPrimary) !important;
+  --bs-btn-bg: var(--colorTertiary) !important;
+  border: 2px solid ;
+  border-color: var(--colorPrimary) !important;
+}
+/* add a transition to de buttons */
+.btn:hover{
+  transition: 0.1s;
+  --bs-btn-color: var(--colorPrimary) !important;
+  --bs-btn-bg: var(--colorSecondaryHover) !important;
+  border: 1px solid ;
+  border-color: var(--colorPrimary) !important;
+}
