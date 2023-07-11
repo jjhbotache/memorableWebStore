@@ -6,17 +6,19 @@ export default function ColorSelect({label,colors,onChange}) {
 
 
   function changed(e) {
-    setCurrentColor(e.target.value)
-    onChange(e)
+    setCurrentColor(colors.find(color => color.id === parseInt(e.target.value)).name)
+    onChange(colors.find(color => color.id==e.target.value))
   }
+
   return(
     <div className="input-group d-flex justify-content-between" >
       <div className="d-flex">
         <label className="input-group-text" htmlFor="inputGroupSelect01">{label}</label>
         <select onChange={changed}>
+          <option>❔</option>
           {
           colors.map(color => (
-            <option key={color} value={color} style={{ backgroundColor: color }}></option>
+            <option key={color.id} value={color.id} style={{ backgroundColor: color.name }}>&nbsp;</option>
           ))
           }
         </select>

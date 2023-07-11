@@ -6,6 +6,8 @@ import LoginAndRegister from "../pages/loginAndRegister/loginAndRegister";
 import UserDashboard from "../pages/userDashboard/userDashboard";
 import AdminDashboard from "../pages/adminDashboard/adminDashboard";
 import CustomiseBottle from "../pages/customiseBottle/customiseBottle";
+import BuyNow from "../pages/buyNow/buyNow";
+import ShippingAndPayement from "../pages/shippingAndPayement/shippingAndPayement";
 
 const router = createBrowserRouter([
   {
@@ -33,9 +35,18 @@ const router = createBrowserRouter([
     element: <CustomiseBottle/>,
   },
   {
+    path: "/buyNow",
+    element: <BuyNow/> ,
+  },
+  {
+    path: "/shippingAndPayement",
+    element: <ShippingAndPayement/> ,
+  },
+  {
     path: "*",
     element: <h1>page not found</h1>,
   },
+
 ]);
 
 

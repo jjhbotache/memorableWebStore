@@ -1,0 +1,19 @@
+#buyNow-container img{
+  border-radius: 0.7em;
+  width: 100%;
+  background: var(--colorSecondary);
+  padding: 0.2em;
+  border: var(--colorPrimary) solid 2px;
+
+  width: 80vw;
+  max-width: 30vh;
+}
+
+#buyNow-container .last-row{
+  height: 20vh;
+}
+
+#buyNow-container button{
+  width: 65vw;
+  max-width: 30vh;
+}

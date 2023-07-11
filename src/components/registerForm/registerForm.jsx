@@ -12,7 +12,7 @@ export default function RegisterForm({submitedFormFunction,changeForm}) {
       <input type="text" name="lastName"/>
       <label htmlFor="email">Email:</label>
       <input type="email" name="email"/>
-      <button type="submit">register</button>
+      <button className="btn" type="submit">register</button>
     </form>
     <button onClick={changeForm}>Already registered?</button>
     </>

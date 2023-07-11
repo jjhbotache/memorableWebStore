@@ -18,7 +18,7 @@ export default function Catalog() {
   }
 
   return (
-    <div className="container-md">
+    <div className="container-md my-2">
       <div className="container">
         <div className="row g-2">
           {designs.map(design=><CardCatalog design={design} key={design.id} onClick={()=>{designClicked(design)}}/>)}
