@@ -10,9 +10,8 @@
   color: var(--colorPrimary);
   text-align: center;
 
-  height: 80vw;
+  min-height: 80vw;
   width: 80vw;
-  max-height: 50vh;
 
   padding: 2em 1em  ;
 

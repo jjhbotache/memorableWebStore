@@ -41,3 +41,10 @@ body,#root{
   border: 1px solid ;
   border-color: var(--colorPrimary) !important;
 }
+
+hr{
+  border: 2px solid var(--colorPrimary) !important;
+  width: 95% !important;
+}
+
+/* make inputs like a btn */

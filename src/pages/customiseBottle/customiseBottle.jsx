@@ -91,6 +91,10 @@ export default function CustomiseBottle() {
           </div>
 
           <div className="col-12">
+            <textarea className="form-control" placeholder="Message" onChange={(e)=>{setOrder({...order,msg:e.target.value})}}></textarea>
+          </div>
+
+          <div className="col-12">
             <button className="btn btn-white d-block mx-auto my-2" disabled> add to shopping cart</button>
             <button className="btn d-block mx-auto" onClick={onBuyNow} disabled={!readyToOrder}> buy now</button>
           </div>
