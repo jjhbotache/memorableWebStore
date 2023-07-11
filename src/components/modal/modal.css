@@ -1,0 +1,42 @@
+.modal-window{
+  /* display it att the center of the page above everthing */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+
+
+  color: var(--colorPrimary);
+  text-align: center;
+
+  height: 80vw;
+  width: 80vw;
+  max-height: 50vh;
+
+  padding: 2em 1em  ;
+
+  background: var(--colorTertiary);
+  border-radius: 0.5em;
+  border: var(--colorPrimary) solid 2px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.modal-window.show {
+  opacity: 1;
+}
+
+.modal-window .btn{
+  margin-bottom: 0.4em;
+  padding-top: 0.1em ;
+  padding-bottom: 0.1em ;
+  max-height: 7vh;
+  height: 5vh;
+}

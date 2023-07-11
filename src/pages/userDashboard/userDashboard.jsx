@@ -9,16 +9,19 @@ export default function Dashboard() {
   
   const userInfo = Object.keys(localStorage).map((key) => {
     // skip some properties
-    const keysToAvoid = [
-      "order",
-      "token",
+    const keysToKeep = [
+      "first_name",
+      "last_name",
+      "id",
+      "email",
+      "phone",
     ]
     const readOnly = [
       "email",
       "id",
     ]
 
-    if (keysToAvoid.includes(key)) return null
+    if (!keysToKeep.includes(key)) return null
     return(
       <div key={key}>
         <label htmlFor={key}>{key}:</label>

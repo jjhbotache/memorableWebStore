@@ -12,6 +12,7 @@ export default function BuyNow() {
         <div className="row">
           <div className="col-12">
             <h1 className="text-center">Confirm your order</h1>
+            <hr />
           </div>
         </div>
         <div className="row">
