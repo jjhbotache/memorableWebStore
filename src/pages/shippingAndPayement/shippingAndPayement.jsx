@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './shippingAndPayement.css';
 import Modal from '../../components/modal/modal';
-import { apiRoute, catalogPath, getUserToken, setRequestConfig } from '../../const/const';
+import { apiRoute, catalogPath, getUserToken, setRequestConfig, userDashboardPath } from '../../const/const';
 
 export default function ShippingAndPayement() {
   // shipping just save a shippingId:1
@@ -21,25 +21,27 @@ export default function ShippingAndPayement() {
       setWayOfShiping()
   }
   function handlePayement(value) {
-    if (input.current.files[0]) {
-      setPayement(input.current.files[0]);
-      if (payement instanceof File) {
+    console.log("paying");
+    const vaucher = input.current.files[0];
+    if (vaucher) {
+      setPayement(vaucher);
+      if (vaucher instanceof File) {
         const logic = async ()=>{
           
           if (await getUserToken()) {
             const formData = new FormData();
-            formData.append("vaucher",payement);
+            formData.append("vaucher",vaucher);
   
             const savedVaucher = await fetch(apiRoute+"/insert-vaucher-anyone",setRequestConfig("POST",formData,true)).then(response=>response.json()).then(data=>{
               console.log(data);
               return data
             }).catch(error=>{
               console.log(error);
-              fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedData}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
+              setPayement(null)
               return false
             })
             if (savedVaucher) {
-              alert("Your vaucher has been saved");
+              console.log("Your vaucher has been saved");
               // amount:"1"
               // id_delivery_place:"\"Ibague Tolima Calle 13 #7-82\""
               // id_design:"26"
@@ -65,16 +67,19 @@ export default function ShippingAndPayement() {
               }
               fetch(apiRoute+"/user/create/pucharse_orders",setRequestConfig("POST",JSON.stringify(finalOrder))).then(re=>re.json()).then((data) => {
                 console.log(data);
-                alert("Your order has been created");
+                console.log("Your order has been created");
                 // window.location.assign(catalogPath);
               })
             }else{
-              alert("There was an error saving your vaucher");
-  
-            }
-  
-            
+              console.log("There was an error saving your vaucher, try changing the file name");
+              fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedData}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
+              setPayement(null)
+            }            
+          }else{
+            setPayement(null)
+            alert("You must confirm your email to pay");
           }
+
         }
         logic();
       }
@@ -163,12 +168,22 @@ export default function ShippingAndPayement() {
               break;
           }
         }else{
-          modalToRender=
-            <Modal title='Upload your vaucher in here' options={[
-              {label:'Done', value:1},
-            ]} resolveFunction={handlePayement}>
-              <input ref={input} type="file" name="vaucher" id="vaucher" accept='.png' className="form-control"/>
-            </Modal>
+          // if payement is a file
+          if (payement instanceof File) {
+            modalToRender=(
+              <Modal title='Your order has been created succesfully!' options={[
+                {label:'Done', value:1},
+              ]} resolveFunction={()=>{window.location.assign(userDashboardPath)}} />
+            )
+          }else{
+            modalToRender=
+              <Modal title='Upload your vaucher in here' options={[
+                {label:'Done', value:1},
+              ]} resolveFunction={handlePayement}>
+                <input ref={input} type="file" name="vaucher" id="vaucher" accept='.png' className="form-control"/>
+              </Modal>
+          }
+
         }
     }
     }

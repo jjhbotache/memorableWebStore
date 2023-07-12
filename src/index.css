@@ -12,7 +12,17 @@
   --bs-btn-hover-bg:var(--colorSecondaryHover);
   --bs-btn-hover-color:var(--colorPrimary)
 
+  --bs-accordion-btn-focus-border-color:var(--colorPrimary)
 
+}
+.accordion{
+  --bs-accordion-active-color:var(--colorPrimary) !important;
+  --bs-accordion-active-bg:var(--colorTertiary) !important;
+  --bs-accordion-button-focus-color:var(--colorPrimary) !important;
+  --bs-accordion-btn-focus-border-color:var(--colorSecondaryHover) !important;
+}
+.accordion-item{
+  --bs-accordion-btn-focus-box-shadow:var(--colorSecondaryHover) !important;
 }
 
 

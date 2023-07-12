@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { apiRoute, getUserToken, loginAndRegisterPath, setRequestConfig, verifyIsWhereItShould } from "../../const/const"
 import Spinner from "../../components/spinner/spinner";
+import BuyItem from "../../components/buyItem/buyItem";
 
 export default function Dashboard() {
   const [editingInfo, setEditingInfo] = useState(false);
   const [loadingUpdateInfo, setLoadingUpdateInfo] = useState(false);
+  const [shoppings, setShoppings] = useState([]);
+  
+
   verifyIsWhereItShould()
   
   const userInfo = Object.keys(localStorage).map((key) => {
@@ -29,6 +33,13 @@ export default function Dashboard() {
       </div>
     )
   })
+
+  useEffect(() => {
+    fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
+      setShoppings(data)
+      console.log(data);
+    })
+  }, []);
 
   function onsubmitUserInfo(e) {
     e.preventDefault()
@@ -96,11 +107,39 @@ export default function Dashboard() {
   return (
     <>
       <h1>dashboard</h1>
-      <form onSubmit={onsubmitUserInfo}>
-        {userInfo}
-        {loadingUpdateInfo && <Spinner/>}
-        <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"update"}</button>
-      </form>
+      <div className="accordion" id="userDashboadAccordion">
+        <div className="accordion-item">
+          <h2 className="accordion-header">
+            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Profile
+            </button>
+          </h2>
+          <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#userDashboad">
+            <div className="accordion-body">
+            <form onSubmit={onsubmitUserInfo}>
+              {userInfo}
+              {loadingUpdateInfo && <Spinner/>}
+              <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"update"}</button>
+            </form>
+            </div>
+          </div>
+        </div>
+        <div className="accordion-item">
+          <h2 className="accordion-header">
+            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+              Shoppings
+            </button>
+          </h2>
+          <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboad">
+            <div className="accordion-body">
+            {shoppings.map(shopping => <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
     
     </>
   )
