@@ -1,0 +1,32 @@
+:root {
+    --rosa-pastel: #FCF8F4;
+    --rosa-opaco: #E9C5D2;
+    --morado: #460126; 
+  }
+
+@font-face {
+    font-family: "Dancing Script Bold";
+    src: url("../assets/fonts/DancingScript-Bold.ttf") format("truetype");
+  }
+
+@font-face {
+font-family: "Fragment Core Roman";
+src: url("../assets/fonts/Fragmentcore.otf") format("truetype");
+}
+
+body {
+    font-family: "Fragment Core Roman", sans-serif;
+    font-size: 2.2vh;
+    color: var(--morado);
+}
+
+.title {
+    font-family: "Dancing Script Bold", sans-serif;
+    color: var(--morado);
+}
+
+/* input:focus {
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    box-shadow: 0px 10px 30px var(--rosa-opaco);
+} */

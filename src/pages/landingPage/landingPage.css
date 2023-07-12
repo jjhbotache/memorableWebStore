@@ -8,8 +8,13 @@
   color:var(--colorTertiary);
   min-height: 100vh;
 }
+
+.title-lp {
+  font-size: 10vh; 
+}
+
 .a-lp{
   transition: all 0.2s ease-in-out !important;
   width: 80vw;
-  max-width: 25vh;
+  max-width: 30vh;
 }
