@@ -8,6 +8,7 @@ import AdminDashboard from "../pages/adminDashboard/adminDashboard";
 import CustomiseBottle from "../pages/customiseBottle/customiseBottle";
 import BuyNow from "../pages/buyNow/buyNow";
 import ShippingAndPayement from "../pages/shippingAndPayement/shippingAndPayement";
+import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmin";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/shippingAndPayement",
     element: <ShippingAndPayement/> ,
+  },
+  {
+    path: "/pucharseOrdersAdmin",
+    element: <PucharseOrdersAdmin/>,
   },
   {
     path: "*",

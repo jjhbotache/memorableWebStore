@@ -25,6 +25,10 @@ export const catalogPath = "/catalog";
 export const customiseBottlePath = "/customiseBottle";
 export const buyNowPath = "/buyNow";
 export const shippingAndPayementPath = "/shippingAndPayement";
+export const pucharseOrdersAdminPath = "/pucharseOrdersAdmin";
+
+
+
 
 
 
@@ -103,4 +107,9 @@ export async function getUserToken() {
     thereIsToken = true
   }
   return thereIsToken
+}
+
+export function logout() {
+  localStorage.clear();
+  window.location.assign(loginAndRegisterPath)
 }

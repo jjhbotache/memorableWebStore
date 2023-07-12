@@ -31,7 +31,8 @@ export default function ShippingAndPayement() {
           if (await getUserToken()) {
             const formData = new FormData();
             formData.append("vaucher",vaucher);
-  
+            formData.append("id",localStorage.getItem("id"));
+            
             const savedVaucher = await fetch(apiRoute+"/insert-vaucher-anyone",setRequestConfig("POST",formData,true)).then(response=>response.json()).then(data=>{
               console.log(data);
               return data
@@ -49,18 +50,18 @@ export default function ShippingAndPayement() {
               // id_secondary_packing_color:3
               // id_wine:"2"
               // msg:"''"
-  
+              
               const order = JSON.parse(localStorage.getItem("order"));
-  
+              
               const finalOrder = {
-  
+                
                 amount:order.amount,
                 id_delivery_place:shipping.shippingId===1?"\"Ibague Tolima Calle 13 #7-82\"":shipping.shippingId.toString(),
-                id_design:order.design.id_design,
+                id_design:order.design.id,
                 id_packing_color:order.primaryColor.id,
                 id_secondary_packing_color:order.primaryColor.id,
                 id_wine:order.wine.id_wine,
-                msg:order.msg,
+                msg:`"${order.msg}"`,
   
                 id_user:localStorage.getItem("id"),
                 id_vaucher:"'"+savedVaucher.vaucher_route+"'"
@@ -69,6 +70,11 @@ export default function ShippingAndPayement() {
                 console.log(data);
                 console.log("Your order has been created");
                 // window.location.assign(catalogPath);
+              }).catch((e) => {
+                console.log(e);
+                console.log("There was an error creating your order");
+                fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedVaucher}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
+                setPayement(null)
               })
             }else{
               console.log("There was an error saving your vaucher, try changing the file name");
@@ -79,7 +85,7 @@ export default function ShippingAndPayement() {
             setPayement(null)
             alert("You must confirm your email to pay");
           }
-
+          
         }
         logic();
       }

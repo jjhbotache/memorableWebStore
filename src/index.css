@@ -1,3 +1,5 @@
+
+
 :root {
 
   --colorPrimary:#460126;
@@ -26,6 +28,8 @@
 }
 
 
+
+
 body,#root{
   min-height: 100vh;
 }
@@ -43,6 +47,12 @@ body,#root{
   border: 2px solid ;
   border-color: var(--colorPrimary) !important;
 }
+.btn-dark{
+  --bs-btn-color: var(--colorTertiary) !important;
+  --bs-btn-bg: var(--colorPrimary) !important;
+  border: 2px solid ;
+  border-color: var(--colorPrimary) !important;
+}
 /* add a transition to de buttons */
 .btn:hover{
   transition: 0.1s;
@@ -50,6 +60,11 @@ body,#root{
   --bs-btn-bg: var(--colorSecondaryHover) !important;
   border: 1px solid ;
   border-color: var(--colorPrimary) !important;
+}
+
+input:focus{
+  box-shadow: 1px 1px 3px 1px  var(--colorSecondary) !important;
+  border: 2px solid var(--colorPrimary) !important;
 }
 
 hr{

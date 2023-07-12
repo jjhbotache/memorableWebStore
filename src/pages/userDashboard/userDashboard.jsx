@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiRoute, getUserToken, loginAndRegisterPath, setRequestConfig, verifyIsWhereItShould } from "../../const/const"
+import { apiRoute, getUserToken, loginAndRegisterPath, logout, setRequestConfig, verifyIsWhereItShould } from "../../const/const"
 import Spinner from "../../components/spinner/spinner";
 import BuyItem from "../../components/buyItem/buyItem";
 
@@ -137,6 +137,9 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <button type="button" class=" btn btn-dark mx-auto d-block mt-3" onClick={logout}>Logout</button>
+
+
 
       
 

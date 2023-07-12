@@ -5,21 +5,24 @@ import { apiRoute } from '../../const/const';
 
 const BuyItem = ({ data,token,userId }) => {
   const { id, id_design,id_real_design, amount, delivery_date, id_delivery_place, id_packing_color, id_vaucher } = data;
-  const [nameToUse, setNameToUse] = useState("");
+  const [nameToUse, setNameToUse] = useState("No design");
 
 
   if (id_real_design) {
     fetch(apiRoute+"/user/read/real_designs/"+userId).then(re=>re.json())
     .then(data=>{
-      console.log(data);
-      setNameToUse("real")
+      const design = data.find(design => design.id==id_real_design)
+      setNameToUse(design.name)
     })
-  }else{
+  }else if(id_design){
     fetch(apiRoute+"/read-anyone/designs").then(re=>re.json())
     .then(data=>{
       console.log(data);
-      setNameToUse("fake")
+      const design = data.find(design => design.id==id_design)
+      setNameToUse(design.name)
     })
+  }else{
+    console.log("no design");
   }
   
 
