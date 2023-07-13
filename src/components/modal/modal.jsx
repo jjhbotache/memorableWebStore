@@ -10,15 +10,21 @@ export default function Modal({title="",resolveFunction, options,cancelable, chi
   }, []);
 
   return(
-    <div className={`modal-window ${showModal ? "show" : ""}`}>
-      <h2>{title}</h2>
-      {children}
-      <div className="w-100 px-2 d-flex justify-content-around flex-wrap">
-        {options.map((option) => (
-          <button className="btn " key={option.value} onClick={() => {resolveFunction(option.value);}}>{option.label}</button>
-        ))}
-        {cancelable && <button className="btn " onClick={() => {resolveFunction(0);}}>Cancel</button>}
+    <>
+      <div className="modal-bg">
       </div>
-    </div>
+      <div className={`modal-window ${showModal ? "show" : ""}`}>
+        <h2 className='w-100'>{title}</h2>
+        <div className="children">
+          {children}
+        </div>
+        <div className="w-100 px-2 d-flex justify-content-around flex-wrap">
+          {options.map((option) => (
+            <button className="btn " key={option.value} disabled={option.disabled} onClick={() => {resolveFunction(option.value);}}>{option.label}</button>
+          ))}
+          {cancelable && <button className="btn " onClick={() => {resolveFunction(0);}}>Cancel</button>}
+        </div>
+      </div>
+    </>
   )
 };

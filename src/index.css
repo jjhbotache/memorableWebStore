@@ -58,13 +58,19 @@ body,#root{
   transition: 0.1s;
   --bs-btn-color: var(--colorPrimary) !important;
   --bs-btn-bg: var(--colorSecondaryHover) !important;
+  --bs-btn-hover-bg:var(--colorSecondaryHover) !important;
   border: 1px solid ;
   border-color: var(--colorPrimary) !important;
 }
 
-input:focus{
+img{
+  border:solid 2px var(--colorPrimary) !important;
+  padding: 0.2em !important;
+}
+
+input:focus,select:focus{
   box-shadow: 1px 1px 3px 1px  var(--colorSecondary) !important;
-  border: 2px solid var(--colorPrimary) !important;
+  border: 1px solid var(--colorPrimary) !important;
 }
 
 hr{
