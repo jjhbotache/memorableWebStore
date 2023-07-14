@@ -1,7 +1,7 @@
 import React from 'react';
-import './landingPage.css';
 import '../../styles/layout.css';
 import '../../styles/config.css';
+import './landingPage.css';
 
 
 export default function LandingPage() {

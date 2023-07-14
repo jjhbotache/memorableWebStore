@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url(../../assets/imgs/wine-g9d9b7fd4f_1920.jpg);
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+
+button a {
+    text-decoration: none;
+}
+
+
+
+
+
+/* Style for terms and conditions */
+.s-tyc {
+    color: rgba(0, 0, 0, 0.625);
+    font-weight: 600;
+    font-style: italic;
+    font-size: 14px;
+}
+
+#main-container {
+    height: 90vh;
+}
+
+#container {
+    min-height: 60vh;
+    max-width: 80%;
+    max-height: 90vh;
+    padding: 10vh 6vh 5vh;
+    border-radius: 1vh;
+}
+
+.container{
+    position: relative;
+    z-index: 1;
+}
+
+.filter {
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    background-color: rgba(243, 243, 243, 0.2);
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.759);
+}
+
+.title {
+    font-size: 6vh;
+    margin: 0;
+}
+
+.form-control {
+    border-radius: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 2.5vh;
+}

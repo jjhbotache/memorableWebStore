@@ -1,73 +1,83 @@
 import { useState } from "react";
-import "./loginAndRegister.css"
+import "./loginAndRegister.css";
 import Spinner from "../../components/spinner/spinner";
 import LoginForm from "../../components/loginForm/loginForm";
 import RegisterForm from "../../components/registerForm/registerForm";
-import { adminDashboardPath, apiRoute, setRequestConfig, userDashboardPath, verifyIsWhereItShould } from "../../const/const";
-
+import {
+  adminDashboardPath,
+  apiRoute,
+  setRequestConfig,
+  userDashboardPath,
+  verifyIsWhereItShould,
+} from "../../const/const";
 
 export default function LoginAndRegister() {
   const [login, setLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  verifyIsWhereItShould()
+  verifyIsWhereItShould();
 
   function loginAction(e) {
-    e.preventDefault()
-    const data = Object.fromEntries(new FormData(e.target))
-    console.log(data)
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    console.log(data);
 
-    setLoading(true)
+    setLoading(true);
     const dataToSend = JSON.stringify({
-          id: data.id,
-          phone: data.phone
-    })
-    fetch(apiRoute + "/get_user", setRequestConfig("POST",dataToSend))
-    .then(response => response.json())
-    .then(result => {
-      console.log(result);
-      // add each property to localStorage
-      for (const key in result) {
-        result[key] && localStorage.setItem(key.toString(),(result[key]).toString())
-      }
-      // redirect to the corresponding dashboard 
-      window.location.assign(
-        localStorage.password?
-        adminDashboardPath
-        :userDashboardPath
-      )
-
-    })
-    .catch(error => {
-      alert("Seems like you are not registered or give the wrong credentials");
-      console.error('Error:', error);
-    })
-    .finally(
-      setLoading(false)
-    )
+      id: data.id,
+      phone: data.phone,
+    });
+    fetch(apiRoute + "/get_user", setRequestConfig("POST", dataToSend))
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        // add each property to localStorage
+        for (const key in result) {
+          result[key] &&
+            localStorage.setItem(key.toString(), result[key].toString());
+        }
+        // redirect to the corresponding dashboard
+        window.location.assign(
+          localStorage.password ? adminDashboardPath : userDashboardPath
+        );
+      })
+      .catch((error) => {
+        alert(
+          "Seems like you are not registered or give the wrong credentials"
+        );
+        console.error("Error:", error);
+      })
+      .finally(setLoading(false));
   }
 
   function registerAction(e) {
-    e.preventDefault()
-    const data = Object.fromEntries(new FormData(e.target))
-    console.log(data)
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    console.log(data);
   }
 
-  const formToRender = login?
-    <LoginForm submitedFormFunction={loginAction} changeForm={()=>{setLogin(!login)}}/>
-    :
-    <RegisterForm submitedFormFunction={registerAction} changeForm={()=>{setLogin(!login)}}/>
-    
-  
-  
-  return(
-    <>
-      <h1>register</h1>
-      {
-        loading
-        ?<Spinner></Spinner>
-        :formToRender
-      }
-      
-    </>
-  )
-};
+  const formToRender = login ? (
+    <LoginForm
+      submitedFormFunction={loginAction}
+      changeForm={() => {
+        setLogin(!login);
+      }}
+    />
+  ) : (
+    <RegisterForm
+      submitedFormFunction={registerAction}
+      changeForm={() => {
+        setLogin(!login);
+      }}
+    />
+  );
+
+  return (
+    <div id="main-container" className="d-flex justify-content-center align-items-center">
+      <div className="container filter" id="container">
+        <div className="row">
+          {loading ? <Spinner></Spinner> : formToRender}
+        </div>
+      </div>
+    </div>
+  );
+}
