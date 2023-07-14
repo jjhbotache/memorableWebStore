@@ -24,7 +24,7 @@
   text-align: center;
 
   min-height: 80vw;
-  max-height: 98vh;
+  max-height: 83vh;
   width: 80vw;
 
   padding: 2em 0.6em  ;
@@ -66,3 +66,13 @@
   min-width: 100%;
   padding: 0;
 }
+.modal-window input[type="checkbox"]{
+  min-width: 1.2em;
+  min-height: 1.2em;
+  border: solid 1px var(--colorPrimary);
+}
+.modal-window input[type="checkbox"]:focus{
+  /* delete the boxshadown */
+  box-shadow: none !important;
+}
+
