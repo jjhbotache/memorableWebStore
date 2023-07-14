@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { apiRoute, getOptionsForSelect, setRequestConfig } from "../../const/const";
+import { apiRoute, setRequestConfig } from "../../const/const";
 import Spinner from "../../components/spinner/spinner";
 import PucharseOrderCard from "../../components/pucharseOrderCard/PucharseOrderCard";
 import Modal from "../../components/modal/modal";
@@ -10,6 +10,13 @@ export default function PucharseOrdersAdmin() {
   const [loadingData, setLoadingData] = useState(false);
   const [orderInEditModal, setOrderInEditModal] = useState(false);
   const [editModal, setEditModal] = useState(null);
+  const oldVaucher = useRef(null);  
+  const [loading, setLoading] = useState(false);
+
+  
+  
+
+
 
   useEffect(() => {
     setLoadingData(true)
@@ -30,12 +37,17 @@ export default function PucharseOrdersAdmin() {
   async function putInfoInModal(data){
     
     function getDateFromStrign(fechaString) {
-      const fecha = new Date(fechaString);
-      const valorInputDate = fecha.toISOString().split("T")[0];
-      return valorInputDate;
+      try {
+        const fecha = new Date(fechaString);
+        const valorInputDate = fecha.toISOString().split("T")[0];
+        return valorInputDate;
+      } catch (error) {
+        console.log(error);
+        return fechaString;
+      }
     }
     // ---------------------------------------------------------------------------------------------------------
-    // console.log("data",data);
+    console.log("data",data);
     // console.log("orderInEditModal",orderInEditModal);
     if (!orderInEditModal) {
       
@@ -49,11 +61,10 @@ export default function PucharseOrdersAdmin() {
       // , deliveryDate
       // , paid
       // , vaucher
-      const [wine, primaryColor, secondaryColor, msg] = await Promise.all([
+      const [wine, primaryColor, secondaryColor] = await Promise.all([
         order.id_wine ? fetch(apiRoute + "/read/wine_kinds/" + order.id_wine, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
         order.id_packing_color ? fetch(apiRoute + "/read/packing_colors/" + order.id_packing_color, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
         order.id_secondary_packing_color ? fetch(apiRoute + "/read/secondary_packing_colors/" + order.id_secondary_packing_color, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
-        order.id_msg ? fetch(apiRoute + "/read/msgs/" + order.id_msg, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
       ]);
       const date = getDateFromStrign(order.delivery_date);
   
@@ -63,6 +74,7 @@ export default function PucharseOrdersAdmin() {
         user  : user,
         design  : design,
         realDesign  : realDesign,
+        amount  : order.amount,
         wine  : wine,
         primaryColor  : primaryColor,
         secondaryColor  : secondaryColor,
@@ -70,33 +82,45 @@ export default function PucharseOrdersAdmin() {
         deliveryDate  : date,
         deliveryPlace : order.id_delivery_place,
         vaucher : order.id_vaucher,
-        trulyPaid : order.truly_paid==1,
+        trulyPaid : order.paid==1,
       }
+      oldVaucher.current = orderInfo.vaucher;
       setOrderInEditModal(orderInfo)
     }
   }
 
   useEffect(() => {
-    console.log(orderInEditModal);
+    // so we need to set the editModal to null
+    // so it can be closed
+
+
     if (orderInEditModal) {
       setEditModal( 
       <Modal 
-        title={`Edit Order #${orderInEditModal.id}`} 
-        resolveFunction={(value)=>{updateData(value,orderInEditModal.id)}} 
+        title={orderInEditModal.id?`Edit Order #${orderInEditModal.id}`:"Add Order"} 
+        resolveFunction={value=>{
+          setOrderInEditModal(false)
+          setEditModal(null)
+        }} 
         options={[{label:"Cancel",value:0}]}>
-            <form className=" d-flex flex-column align-content-center justify-content-center w-100">
+            <form className=" d-flex flex-column align-content-center justify-content-center w-100" onSubmit={editorModalSubmited}>
               {/* user */}
-              <EditModalSelect label="User:" tableName="users" getOptionsForSelect={getOptionsForSelect} labelProperty="last_name" firstObj={orderInEditModal.user}/>
+              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,user:obj})} label="User:" tableName="users" labelProperty="last_name" firstObj={orderInEditModal.user}/>
               {/* design */}
-              <EditModalSelect label="Design: " tableName="designs" getOptionsForSelect={getOptionsForSelect} labelProperty="name" firstObj={orderInEditModal.design}/>
+              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,design:obj})} label="Design: " tableName="designs" labelProperty="name" firstObj={orderInEditModal.design}/>
               {/* real design */}
-              <EditModalSelect label="Real Design: " tableName="real_designs" getOptionsForSelect={getOptionsForSelect} labelProperty="name" firstObj={orderInEditModal.realDesign}/>
+              <EditModalSelect optional onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,realDesign:obj})} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
+              {/* amount */}
+              <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
+                <label htmlFor="amount" className="form-label mb-0 align-baseline">Amount: </label>
+                <input type="number" className="form-control mx-auto" name="amount" value={orderInEditModal.amount} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,amount:e.target.value>=1?e.target.value:1})}} />
+              </div>
               {/* wine */}
-              <EditModalSelect label="Wine: " tableName="wine_kinds" getOptionsForSelect={getOptionsForSelect} labelProperty="name" firstObj={orderInEditModal.wine}/>
+              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={orderInEditModal.wine}/>
               {/* primaryColor */}
-              <EditModalSelect label="Primary packing color:" tableName="packing_colors" getOptionsForSelect={getOptionsForSelect} labelProperty="color" firstObj={orderInEditModal.primaryColor}/>
+              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,primaryColor:obj})} label="Primary packing color:" tableName="packing_colors" labelProperty="color" firstObj={orderInEditModal.primaryColor}/>
               {/* secondaryColor */}
-              <EditModalSelect label="secondary packing color:" tableName="secondary_packing_colors" getOptionsForSelect={getOptionsForSelect} labelProperty="color" firstObj={orderInEditModal.secondaryColor}/>
+              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,secondaryColor:obj})} label="secondary packing color:" tableName="secondary_packing_colors" labelProperty="color" firstObj={orderInEditModal.secondaryColor}/>
               {/* msg */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="msg" className="form-label mb-0 align-baseline">Message: </label>
@@ -110,16 +134,16 @@ export default function PucharseOrdersAdmin() {
                 {/* <small className="text-muted"> Choose a new delivery date</small> */}
               </div>
               {/* address */}
-              {/* <EditModalSelect label="Adress:" tableName="addresses" getOptionsForSelect={getOptionsForSelect} labelProperty="name" firstObj={order.adress}/> */}
+              {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="deliveryPlace" className="form-label mb-0 align-baseline">Delivery place: </label>
                 <input type="text" className="form-control p-0" value={orderInEditModal.deliveryPlace} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryPlace:e.target.value})} name="deliveryPlace" />
               </div>
               {/* vaucher */}
-              <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
+              <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2" >
                 <label htmlFor="vaucher" className="form-label mb-0 align-baseline">Vaucher: </label>
                 <img id="vaucherPreview" src={apiRoute + "/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
-                <input type="file" className="form-control p-0" name="vaucher" onChange={
+                <input accept=".png" type="file" className="form-control p-0" name="vaucher" onChange={
                   (e)=>{
                     if (e.target.files[0]) {
                       setOrderInEditModal({...orderInEditModal,vaucher:e.target.files[0]})
@@ -138,49 +162,90 @@ export default function PucharseOrdersAdmin() {
                 <input type="checkbox" className="p-0" name="trulyPaid" checked={orderInEditModal.trulyPaid} onChange={e=>setOrderInEditModal({...orderInEditModal,trulyPaid:e.target.checked})} />
               </div>   
               {/* submit */}
-              <button type="submit" className="btn btn-dark mx-4">Submit</button>
+              <button type="submit" className="btn btn-dark mx-4">{orderInEditModal.id?"Update":"Create"}</button>
             </form>
       </Modal>
       )
+      console.log("orderInEditModal",orderInEditModal);
     }
   }, [orderInEditModal]);
 
 
-  function updateData(data,idTable) {
-    if (data==0) {
-      setOrderInEditModal(false);
-      return
+  function editorModalSubmited(e) {
+    e.preventDefault();
+
+    if (orderInEditModal.id) {
+      console.log("updating...");
+      const formData = new FormData();
+      formData.append("user_id", orderInEditModal.user.id);
+      formData.append("wine_id", orderInEditModal.wine.id);
+      formData.append("design_id", orderInEditModal.design.id);
+      formData.append("real_design_id", orderInEditModal.realDesign.id || null);
+      formData.append("amount", orderInEditModal.amount);
+      formData.append("msg", orderInEditModal.msg);
+      formData.append("primary_color_id", orderInEditModal.primaryColor.id);
+      formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
+      formData.append("delivery_date", orderInEditModal.deliveryDate);
+      formData.append("address", orderInEditModal.deliveryPlace);
+      formData.append("oldVaucher", oldVaucher.current);
+      formData.append("vaucher",  orderInEditModal.vaucher instanceof File?orderInEditModal.vaucher:oldVaucher.current);
+      formData.append("truly_paid", orderInEditModal.trulyPaid?1:0);
+
+      setLoading(true);
+      fetch(apiRoute + "/update_pucharse_orders/" + orderInEditModal.id, setRequestConfig("PUT", formData, true)).then((response) => response.json()).then((data) => {
+        console.log(data);
+        window.location.reload();
+      }).catch((error) => {
+        alert(error);
+        console.error(error);
+      }).finally(
+        setLoading(false)
+      );
+
+    }else{
+      console.log("creating...");
+      const formData = new FormData();
+      try {
+        formData.append("user_id", orderInEditModal.user.id);
+        formData.append("wine_id", orderInEditModal.wine.id);
+        formData.append("design_id", orderInEditModal.design.id);
+        formData.append("real_design_id", orderInEditModal.realDesign?.id || 0);
+        formData.append("amount", orderInEditModal.amount || 1);
+        formData.append("msg", orderInEditModal.msg || "-");
+        formData.append("primary_color_id", orderInEditModal.primaryColor.id);
+        formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
+        if (!orderInEditModal.deliveryDate) throw new Error("No date")
+        formData.append("delivery_date", orderInEditModal.deliveryDate);
+        if (!orderInEditModal.deliveryPlace) throw new Error("No address")
+        formData.append("address", orderInEditModal.deliveryPlace);
+        if (!orderInEditModal.vaucher) throw new Error("No vaucher")
+        formData.append("vaucher",  orderInEditModal.vaucher);
+        formData.append("truly_paid", orderInEditModal.trulyPaid? (orderInEditModal.trulyPaid?1:0) : 0);
+      } catch (error) {
+        console.log(error);      
+        alert("Your are missing a field")
+        return
+      }
+      // log each key-value pair
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+
+      setLoading(true);
+      fetch(apiRoute + "/create/pucharse_orders", setRequestConfig("POST", formData, true)).then((response) => response.json()).then((data) => {
+        console.log(data);
+        window.location.reload();
+      } 
+      ).catch((error) => {
+        console.error(error);
+        alert("No valid vaucher");
+      }
+      ).finally(
+        setLoading(false)
+      );
+
     }
-    console.log("updating");
-    // update a pucharse order
-    const formData = new FormData();
-
-    // formData.append("user_id", userSelect.value);
-    // formData.append("wine_id", wineSelect.value);
-    // formData.append("real_design_id", realDesignSelect.value);
-    // formData.append("amount", amountInput.value);
-    // formData.append("msg", msgInput.value);
-    // formData.append("primary_color_id", primaryColorSelect.value);
-    // formData.append("secondary_color_id", secondaryColorSelect.value);
-    // formData.append("delivery_date", dateInput.value);
-    // formData.append("address", addressInput.value);
-    // formData.append("oldVaucher", pucharseOrder.id_vaucher);
-    // formData.append("vaucher", vaucherInput.files[0] || pucharseOrder.id_vaucher);
-    // formData.append("truly_paid", trulyPaidCheckbox.checked);
-
-    // for each property an its value, append it to the fromData
-    Object.keys(data).forEach((property) => {
-      formData.append(property, data[property]);
-    })
-
-
-    fetch(apiRoute + "/update_pucharse_orders/" + data[idTable], setRequestConfig("PUT", formData, true)).then((response) => response.json()).then((data) => {
-      console.log(data);
-      window.location.reload();
-    }).catch((error) => {
-      alert(error);
-      console.error(error);
-    });
+    return
   }
 
 
@@ -202,7 +267,7 @@ export default function PucharseOrdersAdmin() {
             </div>
           </div>
           <div className="col-3">
-            <button className="btn ">Add</button>
+            <button onClick={e=>setOrderInEditModal({})} className="btn ">Add</button>
           </div>
         </div>
         <div className="row  gap-2">
@@ -214,6 +279,10 @@ export default function PucharseOrdersAdmin() {
           }
         </div>
       </div>
+    </div>
+    :loading?
+    <div className="mt-2">
+      <Spinner></Spinner>
     </div>
     :
     editModal

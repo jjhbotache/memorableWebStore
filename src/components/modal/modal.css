@@ -69,10 +69,15 @@
 .modal-window input[type="checkbox"]{
   min-width: 1.2em;
   min-height: 1.2em;
-  border: solid 1px var(--colorPrimary);
+  border: solid 3px var(--colorPrimary) !important;
 }
 .modal-window input[type="checkbox"]:focus{
   /* delete the boxshadown */
   box-shadow: none !important;
+}
+.modal-window input[type="number"]{
+  /* delete the boxshadown */
+  max-width: 60px;
+  border: solid 1px var(--colorPrimary);
 }
 

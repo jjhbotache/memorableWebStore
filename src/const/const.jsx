@@ -114,27 +114,3 @@ export function logout() {
   localStorage.clear();
   window.location.assign(loginAndRegisterPath)
 }
-
-export function getOptionsForSelect(select,labelProperty,valueProperty="id",idsToFilter=[]) {
-  // console.log("select",select
-  // ,"\nlabelProperty",labelProperty
-  // ,"\nvalueProperty",valueProperty
-  // ,"\nidsToFilter",idsToFilter);
-  
-  const table = select.name
-  const options = Array.from(select.querySelectorAll("option"));
-  // if the number of options are more than 1, do this
-  // select each option of the select
-
-  if (!(options.length>1)) {
-    fetch(apiRoute + "/read/"+table,setRequestConfig()).then(response=>response.json()).then((listOfObjs) => {
-      console.log(listOfObjs);
-      listOfObjs.forEach(obj => {
-        console.log(valueProperty);
-        if (idsToFilter.includes(obj[valueProperty])) return
-        select.innerHTML += `<option value="${obj[valueProperty]}">${obj[labelProperty]}</option>`
-      });
-    })
-  }
-
-}
