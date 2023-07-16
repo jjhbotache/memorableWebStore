@@ -1,0 +1,13 @@
+.poc-f{
+  /* delete the border radious of the right side */
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+.poc-l{
+  /* delete the border radious of the left side */
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+.poc-l,.poc-f{
+  border:solid 2px var(--colorPrimary) !important;
+}

@@ -1,19 +1,33 @@
+.modal-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.5);
+  /* blur the bg */
+  backdrop-filter: blur(2px);
+}
+
 .modal-window{
   /* display it att the center of the page above everthing */
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  z-index: 9998;
+
 
 
   color: var(--colorPrimary);
   text-align: center;
 
   min-height: 80vw;
+  max-height: 83vh;
   width: 80vw;
 
-  padding: 2em 1em  ;
+  padding: 2em 0.6em  ;
 
   background: var(--colorTertiary);
   border-radius: 0.5em;
@@ -39,3 +53,31 @@
   max-height: 7vh;
   height: 5vh;
 }
+
+.modal-window .children{
+  overflow: auto;
+  overflow-x: hidden;
+  min-width: 100%;
+  /* width: 100%; */
+  height: 100%;
+}
+
+.modal-window select{
+  min-width: 100%;
+  padding: 0;
+}
+.modal-window input[type="checkbox"]{
+  min-width: 1.2em;
+  min-height: 1.2em;
+  border: solid 3px var(--colorPrimary) !important;
+}
+.modal-window input[type="checkbox"]:focus{
+  /* delete the boxshadown */
+  box-shadow: none !important;
+}
+.modal-window input[type="number"]{
+  /* delete the boxshadown */
+  max-width: 60px;
+  border: solid 1px var(--colorPrimary);
+}
+

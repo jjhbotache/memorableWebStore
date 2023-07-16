@@ -1,0 +1,15 @@
+{
+  "amount": 1,
+  "delivery_date": "Mon, 17 Jul 2023 00:00:00 GMT",
+  "id": 70,
+  "id_delivery_place": "Ibague Tolima Calle 13 #7-82",
+  "id_design": 25,
+  "id_packing_color": 1,
+  "id_real_design": null,
+  "id_secondary_packing_color": 1,
+  "id_user": 1106226952,
+  "id_vaucher": "vaucher/Captura de pantalla 2023-03-30 162350.png",
+  "id_wine": 0,
+  "msg": "holi",
+  "paid": 0
+}

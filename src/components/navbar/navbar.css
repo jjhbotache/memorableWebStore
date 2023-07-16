@@ -8,6 +8,7 @@
   background-color: var(--colorSecondary);
   position: sticky;
   top: 0;
+  z-index: 9999;
 }
 .nav-link{
   width: 10vw;
