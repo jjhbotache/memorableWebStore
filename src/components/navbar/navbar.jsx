@@ -1,17 +1,23 @@
 import React from "react";
 import "./navbar.css"
+import { logout } from "../../functions/functions";
 
 
 export default function Navbar({links,pathsWhereNotToDisplay}) {
   const pathname = window.location.pathname;
-  const pagesToShow = links.map((obj) => {
-    obj.active = obj.path === pathname;
+  const pagesToShow = links.map(link => {
+    link.active = link.path === pathname;
+    if (localStorage.getItem("id")&&link.path==="/loginAndRegister"){
+      link.name="Dashboard"
+      link.path=localStorage.getItem("password")?"/adminDashboard":"/userDashboard"
+    }
+
     return(
-      <li className="nav-item" key={obj.path}>
-        <a href={obj.path} className={ obj.active ? "nav-link active" : "nav-link" } >{obj.name}</a>
+      <li className="nav-item" key={link.path}>
+        <a href={link.path} className={ link.active ? "nav-link active" : "nav-link" } >{link.name}</a>
       </li>
   )})
-  return (
+return (
       pathsWhereNotToDisplay.includes(pathname)?
       null
       :<nav className="navbar navbar-expand-md">
@@ -26,6 +32,9 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 {pagesToShow}
               </ul>
+              {
+                localStorage.getItem("id")&&<a onClick={logout} className="nav-link" style={{ color: '#e30000' }}>Logout</a>
+              }
 
               
             </div>

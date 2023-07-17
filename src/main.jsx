@@ -7,14 +7,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, RouterProvider } from 'react-router-dom'
 import router from './router/router'
 import Navbar from './components/navbar/navbar'
-import { pagesToShowInNavbar, whereNotToDisplay } from './const/const';
+import { linksToShowInNavbar, whereNotToDisplay } from './const/const';
 
 
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
-    <Navbar links={pagesToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
+    <Navbar links={linksToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
     <RouterProvider router={router}/>
   </>
 )

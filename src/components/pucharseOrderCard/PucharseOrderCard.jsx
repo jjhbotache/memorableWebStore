@@ -2,7 +2,9 @@
 import { useEffect, useState } from "react";
 import "./PucharseOrderCard.css";
 import order from "../../mocks/order.json";
-import { apiRoute, setRequestConfig } from "../../const/const";
+import { apiRoute } from "../../const/const";
+import { setRequestConfig } from "../../functions/functions";
+
 import "./PucharseOrderCard.css";
 import Spinner from "../spinner/spinner";
 import Modal from "../modal/modal";

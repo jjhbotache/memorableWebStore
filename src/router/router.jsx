@@ -9,6 +9,7 @@ import CustomiseBottle from "../pages/customiseBottle/customiseBottle";
 import BuyNow from "../pages/buyNow/buyNow";
 import ShippingAndPayement from "../pages/shippingAndPayement/shippingAndPayement";
 import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmin";
+import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
 
 const router = createBrowserRouter([
   {
@@ -48,10 +49,13 @@ const router = createBrowserRouter([
     element: <PucharseOrdersAdmin/>,
   },
   {
+    path: "/designsAdmin",
+    element: <DesignsAdmin/>,
+  },
+  {
     path: "*",
     element: <h1>page not found</h1>,
   },
-
 ]);
 
 

@@ -3,7 +3,8 @@ import "./loginAndRegister.css"
 import Spinner from "../../components/spinner/spinner";
 import LoginForm from "../../components/loginForm/loginForm";
 import RegisterForm from "../../components/registerForm/registerForm";
-import { adminDashboardPath, apiRoute, setRequestConfig, userDashboardPath, verifyIsWhereItShould } from "../../const/const";
+import { adminDashboardPath, apiRoute, catalogPath, userDashboardPath} from "../../const/const";
+import {setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 
 
 export default function LoginAndRegister() {
@@ -33,7 +34,7 @@ export default function LoginAndRegister() {
       window.location.assign(
         localStorage.password?
         adminDashboardPath
-        :userDashboardPath
+        :catalogPath
       )
 
     })

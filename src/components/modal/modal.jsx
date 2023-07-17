@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import './modal.css';
-export default function Modal({title="",resolveFunction, options,cancelable, children}) {
+export default function Modal({title="",resolveFunction, options=[],cancelable, children}) {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     const timeoutId = setTimeout(() => {
