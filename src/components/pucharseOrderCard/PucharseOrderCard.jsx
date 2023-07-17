@@ -18,7 +18,7 @@ export default function PucharseOrderCard({order,onEdit}){
 
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-
+  console.log(order);
 
 
   useEffect(() => {
@@ -57,8 +57,9 @@ export default function PucharseOrderCard({order,onEdit}){
             <img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/" +(realDesign.img || design.img) +"/" + localStorage.getItem("token")} alt="Has no image" />
             }
           </div>
-            <h5 className="card-title">{order.id + ") " + ( design.name || realDesign.name || "has no design")}</h5>
-            <p className="card-text"> <strong>Customer: &nbsp;</strong> {user.first_name + " " + user.last_name}</p>
+            <h5 className="card-title mb-3">{order.id + ") " + ( design.name || realDesign.name || "has no design")}</h5>
+            <p className="card-text mb-0"> <strong>Customer: &nbsp;</strong> {user.first_name + " " + user.last_name}</p>
+            <p className="card-text mb-0"> <strong>Designed: &nbsp;</strong> {order.id_real_design?"✅":"❌"}</p>
             <p className="card-text"> <strong>Paid: &nbsp;</strong> {order.paid==0?"❌":"✅"}</p>
             <div className="d-flex">
               <button type="button" className="btn poc-f" onClick={()=>{

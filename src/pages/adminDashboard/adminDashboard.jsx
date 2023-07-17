@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import Modal from "../../components/modal/modal";
-import {apiRoute, designsAdminPath, pucharseOrdersAdminPath} from "../../const/const"
+import {apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
 import {getUserToken, logout, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
+
 
 
 export default function AdminDashboard() {
@@ -42,6 +43,10 @@ export default function AdminDashboard() {
     {
       name: "Designs",
       path: designsAdminPath,
+    },
+    {
+      name: "Real designs",
+      path: realDesignsAdminPath,
     },
   ];
       

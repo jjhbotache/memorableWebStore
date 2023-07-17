@@ -6,9 +6,9 @@ import { convertToFileName, loadPreview, setRequestConfig, verifyIsWhereItShould
 import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
-import styles from "./DesignsAdmin.module.css";
+import styles from "../designsAdmin/DesignsAdmin.module.css";
 
-const DesignsAdmin = () => {
+export default function RealDesignsAdmin() {
   verifyIsWhereItShould("admin")
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ const DesignsAdmin = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(apiRoute + "/read/designs",setRequestConfig()).then(re=>re.json()).then(data=>{
+    fetch(apiRoute + "/read/real_designs",setRequestConfig()).then(re=>re.json()).then(data=>{
       setDesigns(data)
       setDesignsToRender(data)
     }).catch(err=>{
@@ -59,14 +59,14 @@ const DesignsAdmin = () => {
     console.log(dataObj);
     if (dataInEditor.id) {
       // update
-      if (dataObj.ai.size > 0) {
-        console.log(`Changing ai file`);
+      if (dataObj.dxf.size > 0) {
+        console.log(`Changing dxf file`);
       
         const data = new FormData();
-        data.append("ai",dataObj.ai)
+        data.append("dxf",dataObj.dxf)
         console.log(data);
         setLoading(true);
-        await fetch(`${apiRoute}/update_design/${dataInEditor.id}/ai`,setRequestConfig())
+        await fetch(`${apiRoute}/update_real_design/${dataInEditor.id}/dxf`,setRequestConfig())
         .then(response => response.json())
         .then((data) => {console.log(data);})  
         .catch(error => console.log(error))
@@ -80,7 +80,7 @@ const DesignsAdmin = () => {
         const data = new FormData();
         data.append("img",dataObj.img)
         setLoading(true);
-        await fetch(`${apiRoute}/update_design/${dataInEditor.id}/img`,setRequestConfig())
+        await fetch(`${apiRoute}/update_real_design/${dataInEditor.id}/img`,setRequestConfig())
         .then(response => response.json())
         .then((data) => {console.log(data);})  
         .catch(error => console.log(error))
@@ -90,7 +90,7 @@ const DesignsAdmin = () => {
       }
       if (!dataObj.name == "" ) {
         await fetch(
-          `${apiRoute}/update_design/${dataInEditor.id}/name`,
+          `${apiRoute}/update_real_design/${dataInEditor.id}/name`,
           setRequestConfig("POST",JSON.stringify({new_data:`"${dataObj.name}"`}))
         )
         .then(response => response.json())
@@ -106,7 +106,7 @@ const DesignsAdmin = () => {
       if (
         !(["",undefined].includes(dataObj.name))  &&
         (dataObj.img.size > 0)  &&
-        (dataObj.ai.size > 0) 
+        (dataObj.dxf.size > 0) 
         ) 
       {
         
@@ -114,9 +114,9 @@ const DesignsAdmin = () => {
         data.append('name', dataObj.name);
         data.append('filesName', convertToFileName(dataObj.name));
         data.append('img', dataObj.img);
-        data.append('ai', dataObj.ai);
+        data.append('dxf', dataObj.dxf);
 
-        fetch(apiRoute+"/design",setRequestConfig("POST",data,true))
+        fetch(apiRoute+"/real_design",setRequestConfig("POST",data,true))
         .then(respuesta=>respuesta.text())
         .then(data=>{
           alert(data);
@@ -143,7 +143,6 @@ const DesignsAdmin = () => {
       ).finally(()=>setLoading(false));
     }
   } 
-
 
   return !loading?
     !dataInEditor?
@@ -189,11 +188,11 @@ const DesignsAdmin = () => {
             }}/>
           </div>
           <div className="mb-3">
-            <label htmlFor="ai" className="form-label">Ai file</label>
-            <input accept='.ai' type="file" className="form-control p-1" name="ai" onChange={e=>{
+            <label htmlFor="dxf" className="form-label">DXF file</label>
+            <input accept='.dxf' type="file" className="form-control p-1" name="dxf" onChange={e=>{
               
               if (e.target.files[0]) {
-                setDataInEditor({...dataInEditor,ai:e.target.files[0]})
+                setDataInEditor({...dataInEditor,dxf:e.target.files[0]})
               }
             }}/>
           </div>
@@ -207,5 +206,3 @@ const DesignsAdmin = () => {
       </div>
     )
 }
-
-export default DesignsAdmin;

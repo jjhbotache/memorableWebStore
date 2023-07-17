@@ -10,6 +10,7 @@ import BuyNow from "../pages/buyNow/buyNow";
 import ShippingAndPayement from "../pages/shippingAndPayement/shippingAndPayement";
 import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmin";
 import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
+import RealDesignsAdmin from "../pages/realDesignsAdmin/realDesignsAdmin";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: "/designsAdmin",
     element: <DesignsAdmin/>,
+  },
+  {
+    path: "/realDesignsAdmin",
+    element: <RealDesignsAdmin/> ,
   },
   {
     path: "*",

@@ -23,6 +23,7 @@ export const buyNowPath = "/buyNow";
 export const shippingAndPayementPath = "/shippingAndPayement";
 export const pucharseOrdersAdminPath = "/pucharseOrdersAdmin";
 export const designsAdminPath = "/designsAdmin";
+export const realDesignsAdminPath = "/realDesignsAdmin";
 
 
 

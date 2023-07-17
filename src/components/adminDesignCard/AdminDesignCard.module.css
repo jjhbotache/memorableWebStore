@@ -9,3 +9,7 @@
 .btnLast,.btnFirst,.btnMiddle{
   border:solid 2px var(--colorPrimary) !important;
 }
+.btnMiddle{
+  border-left: none !important;
+  border-right: none !important;
+}

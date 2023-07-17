@@ -151,7 +151,7 @@ export default function PucharseOrdersAdmin() {
                 <input type="number" disabled={editingOrder} className="form-control mx-auto" name="amount" value={orderInEditModal.amount} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,amount:e.target.value>=1?e.target.value:1})}} />
               </div>
               {/* wine */}
-              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={orderInEditModal.wine}/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={!(orderInEditModal.wine=={})?orderInEditModal.wine:undefined }/>
               {/* primaryColor */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,primaryColor:obj})} label="Primary packing color:" tableName="packing_colors" labelProperty="color" firstObj={orderInEditModal.primaryColor}/>
               {/* secondaryColor */}
@@ -241,7 +241,7 @@ export default function PucharseOrdersAdmin() {
 
         window.location.reload();
       }).catch((error) => {
-        alert(error);
+        alert("check all the fields needed");
         console.error(error);
       }).finally(
         setLoading(false)
