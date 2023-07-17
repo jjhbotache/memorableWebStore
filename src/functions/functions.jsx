@@ -3,6 +3,10 @@ import * as consts from "../const/const.jsx";
 const { loginAndRegisterPath, adminDashboardPath, userDashboardPath } = consts;
 
 export function setRequestConfig(methodGotten="GET",bodyGotten,jsonFalse=false) {
+  // if bodyGotten is an obj it will be converted to json string
+  if (typeof bodyGotten == "object") {bodyGotten = JSON.stringify(bodyGotten)}
+
+
   const config = {
     method: methodGotten, // puedes modificar el método según tu necesidad
   };
@@ -50,17 +54,17 @@ export async function getUserToken() {
   let thereIsToken = false;
   if (!localStorage.getItem("token")) {
     // make the api create a code and sent it to the email
-    await fetch(consts.apiRoute + "/verify-user/" + localStorage.getItem(consts.email)+"/"+localStorage.getItem(consts.id))
+    await fetch(consts.apiRoute + "/verify-user/" + localStorage.getItem("email")+"/"+localStorage.getItem("id"))
     .then(response => response.json())
     .then(async json => {
-        console.log(json);
-        // when sended
-        // ask for the code 
-        const code = prompt(`We have sent you a code to your email: ${localStorage.getItem(consts.email)} \npaste it in here: `);
+      console.log(json);
+      // when sended
+      // ask for the code 
+        const code = prompt(`We have sent you a code to your email: ${localStorage.getItem("email")} \npaste it in here: `);
         // try to get a token by giving the code to the api
-        await fetch(consts.apiRoute + "/test-user/" + code +"/"+localStorage.getItem(consts.id))
+        await fetch(consts.apiRoute + "/test-user/" + code +"/"+localStorage.getItem("id"))
         .then(response => response.json())
-          .then((json) => {
+        .then((json) => {
             // save the token
             console.log(json);
             const key = Object.keys(json)[0];
@@ -97,10 +101,10 @@ export function copyToClipboard(str) {
   // Crear un elemento de texto temporal
   const tempInput = document.createElement("textarea");
   tempInput.value = str;
-
+  
   // Agregar el elemento al DOM
   document.body.appendChild(tempInput);
-
+  
   // Seleccionar y copiar el contenido del elemento
   tempInput.select();
   document.execCommand("copy");
@@ -125,4 +129,35 @@ export function convertToFileName(str) {
   str = str.substring(0,str.indexOf(".")!=-1?str.indexOf("."):str.length)
   // console.log("real name: ",str);
   return str;
+}
+
+export function cleanObjectList(objectList) {
+  const cleanedList = [];
+  const idsSeen = new Set();
+
+  for (const obj of objectList) {
+    if (!idsSeen.has(obj.id)) {
+      idsSeen.add(obj.id);
+      cleanedList.push(obj);
+    }
+  }
+
+  return cleanedList;
+}
+
+export function customSort(order, list) {
+  return list.sort((a, b) => {
+    const indexA = order.indexOf(a);
+    const indexB = order.indexOf(b);
+
+    if (indexA === -1) {
+      return 1; // Mover elementos no especificados al final
+    }
+
+    if (indexB === -1) {
+      return -1; // Mover elementos no especificados al final
+    }
+
+    return indexA - indexB;
+  });
 }

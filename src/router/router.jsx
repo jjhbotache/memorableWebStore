@@ -11,6 +11,7 @@ import ShippingAndPayement from "../pages/shippingAndPayement/shippingAndPayemen
 import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmin";
 import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
 import RealDesignsAdmin from "../pages/realDesignsAdmin/realDesignsAdmin";
+import DataAdmin from "../pages/dataAdmin/dataAdmin";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,26 @@ const router = createBrowserRouter([
   {
     path: "/realDesignsAdmin",
     element: <RealDesignsAdmin/> ,
+  },
+  {
+    path: "/winesAdmin",
+    element: <DataAdmin title="Wines admin" tableToAdmin="wine_kinds" /> ,
+  },
+  {
+    path: "/primaryColorsAdmin",
+    element: <DataAdmin title="Primary colors admin" tableToAdmin="packing_colors" onDisplayProperty="color" /> ,
+  },
+  {
+    path: "/secondaryColorsAdmin",
+    element: <DataAdmin title="Secondary colors admin" tableToAdmin="secondary_packing_colors" onDisplayProperty="color" /> ,
+  },
+  {
+    path: "/tagsAdmin",
+    element: <DataAdmin title="Tags admin" tableToAdmin="tags" /> ,
+  },
+  {
+    path: "/usersAdmin",
+    element: <DataAdmin title="Users admin" tableToAdmin="users" onDisplayProperty="last_name" propertiesToSearch={["first_name"]} customOrderToModal={['id', 'first_name', 'last_name', 'email', 'phone', 'password',]}/> 
   },
   {
     path: "*",

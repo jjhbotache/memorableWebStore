@@ -8,6 +8,7 @@ export default function Dashboard() {
   const [editingInfo, setEditingInfo] = useState(false);
   const [loadingUpdateInfo, setLoadingUpdateInfo] = useState(false);
   const [shoppings, setShoppings] = useState([]);
+  const [loadingShoppings, setLoadingShoppings] = useState(false);
   
 
   verifyIsWhereItShould()
@@ -28,9 +29,9 @@ export default function Dashboard() {
 
     if (!keysToKeep.includes(key)) return null
     return(
-      <div key={key}>
-        <label htmlFor={key}>{key}:</label>
-        <input className="mb-2" type="text" name={key} placeholder={localStorage[key]} disabled={!editingInfo || (readOnly.includes(key))} />
+      <div key={key} className="mb-3">
+        <label htmlFor={key} className="form-label">{key}:</label>
+        <input type="text" className="form-control" name={key} defaultValue={localStorage[key]} disabled={!editingInfo || (readOnly.includes(key))} />
       </div>
     )
   })
@@ -117,10 +118,10 @@ export default function Dashboard() {
           </h2>
           <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#userDashboad">
             <div className="accordion-body">
-            <form onSubmit={onsubmitUserInfo}>
+            <form className="container" onSubmit={onsubmitUserInfo}>
               {userInfo}
               {loadingUpdateInfo && <Spinner/>}
-              <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"update"}</button>
+              <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
             </form>
             </div>
           </div>
@@ -133,7 +134,30 @@ export default function Dashboard() {
           </h2>
           <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboad">
             <div className="accordion-body">
-            {shoppings.map(shopping => <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />)}
+              
+            {
+            localStorage.getItem("token")?
+            shoppings.map(shopping =>
+               <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />
+            )
+            :loadingShoppings?
+              <Spinner/>
+            :
+            <div class="d-grid gap-2">
+              <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
+                setLoadingShoppings(true)
+                getUserToken().then(e => {
+                  fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
+                    setShoppings(data)
+                    console.log(data);
+                  })
+                }).finally(() => {
+                  setLoadingShoppings(false)
+                })}
+              }>see shoppings</button>
+            </div>
+
+            }
             </div>
           </div>
         </div>

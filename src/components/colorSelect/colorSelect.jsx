@@ -6,7 +6,7 @@ export default function ColorSelect({label,colors,onChange}) {
 
 
   function changed(e) {
-    setCurrentColor(colors.find(color => color.id === parseInt(e.target.value)).name)
+    setCurrentColor(colors.find(color => color.id === parseInt(e.target.value)).color)
     onChange(colors.find(color => color.id==e.target.value))
   }
 
@@ -18,7 +18,7 @@ export default function ColorSelect({label,colors,onChange}) {
           <option>❔</option>
           {
           colors.map(color => (
-            <option key={color.id} value={color.id} style={{ backgroundColor: color.name }}>&nbsp;</option>
+            <option key={color.id} value={color.id} style={{ backgroundColor: color.color }}>&nbsp;</option>
           ))
           }
         </select>

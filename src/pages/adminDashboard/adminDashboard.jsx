@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Modal from "../../components/modal/modal";
-import {apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
+import {adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
 import {getUserToken, logout, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 
@@ -35,20 +35,7 @@ export default function AdminDashboard() {
   }
 
   
-  const adminsTools = [
-    {
-      name: "Pucharse Orders",
-      path: pucharseOrdersAdminPath,
-    },
-    {
-      name: "Designs",
-      path: designsAdminPath,
-    },
-    {
-      name: "Real designs",
-      path: realDesignsAdminPath,
-    },
-  ];
+  
       
   return (
     <>

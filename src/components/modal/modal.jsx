@@ -10,10 +10,10 @@ export default function Modal({title="",resolveFunction, options=[],cancelable, 
   }, []);
 
   return(
-    <>
+    <article className='modal-container'>
       <div className="modal-bg">
       </div>
-      <div className={`modal-window ${showModal ? "show" : ""}`}>
+      <div className={`modal-window  ${showModal ? "show" : ""}`}>
         <h2 className='w-100'>{title}</h2>
         <div className="children">
           {children}
@@ -25,6 +25,6 @@ export default function Modal({title="",resolveFunction, options=[],cancelable, 
           {cancelable && <button className="btn " onClick={() => {resolveFunction(0);}}>Cancel</button>}
         </div>
       </div>
-    </>
+    </article>
   )
 };

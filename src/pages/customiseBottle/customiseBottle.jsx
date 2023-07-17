@@ -2,8 +2,9 @@ import { useEffect,useRef,useState } from "react";
 import ColorSelect from "../../components/colorSelect/colorSelect";
 import Counter from "../../components/counter/counter";
 import Select from "../../components/select/select";
-import { apiRoute, catalogPath } from "../../const/const";
-import "./customiseBottle.css";
+import { apiRoute, buyNowPath, catalogPath, loginAndRegisterPath } from "../../const/const";
+import styles from "./customiseBottle.module.css";
+import { setRequestConfig } from "../../functions/functions";
 
 
 const defaultAmount = 1;
@@ -12,6 +13,11 @@ export default function CustomiseBottle() {
   if (!designGotten.current) window.location.assign(catalogPath)
 
   const [readyToOrder, setReadyToOrder] = useState(false);
+  const [wines, setWines] = useState([]);
+  const [primaryColors, setPrimaryColors] = useState([]);
+  const [secondaryColors, setSecondaryColors] = useState([]);
+
+
   const [order, setOrder] = useState({
     design: null,
     wine: null,
@@ -20,28 +26,6 @@ export default function CustomiseBottle() {
     secondaryColor: null,
   });
   
-  const primaryColors = [
-    { id: 1, name: "red" },
-    { id: 2, name: "blue" },
-    { id: 3, name: "darkmagenta" },
-  ];
-  
-  const secondaryColors = [
-    { id: 1, name: "white" },
-    { id: 2, name: "black" },
-    { id: 3, name: "silver" },
-  ];
-  
-  const wines = [
-    { id: 2, name: "tempranillo" },
-    { id: 3, name: "airen" },
-    { id: 4, name: "malbec" },
-    { id: 5, name: "carmenere" },
-    { id: 6, name: "merlot" },
-    { id: 8, name: "cabernet sauvignon" },
-    { id: 13, name: "moscatel" },
-    { id: 16, name: "rose" },
-  ];
   
   useEffect(() => {
     const firstOrder = {
@@ -50,6 +34,20 @@ export default function CustomiseBottle() {
         amount: defaultAmount,
       };
     setOrder(firstOrder)
+
+    fetch(apiRoute + "/read-anyone/wine_kinds").then(re=>re.json()).then(data=>{
+      setWines(data)
+    }).catch(err=>{console.log(err);})
+
+    fetch(apiRoute + "/read-anyone/packing_colors").then(re=>re.json()).then(data=>{
+      setPrimaryColors(data)
+    }).catch(err=>{console.log(err);})
+
+    fetch(apiRoute + "/read-anyone/secondary_packing_colors").then(re=>re.json()).then(data=>{
+      setSecondaryColors(data)
+    }
+    ).catch(err=>{console.log(err);})
+
   }, []);
 
   useEffect(() => {
@@ -62,42 +60,47 @@ export default function CustomiseBottle() {
     // save in localstorage the order
     localStorage.setItem("order", JSON.stringify(order));
     // redirect to checkout
-    window.location.assign("/buyNow");
+    (localStorage.getItem("id")&&!localStorage.getItem("password")) 
+    ?window.location.assign(buyNowPath)
+    :window.location.assign(loginAndRegisterPath)
   }
 
   return(
     <>
-      <div className="container mt-1" id="customiseBottle-container">
-        <div className="row">
-          <div className="col-12">
-            <img src={apiRoute+"/"+designGotten.current.img+"/-"} alt={designGotten.current.name} />
-            <h2>{designGotten.current.name}</h2>
+      <div className={` container-lg ${styles.customiseBottleContainer}`}>
+        <div className="row gap-4 gap-sm-0">
+          <div className="col-12 col-sm-5 d-grid align-content-center">
+            <img className="img-fluid" src={apiRoute+"/"+designGotten.current.img+"/-"} alt={designGotten.current.name} />
+            <h2 className="mt-2">{designGotten.current.name}</h2>
           </div>
 
-          <div className="col-12">
-            <Select options={wines} defaultValue="" label="Kind of wine:" onChange={(e)=>{setOrder({...order,wine:e})}} />
+          <div className="col-12 col-sm-7 gap-2 px-sm-5 d-flex flex-column justify-content-center align-content-between">
+            <div className="col-12">
+              <Select options={wines} defaultValue="" label="Kind of wine:" onChange={(e)=>{setOrder({...order,wine:e})}} />
+            </div>
+
+            <div className="col-12">
+              <Counter firstValue={defaultAmount} onChange={(number)=>{setOrder({...order,amount:number})}}/>
+            </div>
+
+            <div className="col-12">
+              <ColorSelect label={"Primary packing color"} colors={primaryColors} onChange={(e)=>{setOrder({...order,primaryColor:e})}}/>
+            </div>
+
+            <div className="col-12">
+              <ColorSelect label={"Secondary packing color"} colors={secondaryColors} onChange={(e)=>{setOrder({...order,secondaryColor:e})}}/>
+            </div>
+
+            <div className="col-12">
+              <textarea className="form-control" placeholder="Message" onChange={(e)=>{setOrder({...order,msg:e.target.value})}}></textarea>
+            </div>
+
+            <div className="col-12">
+              <button className="btn btn-white d-block mx-auto my-2" disabled> add to shopping cart</button>
+              <button className="btn d-block mx-auto" onClick={onBuyNow} disabled={!readyToOrder}> buy now</button>
+            </div>
           </div>
 
-          <div className="col-12">
-            <Counter firstValue={defaultAmount} onChange={(number)=>{setOrder({...order,amount:number})}}/>
-          </div>
-
-          <div className="col-12">
-            <ColorSelect label={"Primary packing color"} colors={primaryColors} onChange={(e)=>{setOrder({...order,primaryColor:e})}}/>
-          </div>
-
-          <div className="col-12">
-            <ColorSelect label={"Secondary packing color"} colors={secondaryColors} onChange={(e)=>{setOrder({...order,secondaryColor:e})}}/>
-          </div>
-
-          <div className="col-12">
-            <textarea className="form-control" placeholder="Message" onChange={(e)=>{setOrder({...order,msg:e.target.value})}}></textarea>
-          </div>
-
-          <div className="col-12">
-            <button className="btn btn-white d-block mx-auto my-2" disabled> add to shopping cart</button>
-            <button className="btn d-block mx-auto" onClick={onBuyNow} disabled={!readyToOrder}> buy now</button>
-          </div>
           
         </div>
       </div>

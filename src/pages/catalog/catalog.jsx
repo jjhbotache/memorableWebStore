@@ -20,7 +20,7 @@ export default function Catalog() {
   return (
     <div className="container-md my-2">
       <div className="container">
-        <div className="row g-2">
+        <div className="row d-flex justify-content-around gap-5">
           {designs.map(design=><CardCatalog design={design} key={design.id} onClick={()=>{designClicked(design)}}/>)}
         </div>
       </div>

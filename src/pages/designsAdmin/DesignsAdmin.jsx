@@ -147,8 +147,8 @@ const DesignsAdmin = () => {
 
   return !loading?
     !dataInEditor?
-      <div className="container">
-        <h1>DesignsAdmin</h1>
+      <div className="container-md">
+        <h1>Designs admin</h1>
         <hr />
         <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} />
         <div className="row gap-2">

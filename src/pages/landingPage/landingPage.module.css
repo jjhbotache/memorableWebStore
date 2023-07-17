@@ -1,4 +1,4 @@
-.main-lp{
+.main_lp{
   background: url("../../assets/imgs/wineAndFlowerbg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
@@ -8,8 +8,13 @@
   color:var(--colorTertiary);
   min-height: 100vh;
 }
-.a-lp{
+.a_lp{
   transition: all 0.2s ease-in-out !important;
   width: 80vw;
   max-width: 25vh;
+}
+.bg{
+  /* min-height: 100vh; */
+  padding: 15vh 0;
+  background: rgba(0, 0, 0, 0.297);
 }

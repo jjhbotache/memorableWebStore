@@ -3,7 +3,7 @@ import "./loginAndRegister.css"
 import Spinner from "../../components/spinner/spinner";
 import LoginForm from "../../components/loginForm/loginForm";
 import RegisterForm from "../../components/registerForm/registerForm";
-import { adminDashboardPath, apiRoute, catalogPath, userDashboardPath} from "../../const/const";
+import { adminDashboardPath, apiRoute, catalogPath, shippingAndPayementPath, userDashboardPath} from "../../const/const";
 import {setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 
 
@@ -34,7 +34,10 @@ export default function LoginAndRegister() {
       window.location.assign(
         localStorage.password?
         adminDashboardPath
-        :catalogPath
+        :
+          localStorage.getItem("order")?
+          shippingAndPayementPath
+          :catalogPath
       )
 
     })
@@ -53,16 +56,21 @@ export default function LoginAndRegister() {
     console.log(data)
   }
 
-  const formToRender = login?
-    <LoginForm submitedFormFunction={loginAction} changeForm={()=>{setLogin(!login)}}/>
-    :
-    <RegisterForm submitedFormFunction={registerAction} changeForm={()=>{setLogin(!login)}}/>
+  const formToRender = (
+    <div className="container d-flex justify-content-center mt-md-5">
+      <div className="col-10 col-sm-8 col-md-4 d-flex justify-content-center">
+        {login?
+        <LoginForm submitedFormFunction={loginAction} changeForm={()=>{setLogin(!login)}}/>
+        :
+        <RegisterForm submitedFormFunction={registerAction} changeForm={()=>{setLogin(!login)}}/>}
+      </div>
+    </div>
+  )
     
   
   
   return(
     <>
-      <h1>register</h1>
       {
         loading
         ?<Spinner></Spinner>

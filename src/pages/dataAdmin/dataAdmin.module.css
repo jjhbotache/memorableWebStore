@@ -1,0 +1,6 @@
+.preview{
+  height: 50px;
+  width: 50px;
+  border-radius: 1em;
+  border: var(--colorPrimary) solid 1px;
+}

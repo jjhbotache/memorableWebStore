@@ -24,6 +24,48 @@ export const shippingAndPayementPath = "/shippingAndPayement";
 export const pucharseOrdersAdminPath = "/pucharseOrdersAdmin";
 export const designsAdminPath = "/designsAdmin";
 export const realDesignsAdminPath = "/realDesignsAdmin";
+export const winesAdminPath = "/winesAdmin";
+export const primaryColorsAdminPath = "/primaryColorsAdmin";
+export const secondaryColorsAdminPath = "/secondaryColorsAdmin";
+export const tagsAdminPath = "/tagsAdmin";
+export const usersAdminPath = "/usersAdmin";
+
+
+
+export const adminsTools = [
+  {
+    name: "Pucharse Orders",
+    path: pucharseOrdersAdminPath,
+  },
+  {
+    name: "Designs",
+    path: designsAdminPath,
+  },
+  {
+    name: "Real designs",
+    path: realDesignsAdminPath,
+  },
+  {
+    name: "Wines",
+    path: winesAdminPath,
+  },
+  {
+    name: "Primary colors",
+    path: primaryColorsAdminPath,
+  },
+  {
+    name: "Secondary colors",
+    path: secondaryColorsAdminPath,
+  },
+  {
+    name: "Tags",
+    path: tagsAdminPath,
+  },
+  {
+    name: "Users",
+    path: usersAdminPath,
+  },
+];
 
 
 

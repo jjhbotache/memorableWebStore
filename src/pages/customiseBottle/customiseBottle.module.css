@@ -1,12 +1,21 @@
-#customiseBottle-container img{
+.customiseBottleContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 5vw;
+}
+
+.customiseBottleContainer img{
   border-radius: 0.7em;
   width: 100%;
+  max-width: 400px;
   background: var(--colorSecondary);
   padding: 0.2em;
   border: var(--colorPrimary) solid 2px;
 }
 
-#customiseBottle-container .input-group-text{
+.customiseBottleContainer .input-group-text{
   background: var(--colorSecondary);
   border: var(--colorPrimary) solid 2px;
   border-radius: 0.7em 0 0 0.7em;
