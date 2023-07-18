@@ -30,7 +30,6 @@ export default function ShippingAndPayement() {
       setPayement(vaucher);
       if (vaucher instanceof File) {
         const logic = async ()=>{
-          
           if (await getUserToken()) {
             const formData = new FormData();
             formData.append("vaucher",vaucher);
@@ -44,6 +43,7 @@ export default function ShippingAndPayement() {
               setPayement(null)
               return false
             })
+            console.log(savedVaucher);
             if (savedVaucher) {
               console.log("Your vaucher has been saved");
               // amount:"1"
@@ -78,14 +78,12 @@ export default function ShippingAndPayement() {
                 window.location.assign(userDashboardPath);
               }).catch((e) => {
                 console.log(e);
-                console.log("There was an error creating your order");
+                alert("There was an error saving your vaucher, try changing the file name");
                 fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedVaucher}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
                 setPayement(null)
               })
             }else{
-              console.log("There was an error saving your vaucher, try changing the file name");
-              fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedData}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
-              setPayement(null)
+              alert("There was an error saving your vaucher");
             }            
           }else{
             setPayement(null)
@@ -112,7 +110,7 @@ export default function ShippingAndPayement() {
   }else{
     if (!shipping.shippingId) {
       if(wayOfShiping===1){
-        fetch(apiRoute + "/pick-up-adress").then(json => json.json()).then(pickUpPlaceGotten => {
+        if (!pickUpPlace) fetch(apiRoute + "/pick-up-adress").then(json => json.json()).then(pickUpPlaceGotten => {
           setPickUpPlace(pickUpPlaceGotten)
         })
         modalToRender=
@@ -155,7 +153,6 @@ export default function ShippingAndPayement() {
                 <hr/>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
-                <hr/>
               </Modal>
               break;
             case 2:
@@ -180,7 +177,6 @@ export default function ShippingAndPayement() {
                 <hr/>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
-                <hr/>
               </Modal>  
               break;
           }

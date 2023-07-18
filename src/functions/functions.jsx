@@ -4,17 +4,19 @@ const { loginAndRegisterPath, adminDashboardPath, userDashboardPath } = consts;
 
 export function setRequestConfig(methodGotten="GET",bodyGotten,jsonFalse=false) {
   // if bodyGotten is an obj it will be converted to json string
-  if (typeof bodyGotten == "object") {bodyGotten = JSON.stringify(bodyGotten)}
-
-
+  if (typeof bodyGotten == "object" && !jsonFalse) {bodyGotten = JSON.stringify(bodyGotten)}
+  
+  
   const config = {
     method: methodGotten, // puedes modificar el método según tu necesidad
   };
-  if (bodyGotten) {config.body = bodyGotten}
   const headers = {'auth': localStorage.getItem("token")};
+  
+  if (bodyGotten) {config.body = bodyGotten}
   if (localStorage.getItem("password")!=="-") {headers["password"] = localStorage.getItem("password")}
   if (methodGotten!="GET" && !jsonFalse) {headers['Content-Type'] = 'application/json' }
   config.headers = headers;
+  console.log(config);
   return config;
 }
 
@@ -99,6 +101,7 @@ export function logout() {
 
 export function copyToClipboard(str) {
   // Crear un elemento de texto temporal
+  str=str.toString()
   const tempInput = document.createElement("textarea");
   tempInput.value = str;
   

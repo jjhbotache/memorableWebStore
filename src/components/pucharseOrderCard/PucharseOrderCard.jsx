@@ -9,7 +9,7 @@ import "./PucharseOrderCard.css";
 import Spinner from "../spinner/spinner";
 import Modal from "../modal/modal";
 
-export default function PucharseOrderCard({order,onEdit}){
+export default function PucharseOrderCard({order,onEdit,onDelete}){
   const [design, setDesign] = useState({});
   const [realDesign, setRealDesign] = useState({});
   const [user, setUser] = useState({});
@@ -37,22 +37,14 @@ export default function PucharseOrderCard({order,onEdit}){
     main()
   }, []);
 
-  function deleteOrder (){
-    if (confirm(`Are you sure about deleting ${order.id} order?`)) {
-      setLoading(true)
-      fetch(apiRoute+"/erase/pucharse_orders/"+order.id,setRequestConfig("DELETE")).then(re=>re.json()).then(r=>setDeleted(true))
-      .catch(e=>{alert("there was an error deleting the order");console.log(e)})
-      .finally(setLoading(false))
-    }
-  }
 
   return !deleted?
     (
     !loading?
-      <div className="col-12 col-md-6 col-lg-4">
+      <div className="col-12 col-sm-5 col-md-4 h-100">
         <div className="card">
           <div className="card-body">
-          <div className=" card-img p-1">
+          <div className=" card-img p-3">
             {(realDesign.img || design.img)&&
             <img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/" +(realDesign.img || design.img) +"/" + localStorage.getItem("token")} alt="Has no image" />
             }
@@ -69,7 +61,7 @@ export default function PucharseOrderCard({order,onEdit}){
                 realDesign:realDesign,
                 user:user
               })}}>edit</button>
-              <button type="button" className="btn btn-dark poc-l" onClick={deleteOrder}>Delete</button>
+              <button type="button" className="btn btn-dark poc-l" onClick={e=>{onDelete(order)}}>Delete</button>
             </div>
           </div>
         </div>

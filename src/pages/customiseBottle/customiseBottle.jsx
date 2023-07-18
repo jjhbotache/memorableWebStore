@@ -67,14 +67,14 @@ export default function CustomiseBottle() {
 
   return(
     <>
-      <div className={` container-lg ${styles.customiseBottleContainer}`}>
-        <div className="row gap-4 gap-sm-0">
+      <div className={` container-fluid ${styles.customiseBottleContainer}`}>
+        <div className="row w-100 gap-4 gap-sm-0">
           <div className="col-12 col-sm-5 d-grid align-content-center">
             <img className="img-fluid" src={apiRoute+"/"+designGotten.current.img+"/-"} alt={designGotten.current.name} />
             <h2 className="mt-2">{designGotten.current.name}</h2>
           </div>
 
-          <div className="col-12 col-sm-7 gap-2 px-sm-5 d-flex flex-column justify-content-center align-content-between">
+          <div className="col-12 col-sm-7 gap-3 px-sm-2 d-flex flex-column justify-content-center align-content-between">
             <div className="col-12">
               <Select options={wines} defaultValue="" label="Kind of wine:" onChange={(e)=>{setOrder({...order,wine:e})}} />
             </div>
@@ -92,7 +92,8 @@ export default function CustomiseBottle() {
             </div>
 
             <div className="col-12">
-              <textarea className="form-control" placeholder="Message" onChange={(e)=>{setOrder({...order,msg:e.target.value})}}></textarea>
+              <label htmlFor="msg">Message:</label>
+              <textarea className="form-control" rows={4} placeholder="Describe how do you want to customise your bottle..." onChange={(e)=>{setOrder({...order,msg:e.target.value})}} ></textarea>
             </div>
 
             <div className="col-12">

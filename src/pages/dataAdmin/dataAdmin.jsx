@@ -141,7 +141,12 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
                 <label htmlFor={field} className="form-label">{field}</label>
                 <input disabled={(field=="id")&&(!(tableToAdmin=="users")||!creating.current)?true:false} type="text" className="form-control" id={field} name={field} value={dataInEditor[field]} onChange={e=>setDataInEditor({...dataInEditor,[field]:e.target.value})}/>
                 {
-                  ["packing_colors","secondary_packing_colors"].includes(tableToAdmin) && <div className={`d-block mx-auto mt-2 ${styles.preview}`} style={{backgroundColor: dataInEditor[field],}}></div>
+                  (["packing_colors","secondary_packing_colors"].includes(tableToAdmin) && !(field=="id"))&& (
+                    <>
+                    <div className={`d-block mx-auto mt-2 ${styles.preview}`} style={{backgroundColor: dataInEditor[field],}}></div>
+                    <a href="https://www.w3.org/TR/css-color-3/#svg-color" target="_blank">Want to know about more color names?</a>
+                    </>
+                  )
                 }
               </div>
             ))

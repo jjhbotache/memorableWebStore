@@ -67,6 +67,12 @@ img{
   border:solid 2px var(--colorPrimary) !important;
   padding: 0.2em !important;
 }
+img:hover{
+  transition: all 0.2s ease-in-out;
+  transform: scale(1.01);
+  cursor: pointer;
+  box-shadow: 0 0 0.2em var(--colorPrimary);
+}
 
 input:focus,select:focus,textarea:focus{
   box-shadow: 1px 1px 3px 1px  var(--colorSecondary) !important;

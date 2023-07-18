@@ -3,7 +3,7 @@ import styles from "./AdminDesignCard.module.css"
 
 export default function AdminDesignCard({design,onDelete,onEdit}) {
   return(
-    <div className="col-12 col-md-6 col-lg-4 ">
+    <div className="col-12 col-sm-5 col-md-3">
       <div className="card h-100 d-flex flex-column justify-content-between">
         <div className=" card-img p-1">
           {<img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/" +design.img +"/" + localStorage.getItem("token")} alt="Has no image" />}

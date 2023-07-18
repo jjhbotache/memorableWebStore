@@ -151,7 +151,7 @@ const DesignsAdmin = () => {
         <h1>Designs admin</h1>
         <hr />
         <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} />
-        <div className="row gap-2">
+        <div className="row gap-2 d-flex justify-content-around">
           {
             designsToRender.map(design =>(
             <AdminDesignCard key={design.id} design={design} 

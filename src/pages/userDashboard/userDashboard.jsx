@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiRoute, loginAndRegisterPath} from "../../const/const"
-import { logout, getUserToken, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
+import { logout, getUserToken, setRequestConfig, verifyIsWhereItShould, customSort } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import BuyItem from "../../components/buyItem/buyItem";
 
@@ -13,7 +13,7 @@ export default function Dashboard() {
 
   verifyIsWhereItShould()
   
-  const userInfo = Object.keys(localStorage).map((key) => {
+  const userInfo = customSort(["id","first_name","last_name","email","phone"],Object.keys(localStorage)).map((key) => {
     // skip some properties
     const keysToKeep = [
       "first_name",
@@ -109,60 +109,66 @@ export default function Dashboard() {
   return (
     <>
       <h1>dashboard</h1>
-      <div className="accordion" id="userDashboadAccordion">
-        <div className="accordion-item">
-          <h2 className="accordion-header">
-            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Profile
-            </button>
-          </h2>
-          <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#userDashboad">
-            <div className="accordion-body">
-            <form className="container" onSubmit={onsubmitUserInfo}>
-              {userInfo}
-              {loadingUpdateInfo && <Spinner/>}
-              <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
-            </form>
+      <div className="container-sm mx-sm-5 px-sm-5">
+        <div className="row mx-sm-5 p-sm-5">
+          <div className="accordion" id="userDashboadAccordion">
+            {/* user */}
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Profile
+                </button>
+              </h2>
+              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#userDashboad">
+                <div className="accordion-body">
+                <form className="container" onSubmit={onsubmitUserInfo}>
+                  {userInfo}
+                  {loadingUpdateInfo && <Spinner/>}
+                  <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
+                </form>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="accordion-item">
-          <h2 className="accordion-header">
-            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
-              Shoppings
-            </button>
-          </h2>
-          <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboad">
-            <div className="accordion-body">
-              
-            {
-            localStorage.getItem("token")?
-            shoppings.map(shopping =>
-               <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />
-            )
-            :loadingShoppings?
-              <Spinner/>
-            :
-            <div class="d-grid gap-2">
-              <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
-                setLoadingShoppings(true)
-                getUserToken().then(e => {
-                  fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
-                    setShoppings(data)
-                    console.log(data);
-                  })
-                }).finally(() => {
-                  setLoadingShoppings(false)
-                })}
-              }>see shoppings</button>
-            </div>
+            {/* shoppings */}
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                  Shoppings
+                </button>
+              </h2>
+              <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboad">
+                <div className="accordion-body">
+                  
+                {
+                localStorage.getItem("token")?
+                shoppings.map(shopping =>
+                  <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />
+                )
+                :loadingShoppings?
+                  <Spinner/>
+                :
+                <div class="d-grid gap-2">
+                  <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
+                    setLoadingShoppings(true)
+                    getUserToken().then(e => {
+                      fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
+                        setShoppings(data)
+                        console.log(data);
+                      })
+                    }).finally(() => {
+                      setLoadingShoppings(false)
+                    })}
+                  }>see shoppings</button>
+                </div>
 
-            }
+                }
+                </div>
+              </div>
             </div>
           </div>
+          <button type="button" className=" btn btn-dark mx-auto d-block mt-3 w-50" onClick={logout}>Logout</button>
         </div>
       </div>
-      <button type="button" className=" btn btn-dark mx-auto d-block mt-3" onClick={logout}>Logout</button>
 
 
 
