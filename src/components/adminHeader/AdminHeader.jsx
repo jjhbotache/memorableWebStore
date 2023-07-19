@@ -4,7 +4,7 @@ export default function AdminHeader({onSearch, onAdd}) {
 
   return (
     
-      <div className="row mb-3 justify-content-center align-items-center ">
+      <div className="row justify-content-center align-items-center ">
         <div className="col-9 ">
           <div className="row">
             <div className="col-10">

@@ -3,12 +3,12 @@ import styles from "./AdminDesignCard.module.css"
 
 export default function AdminDesignCard({design,onDelete,onEdit}) {
   return(
-    <div className="col-12 col-sm-5 col-md-3">
+    <div className="col-12 col-sm-6 col-md-4 col-lg-3" style={{maxWidth:"350px"}}>
       <div className="card h-100 d-flex flex-column justify-content-between">
         <div className=" card-img p-1">
           {<img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/" +design.img +"/" + localStorage.getItem("token")} alt="Has no image" />}
         </div>
-        <h5 className="card-title">{design.id + ") " + design.name}</h5>
+        <h5 className="card-title p-1">{design.id + ") " + design.name}</h5>
         <div className="card-body d-grid align-content-end justify-content-end">
           <div className="d-flex">
             <button type="button" className={`btn ${styles.btnFirst}`} onClick={()=>{onEdit(design)}}>edit</button>

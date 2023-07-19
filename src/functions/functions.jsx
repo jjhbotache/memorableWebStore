@@ -16,7 +16,7 @@ export function setRequestConfig(methodGotten="GET",bodyGotten,jsonFalse=false) 
   if (localStorage.getItem("password")!=="-") {headers["password"] = localStorage.getItem("password")}
   if (methodGotten!="GET" && !jsonFalse) {headers['Content-Type'] = 'application/json' }
   config.headers = headers;
-  console.log(config);
+  // console.log(config);
   return config;
 }
 
