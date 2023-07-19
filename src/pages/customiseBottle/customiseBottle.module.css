@@ -1,0 +1,34 @@
+.customiseBottleContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 5vw;
+}
+
+.customiseBottleContainer img{
+  border-radius: 0.7em;
+  width: 100%;
+  max-width: 400px;
+  background: var(--colorSecondary);
+  padding: 0.2em;
+  border: var(--colorPrimary) solid 2px;
+}
+.customiseBottleContainer img:hover{
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  transform: scale(1.05) !important;
+  /* add a box shadown */
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.customiseBottleContainer .input-group-text{
+  background: var(--colorSecondary);
+  border: var(--colorPrimary) solid 2px;
+  border-radius: 0.7em 0 0 0.7em;
+  color: var(--colorPrimary);
+}
+
+.customiseBottleContainer textarea{
+  resize: none; 
+}

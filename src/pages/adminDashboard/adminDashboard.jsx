@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
 import Modal from "../../components/modal/modal";
-import {apiRoute, getUserToken, setRequestConfig, verifyIsWhereItShould } from "../../const/const"
+import {adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
+import {getUserToken, logout, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
+
+
 
 export default function AdminDashboard() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -32,6 +35,8 @@ export default function AdminDashboard() {
   }
 
   
+  
+      
   return (
     <>
       {token?
@@ -49,10 +54,19 @@ export default function AdminDashboard() {
             <hr />
             {/* make a list of btns */}
             <ul>
-              <li>
-                <a className="btn" href="/pucharseOrdersAdmin">Pucharse orders admin</a>
-              </li>
+              {adminsTools.map(tool =>(
+                <li key={tool.name} className=" mb-2">
+                  <a className="btn" href={tool.path}>{tool.name}</a>
+                </li>
+              )
+              )}
             </ul>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <hr />
+            <button className="btn btn-dark btn-danger" onClick={logout}>Logout</button>
           </div>
         </div>
       </div>

@@ -7,14 +7,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, RouterProvider } from 'react-router-dom'
 import router from './router/router'
 import Navbar from './components/navbar/navbar'
-import { pagesToShowInNavbar, whereNotToDisplay } from './const/const';
+import { linksToShowInNavbar, whereNotToDisplay } from './const/const';
 
-
-
+// if any img is clicked, open it in a new tab
+document.addEventListener('click', (e) => {
+  if (e.target.tagName === 'IMG') {
+    window.open(e.target.src, '_blank')
+  }
+})
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
-    <Navbar links={pagesToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
+    <Navbar links={linksToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
     <RouterProvider router={router}/>
   </>
 )

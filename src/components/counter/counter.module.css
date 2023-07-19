@@ -1,0 +1,23 @@
+.f{
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.l{
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+.m{
+  border-radius: 0 !important;
+  min-width: 40px;
+  margin: 0;
+  padding: 0;
+  border-left: none !important;
+  border-right: none !important;
+}
+.f, .l, .m{
+  border: solid 2px var(--colorPrimary) !important;
+  background: var(--colorSecondary) !important;
+  color: var(--colorPrimary) !important;
+  min-height: 2em;
+  height: 100%;
+}

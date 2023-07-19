@@ -9,6 +9,9 @@ import CustomiseBottle from "../pages/customiseBottle/customiseBottle";
 import BuyNow from "../pages/buyNow/buyNow";
 import ShippingAndPayement from "../pages/shippingAndPayement/shippingAndPayement";
 import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmin";
+import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
+import RealDesignsAdmin from "../pages/realDesignsAdmin/realDesignsAdmin";
+import DataAdmin from "../pages/dataAdmin/dataAdmin";
 
 const router = createBrowserRouter([
   {
@@ -48,10 +51,37 @@ const router = createBrowserRouter([
     element: <PucharseOrdersAdmin/>,
   },
   {
+    path: "/designsAdmin",
+    element: <DesignsAdmin/>,
+  },
+  {
+    path: "/realDesignsAdmin",
+    element: <RealDesignsAdmin/> ,
+  },
+  {
+    path: "/winesAdmin",
+    element: <DataAdmin title="Wines admin" tableToAdmin="wine_kinds" /> ,
+  },
+  {
+    path: "/primaryColorsAdmin",
+    element: <DataAdmin title="Primary colors admin" tableToAdmin="packing_colors" onDisplayProperty="color" /> ,
+  },
+  {
+    path: "/secondaryColorsAdmin",
+    element: <DataAdmin title="Secondary colors admin" tableToAdmin="secondary_packing_colors" onDisplayProperty="color" /> ,
+  },
+  {
+    path: "/tagsAdmin",
+    element: <DataAdmin title="Tags admin" tableToAdmin="tags" /> ,
+  },
+  {
+    path: "/usersAdmin",
+    element: <DataAdmin title="Users admin" tableToAdmin="users" onDisplayProperty="last_name" propertiesToSearch={["first_name"]} customOrderToModal={['id', 'first_name', 'last_name', 'email', 'phone', 'password',]}/> 
+  },
+  {
     path: "*",
     element: <h1>page not found</h1>,
   },
-
 ]);
 
 

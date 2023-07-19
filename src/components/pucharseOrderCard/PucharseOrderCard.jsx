@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import "./PucharseOrderCard.css";
 import order from "../../mocks/order.json";
-import { apiRoute, setRequestConfig } from "../../const/const";
+import { apiRoute } from "../../const/const";
+import { setRequestConfig } from "../../functions/functions";
+
 import "./PucharseOrderCard.css";
 import Spinner from "../spinner/spinner";
 import Modal from "../modal/modal";
 
-export default function PucharseOrderCard({order,onEdit}){
+export default function PucharseOrderCard({order,onEdit,onDelete}){
   const [design, setDesign] = useState({});
   const [realDesign, setRealDesign] = useState({});
   const [user, setUser] = useState({});
@@ -16,7 +18,7 @@ export default function PucharseOrderCard({order,onEdit}){
 
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-
+  console.log(order);
 
 
   useEffect(() => {
@@ -35,28 +37,21 @@ export default function PucharseOrderCard({order,onEdit}){
     main()
   }, []);
 
-  function deleteOrder (){
-    if (confirm(`Are you sure about deleting ${order.id} order?`)) {
-      setLoading(true)
-      fetch(apiRoute+"/erase/pucharse_orders/"+order.id,setRequestConfig("DELETE")).then(re=>re.json()).then(r=>setDeleted(true))
-      .catch(e=>{alert("there was an error deleting the order");console.log(e)})
-      .finally(setLoading(false))
-    }
-  }
 
   return !deleted?
     (
     !loading?
-      <div className="col-12 col-md-6 col-lg-4">
+      <div className="col-12 col-sm-5 col-md-4 h-100">
         <div className="card">
           <div className="card-body">
-          <div className=" card-img p-1">
+          <div className=" card-img p-3">
             {(realDesign.img || design.img)&&
             <img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/" +(realDesign.img || design.img) +"/" + localStorage.getItem("token")} alt="Has no image" />
             }
           </div>
-            <h5 className="card-title">{order.id + ") " + ( design.name || realDesign.name || "has no design")}</h5>
-            <p className="card-text"> <strong>Customer: &nbsp;</strong> {user.first_name + " " + user.last_name}</p>
+            <h5 className="card-title mb-3">{order.id + ") " + ( design.name || realDesign.name || "has no design")}</h5>
+            <p className="card-text mb-0"> <strong>Customer: &nbsp;</strong> {user.first_name + " " + user.last_name}</p>
+            <p className="card-text mb-0"> <strong>Designed: &nbsp;</strong> {order.id_real_design?"✅":"❌"}</p>
             <p className="card-text"> <strong>Paid: &nbsp;</strong> {order.paid==0?"❌":"✅"}</p>
             <div className="d-flex">
               <button type="button" className="btn poc-f" onClick={()=>{
@@ -66,7 +61,7 @@ export default function PucharseOrderCard({order,onEdit}){
                 realDesign:realDesign,
                 user:user
               })}}>edit</button>
-              <button type="button" className="btn btn-dark poc-l" onClick={deleteOrder}>Delete</button>
+              <button type="button" className="btn btn-dark poc-l" onClick={e=>{onDelete(order)}}>Delete</button>
             </div>
           </div>
         </div>

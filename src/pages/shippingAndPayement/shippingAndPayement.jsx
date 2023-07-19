@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import './shippingAndPayement.css';
 import Modal from '../../components/modal/modal';
-import { apiRoute, catalogPath, getUserToken, setRequestConfig, userDashboardPath } from '../../const/const';
+import { apiRoute, userDashboardPath } from '../../const/const';
+import {getUserToken, setRequestConfig} from "../../functions/functions"
 
 export default function ShippingAndPayement() {
   // shipping just save a shippingId:1
@@ -10,6 +11,8 @@ export default function ShippingAndPayement() {
   // payement just save an img
   const [payement, setPayement] = useState(null);
   const [wayOfPaying, setWayOfPaying] = useState();  
+
+  const [pickUpPlace, setPickUpPlace] = useState(null);
 
   const input = useRef()
   
@@ -20,14 +23,13 @@ export default function ShippingAndPayement() {
     :
       setWayOfShiping()
   }
-  function handlePayement(value) {
+  async function handlePayement(value) {
     console.log("paying");
     const vaucher = input.current.files[0];
     if (vaucher) {
       setPayement(vaucher);
       if (vaucher instanceof File) {
         const logic = async ()=>{
-          
           if (await getUserToken()) {
             const formData = new FormData();
             formData.append("vaucher",vaucher);
@@ -41,6 +43,7 @@ export default function ShippingAndPayement() {
               setPayement(null)
               return false
             })
+            console.log(savedVaucher);
             if (savedVaucher) {
               console.log("Your vaucher has been saved");
               // amount:"1"
@@ -68,18 +71,19 @@ export default function ShippingAndPayement() {
               }
               fetch(apiRoute+"/user/create/pucharse_orders",setRequestConfig("POST",JSON.stringify(finalOrder))).then(re=>re.json()).then((data) => {
                 console.log(data);
-                console.log("Your order has been created");
-                // window.location.assign(catalogPath);
+                alert("Your order has been created");
+                alert( "Remember that if it exists any problem, will be notice you to your phone or email registered")
+                // delete the order from the local storage
+                localStorage.removeItem("order");
+                window.location.assign(userDashboardPath);
               }).catch((e) => {
                 console.log(e);
-                console.log("There was an error creating your order");
+                alert("There was an error saving your vaucher, try changing the file name");
                 fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedVaucher}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
                 setPayement(null)
               })
             }else{
-              console.log("There was an error saving your vaucher, try changing the file name");
-              fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedData}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
-              setPayement(null)
+              alert("There was an error saving your vaucher");
             }            
           }else{
             setPayement(null)
@@ -94,10 +98,8 @@ export default function ShippingAndPayement() {
     }
   }
 
-  let modalToRender;
-
   
-
+  let modalToRender;
   // logic to show modals
   if (!wayOfShiping) {
     modalToRender = 
@@ -108,11 +110,18 @@ export default function ShippingAndPayement() {
   }else{
     if (!shipping.shippingId) {
       if(wayOfShiping===1){
+        if (!pickUpPlace) fetch(apiRoute + "/pick-up-adress").then(json => json.json()).then(pickUpPlaceGotten => {
+          setPickUpPlace(pickUpPlaceGotten)
+        })
         modalToRender=
-        <Modal title='Do you want to pick up your order in <place>?' options={[
+        <Modal title={`Do you want to pick up your order in the pick up place?`} options={[
           {label:'Yes', value:1},
           {label:'No', value:false}
-        ]} resolveFunction={(value)=>handleSetShipping({shippingId:value})}/>
+        ]} resolveFunction={(value)=>handleSetShipping({shippingId:value})}>
+          <h5><strong>Pick up place: </strong> </h5>
+          <h6>{pickUpPlace?pickUpPlace:"loading..."}</h6>
+          </Modal>
+          
       }else{
         modalToRender=
         <Modal title='To which address would you like to send your order?' options={[
@@ -144,17 +153,16 @@ export default function ShippingAndPayement() {
                 <hr/>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
-                <hr/>
               </Modal>
               break;
             case 2:
               modalToRender = 
-              <Modal title='Scan the QR code to pay' options={[
+              <Modal title='Here is the account number' options={[
                 {label:'Payed', value:true},
                 {label:'cancel', value:false},
               ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
                 <hr/>
-                <h5>Account number</h5>
+                <h5>Account number:</h5>
                 <h6>1205-672235</h6>
                 <hr/>
               </Modal>
@@ -169,17 +177,20 @@ export default function ShippingAndPayement() {
                 <hr/>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
-                <hr/>
               </Modal>  
               break;
           }
         }else{
           // if payement is a file
           if (payement instanceof File) {
+
             modalToRender=(
-              <Modal title='Your order has been created succesfully!' options={[
+              <Modal title="We are verifying it's you " options={[
                 {label:'Done', value:1},
-              ]} resolveFunction={()=>{window.location.assign(userDashboardPath)}} />
+              ]} resolveFunction={()=>{
+                localStorage.getItem("token")&&window.location.assign(userDashboardPath)
+                }} >
+              </Modal>
             )
           }else{
             modalToRender=

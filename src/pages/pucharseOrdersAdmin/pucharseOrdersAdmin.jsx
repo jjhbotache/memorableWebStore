@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { apiRoute, setRequestConfig } from "../../const/const";
+import { apiRoute } from "../../const/const";
+import {copyToClipboard, loadPreview, setRequestConfig} from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import PucharseOrderCard from "../../components/pucharseOrderCard/PucharseOrderCard";
 import Modal from "../../components/modal/modal";
@@ -7,12 +8,16 @@ import EditModalSelect from "../../components/editModalSelect/EditModalSelect";
 
 export default function PucharseOrdersAdmin() {
   const [pucharseOrders, setPucharseOrders] = useState([]);
+  const [pucharseOrdersRendered, setPucharseOrdersRendered] = useState([]);
+
   const [loadingData, setLoadingData] = useState(false);
   const [orderInEditModal, setOrderInEditModal] = useState(false);
   const [editModal, setEditModal] = useState(null);
   const oldVaucher = useRef(null);  
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
+  const preview = useRef();
   
   
 
@@ -22,10 +27,9 @@ export default function PucharseOrdersAdmin() {
     setLoadingData(true)
     fetch(apiRoute + "/read/pucharse_orders", setRequestConfig("GET")).then((response) => response.json()).then((pucharseOrders) => {
       // console.log(pucharseOrders);
-      setPucharseOrders(
-        pucharseOrders.map(pucharseOrder => <PucharseOrderCard key={pucharseOrder.id} order={pucharseOrder}onEdit={(data)=>{putInfoInModal(data)}}
-          />)
-      )
+      setPucharseOrders(pucharseOrders)
+      setPucharseOrdersRendered(pucharseOrders)
+        
     }
     ).catch((error) => {
       console.log(error);
@@ -33,6 +37,36 @@ export default function PucharseOrdersAdmin() {
       setLoadingData(false)
     )
   }, []);
+
+  useEffect(() => { 
+    // filter the orders by its name and set orderInEditModal the result
+    console.log("search",search);
+    console.log("pucharseOrders",pucharseOrders);
+    
+    // !(search=="") && 
+    async function setFilteredFunctions() {
+      const ordersEncountered = [];
+      for (const order of pucharseOrders) {
+        const [first_name,last_name,designName] = await Promise.all([
+          fetch(apiRoute + `/read/users/${order.id_user}/first_name` , setRequestConfig()).then(re => re.json()).then(d => d[0]),
+          fetch(apiRoute + `/read/users/${order.id_user}/last_name` , setRequestConfig()).then(re => re.json()).then(d => d[0]),
+          fetch(apiRoute + `/read/designs/${order.id_design}/name` , setRequestConfig()).then(re => re.json()).then(d => d[0]),
+        ])
+        // if the search is inclued by any of the parameters, incluidem in a new array
+        if (first_name.first_name.toLowerCase().includes(search.toLowerCase()) ||
+            last_name.last_name.toLowerCase().includes(search.toLowerCase()) ||
+            designName.name.toLowerCase().includes(search.toLowerCase()) ||
+            order.id.toString().includes(search.toLowerCase())
+            ) {
+          ordersEncountered.push(order)
+        }
+      }
+      // console.log(ordersEncountered);
+      return ordersEncountered
+    }
+    setFilteredFunctions().then(orders=> setPucharseOrdersRendered(orders))
+    }, [search]);
+
 
   async function putInfoInModal(data){
     
@@ -93,65 +127,63 @@ export default function PucharseOrdersAdmin() {
     // so we need to set the editModal to null
     // so it can be closed
 
-
+    
     if (orderInEditModal) {
+      const editingOrder = !!orderInEditModal.id;
       setEditModal( 
       <Modal 
-        title={orderInEditModal.id?`Edit Order #${orderInEditModal.id}`:"Add Order"} 
+        title={editingOrder?`Edit Order #${orderInEditModal.id}`:"Add Order"} 
         resolveFunction={value=>{
           setOrderInEditModal(false)
           setEditModal(null)
+          setSearch("")
         }} 
         options={[{label:"Cancel",value:0}]}>
             <form className=" d-flex flex-column align-content-center justify-content-center w-100" onSubmit={editorModalSubmited}>
               {/* user */}
-              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,user:obj})} label="User:" tableName="users" labelProperty="last_name" firstObj={orderInEditModal.user}/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,user:obj})} label="User:" tableName="users" labelProperty="last_name" firstObj={orderInEditModal.user}/>
               {/* design */}
-              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,design:obj})} label="Design: " tableName="designs" labelProperty="name" firstObj={orderInEditModal.design}/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,design:obj})} label="Design: " tableName="designs" labelProperty="name" firstObj={orderInEditModal.design}/>
               {/* real design */}
               <EditModalSelect optional onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,realDesign:obj})} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
               {/* amount */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="amount" className="form-label mb-0 align-baseline">Amount: </label>
-                <input type="number" className="form-control mx-auto" name="amount" value={orderInEditModal.amount} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,amount:e.target.value>=1?e.target.value:1})}} />
+                <input type="number" disabled={editingOrder} className="form-control mx-auto" name="amount" defaultValue={orderInEditModal.amount?undefined:1}  value={orderInEditModal.amount} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,amount:e.target.value>=1?e.target.value:1})}} />
               </div>
               {/* wine */}
-              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={orderInEditModal.wine}/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={!(orderInEditModal.wine=={})?orderInEditModal.wine:undefined }/>
               {/* primaryColor */}
-              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,primaryColor:obj})} label="Primary packing color:" tableName="packing_colors" labelProperty="color" firstObj={orderInEditModal.primaryColor}/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,primaryColor:obj})} label="Primary packing color:" tableName="packing_colors" labelProperty="color" firstObj={orderInEditModal.primaryColor}/>
               {/* secondaryColor */}
-              <EditModalSelect onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,secondaryColor:obj})} label="secondary packing color:" tableName="secondary_packing_colors" labelProperty="color" firstObj={orderInEditModal.secondaryColor}/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,secondaryColor:obj})} label="secondary packing color:" tableName="secondary_packing_colors" labelProperty="color" firstObj={orderInEditModal.secondaryColor}/>
               {/* msg */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="msg" className="form-label mb-0 align-baseline">Message: </label>
-                <textarea type="textArea" className="form-control" name="msg" value={orderInEditModal.msg} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,msg:e.target.value})}} rows={3} style={{resize:"none"}}></textarea>
+                <textarea disabled={editingOrder} type="textArea" className="form-control" name="msg" value={orderInEditModal.msg} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,msg:e.target.value})}} rows={3} style={{resize:"none"}}></textarea>
               </div>
               {/* date */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="msg" className="form-label mb-0 align-baseline">Date: </label>
                 {/* <p className="m-0">{date}</p> */}
-                <input type="date" className="form-control p-0" name="deliveryDate" value={orderInEditModal.deliveryDate} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryDate:e.target.value})} />
+                <input disabled={editingOrder} type="date" className="form-control p-0" name="deliveryDate" value={orderInEditModal.deliveryDate} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryDate:e.target.value})} />
                 {/* <small className="text-muted"> Choose a new delivery date</small> */}
               </div>
               {/* address */}
               {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="deliveryPlace" className="form-label mb-0 align-baseline">Delivery place: </label>
-                <input type="text" className="form-control p-0" value={orderInEditModal.deliveryPlace} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryPlace:e.target.value})} name="deliveryPlace" />
+                <input disabled={editingOrder} type="text" className="form-control p-0" value={orderInEditModal.deliveryPlace} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryPlace:e.target.value})} name="deliveryPlace" />
               </div>
               {/* vaucher */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2" >
                 <label htmlFor="vaucher" className="form-label mb-0 align-baseline">Vaucher: </label>
-                <img id="vaucherPreview" src={apiRoute + "/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
-                <input accept=".png" type="file" className="form-control p-0" name="vaucher" onChange={
+                <img ref={preview} src={apiRoute + "/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
+                <input disabled={editingOrder} accept=".png" type="file" className="form-control p-0" name="vaucher" onChange={
                   (e)=>{
                     if (e.target.files[0]) {
                       setOrderInEditModal({...orderInEditModal,vaucher:e.target.files[0]})
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        document.getElementById("vaucherPreview").src = reader.result;
-                      };
-                      reader.readAsDataURL(e.target.files[0])
+                      loadPreview(preview,e)
                     }
                   }
                 }/>
@@ -170,11 +202,15 @@ export default function PucharseOrdersAdmin() {
     }
   }, [orderInEditModal]);
 
-
+  
   function editorModalSubmited(e) {
     e.preventDefault();
 
+    // if editing...
     if (orderInEditModal.id) {
+      if (confirm("Are you sure you want to update this order? Remeber that the user choose it's order and you are changing it.")) {
+        
+      }
       console.log("updating...");
       const formData = new FormData();
       formData.append("user_id", orderInEditModal.user.id);
@@ -190,17 +226,32 @@ export default function PucharseOrdersAdmin() {
       formData.append("oldVaucher", oldVaucher.current);
       formData.append("vaucher",  orderInEditModal.vaucher instanceof File?orderInEditModal.vaucher:oldVaucher.current);
       formData.append("truly_paid", orderInEditModal.trulyPaid?1:0);
-
+      console.log(orderInEditModal.user);
       setLoading(true);
       fetch(apiRoute + "/update_pucharse_orders/" + orderInEditModal.id, setRequestConfig("PUT", formData, true)).then((response) => response.json()).then((data) => {
         console.log(data);
+        setSearch("")
+        const infoStr = 
+        "Name: " + orderInEditModal.user.first_name + " " + orderInEditModal.user.last_name +
+        "\nEmail: " + orderInEditModal.user.email +
+        "\nPhone: " + orderInEditModal.user.phone;
+        // const infoStr = 
+        // `Name: ${orderInEditModal.user.first_name} ${orderInEditModal.user.last_name}
+        // Email: ${orderInEditModal.user.email}
+        // Phone: ${orderInEditModal.user.phone}`;
+        console.log(infoStr);
+        if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the phone number?")){
+          // copyToClipboard(orderInEditModal.user.phone)
+          copyToClipboard(infoStr)
+        }
+
         window.location.reload();
       }).catch((error) => {
-        alert(error);
+        alert("check all the fields needed");
         console.error(error);
       }).finally(
         setLoading(false)
-      );
+        );
 
     }else{
       console.log("creating...");
@@ -248,6 +299,18 @@ export default function PucharseOrdersAdmin() {
     return
   }
 
+  function deleteOrder (order){
+    if (confirm(`Are you sure about deleting ${order.id} order?`)) {
+      setLoading(true)
+      fetch(apiRoute+"/erase/pucharse_orders/"+order.id,setRequestConfig("DELETE")).then(re=>re.json()).then(r=>{
+        alert("order deleted successfully");
+        setPucharseOrdersRendered(pucharseOrders.filter(o=>o.id!=order.id))
+        setPucharseOrders(pucharseOrders.filter(o=>o.id!=order.id))
+      })
+      .catch(e=>{alert("there was an error deleting the order");console.log(e)})
+      .finally(setLoading(false))
+    }
+  }
 
 
   return !orderInEditModal?
@@ -259,7 +322,7 @@ export default function PucharseOrdersAdmin() {
           <div className="col-9 ">
             <div className="row">
               <div className="col-10">
-                <input type="text" className="form-control" aria-describedby="helpId" placeholder=""/>
+                <input onChange={e=>{setSearch(e.target.value)}} type="text" className="form-control" aria-describedby="helpId" placeholder=""/>
               </div>
               <div className="col-2 d-flex justify-content-center align-content-center">
                 <i className="fi fi-br-search d-grid align-items-center"></i>
@@ -270,12 +333,12 @@ export default function PucharseOrdersAdmin() {
             <button onClick={e=>setOrderInEditModal({})} className="btn ">Add</button>
           </div>
         </div>
-        <div className="row  gap-2">
+        <div className="row d-flex justify-content-around gap-1">
           {
           loadingData?
           <Spinner></Spinner>
           :
-          (pucharseOrders)
+          (pucharseOrdersRendered.map(pucharseOrder => <PucharseOrderCard key={pucharseOrder.id} order={pucharseOrder}onEdit={(data)=>{putInfoInModal(data)}} onDelete={order=>deleteOrder(order)}/>))
           }
         </div>
       </div>
