@@ -1,6 +1,6 @@
 export default function RegisterForm({ submitedFormFunction, changeForm }) {
   return (
-    <>
+    <div className="container">
       <h1 className="title text-center">Register</h1>
       <form onSubmit={submitedFormFunction}>
         <div className="col-12 mt-4">
@@ -30,6 +30,6 @@ export default function RegisterForm({ submitedFormFunction, changeForm }) {
         </button>
       </form>
       <button onClick={changeForm}>Already registered?</button>
-    </>
+    </div>
   );
 }

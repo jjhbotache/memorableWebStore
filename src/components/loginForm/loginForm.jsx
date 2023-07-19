@@ -1,6 +1,6 @@
 export default function LoginForm({ changeForm, submitedFormFunction }) {
   return (
-    <>
+    <div className="container">
       <h1 className="title text-center">Login</h1>
       <form onSubmit={submitedFormFunction}>
         <div className="col-12 mt-4">
@@ -31,6 +31,6 @@ export default function LoginForm({ changeForm, submitedFormFunction }) {
           Not registered yet?
         </button>
       </div>
-    </>
+    </div>
   );
 }
