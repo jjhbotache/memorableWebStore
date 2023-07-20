@@ -1,74 +1,69 @@
 body {
-    margin: 0;
-    padding: 0;
-    background-image: url(../../assets/imgs/wine-g9d9b7fd4f_1920.jpg);
-    background-size: cover;
-    background-position: center center;
-    position: relative;
-    background-repeat: no-repeat;
-    box-sizing: border-box;
-    background-attachment: fixed;
-    overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background-image: url(../../assets/imgs/wine-g9d9b7fd4f_1920.jpg);
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  background-attachment: fixed;
+  overflow: hidden;
 }
-
 
 button a {
-    text-decoration: none;
+  text-decoration: none;
 }
-
-
-
-
 
 /* Style for terms and conditions */
 .s-tyc {
-    color: rgba(0, 0, 0, 0.625);
-    font-weight: 600;
-    font-style: italic;
-    font-size: 14px;
+  color: rgba(0, 0, 0, 0.625);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 14px;
 }
 
-#main-container {
-    height: 90vh;
+.main-container {
+  min-height: 80vh;
 }
 
 #container {
-    min-height: 60vh;
-    max-width: 100vh;
-    max-height: 90vh;
-    padding: 10vh 6vh ;
-    border-radius: 1vh;
-}
-
-.container{
-    position: relative;
-    z-index: 1;
+  min-height: 60vh;
+  max-width: 80vh;
+  max-height: 85vh;
+  padding: 8vh 6vh;
+  border-radius: 1vh;
 }
 
 .filter {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 254, 254, 0.677);
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.759);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 254, 254, 0.677);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.759);
 }
 
 .title {
-    font-size: 6vh;
-    margin: 0;
+  font-size: 6vh;
+  margin: 0;
 }
 
 .form-control {
-    border-radius: 2px;
-    padding-top: 0;
-    padding-bottom: 0;
-    font-size: 2.5vh;
+  border-radius: 2px;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 2.5vh;
 }
 
 #container-animation {
-    background-color: var(--colorSecondary);
-    padding: 1vh;
-    border-radius: 5vh;
-    position: relative;
-    overflow: hidden; /* Evitar que la sombra se desborde fuera del contenedor */
-  }
-  
+  margin-top: 2vh;
+  background-color: var(--colorSecondary);
+  padding: 1vh;
+  border-radius: 5vh;
+  overflow: hidden; /* Evitar que la sombra se desborde fuera del contenedor */
+  transition: transform 1s ease;
+}
+
+#container-animation :hover {
+    transform: scale(1.1);
+
+}
