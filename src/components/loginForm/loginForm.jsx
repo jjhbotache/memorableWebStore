@@ -1,6 +1,9 @@
 export default function LoginForm({ changeForm, submitedFormFunction }) {
   return (
-    <div className="container">
+    <div
+      id="container"
+      className="d-flex flex-column justify-content-center align-items-center"
+    >
       <h1 className="title text-center">Login</h1>
       <form onSubmit={submitedFormFunction}>
         <div className="col-12 mt-4">
@@ -21,15 +24,17 @@ export default function LoginForm({ changeForm, submitedFormFunction }) {
           />
         </div>
         <div className="col-12 d-flex justify-content-center mt-4">
-          <button className="btn py-0" type="submit">
+          <button className="btn p-1 px-4" type="submit">
             Enter
           </button>
         </div>
       </form>
-      <div className="col-12 d-flex justify-content-center mt-2"> 
-        <button className="btn py-0" onClick={changeForm}>
-          Not registered yet?
-        </button>
+      <div id="container-animation" className="col-12 d-flex justify-content-center mt-auto shadow" onClick={changeForm}>
+        <div>
+          <a role="button" className="icon-link icon-link-hover text-dark text-decoration-none py-0">
+            Not registered yet?
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -57,8 +57,8 @@ export default function LoginAndRegister() {
   }
 
   const formToRender = (
-    <div className="container d-flex justify-content-center mt-md-5">
-      <div className="col-10 col-sm-8 col-md-4 d-flex justify-content-center">
+    <div className="container h-100 d-flex justify-content-center align-items-center">
+      <div className="col-8 col-md-5 d-flex justify-content-center filter rounded-4">
         {login?
         <LoginForm submitedFormFunction={loginAction} changeForm={()=>{setLogin(!login)}}/>
         :

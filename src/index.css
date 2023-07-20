@@ -55,12 +55,11 @@ body,#root{
 }
 /* add a transition to de buttons */
 .btn:hover{
-  transition: 0.1s;
+  transition: 0.3s;
   --bs-btn-color: var(--colorPrimary) !important;
   --bs-btn-bg: var(--colorSecondaryHover) !important;
   --bs-btn-hover-bg:var(--colorSecondaryHover) !important;
-  border: 1px solid ;
-  border-color: var(--colorPrimary) !important;
+  box-shadow: 0 1px 2px var(--colorPrimary) !important;
 }
 
 img{
@@ -87,4 +86,6 @@ hr{
   width: 95% !important;
 }
 
-/* make inputs like a btn */
+div *:is(button, input, a) {
+  font-weight: 600; /* Puedes cambiar a 800 según tus necesidades */
+}

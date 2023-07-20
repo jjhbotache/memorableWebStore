@@ -23,3 +23,12 @@
 .memorable-title {
   font-size: 6vh;
 }
+
+
+.nav-links li{
+  transition: all 0.8s ease-in-out 1s;
+}
+
+.nav-links :hover{
+  color: var(--colorPrimary);
+}

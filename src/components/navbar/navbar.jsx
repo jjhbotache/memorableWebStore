@@ -15,23 +15,23 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
     }
 
     return(
-      <li className="nav-item" key={link.path}>
+      <li className={ link.active ? "nav-item capitalize border-bottom border-danger px-2" : "nav-item border-bottom border-white capitalize px-2" } key={link.path}>
         <a href={link.path} className={ link.active ? "nav-link active" : "nav-link" } >{link.name}</a>
       </li>
   )})
 return (
       pathsWhereNotToDisplay.includes(pathname)?
       null
-      :<nav className="navbar navbar-expand-md shadow">
+      :<nav className="navbar navbar-expand-md shadow-lg">
           <div className="container-fluid">
-            <a className="navbar-brand" href="/">Navbar</a>
+            <a className="navbar-brand title px-2 px-sm-3" href="/">Memorable</a>
 
             <button className="navbar-toggler bg-light p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon bg-light"></span>
             </button>
 
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul className="navbar-nav me-auto mb-2 mb-lg-0 pb-0">
+            <div className="collapse navbar-collapse nav-links" id="navbarSupportedContent">
+              <ul className="navbar-nav me-4 mx-4 pb-0 gap-3">
                 {pagesToShow}
               </ul>
               {
