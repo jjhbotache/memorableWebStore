@@ -147,7 +147,7 @@ export default function Dashboard() {
                 :loadingShoppings?
                   <Spinner/>
                 :
-                <div class="d-grid gap-2">
+                <div className="d-grid gap-2">
                   <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
                     setLoadingShoppings(true)
                     getUserToken().then(e => {

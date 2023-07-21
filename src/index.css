@@ -85,6 +85,9 @@ input{
 hr{
   border: 2px solid var(--colorPrimary) !important;
   width: 95% !important;
+  /* add a box shadow */
+  box-shadow: 0 0 0.4em 1px rgb(255, 0, 217);
+  border-radius: 99999px;
 }
 
 /* make inputs like a btn */

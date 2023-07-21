@@ -14,17 +14,15 @@ export default function EditModalSelect({readOnly,label,tableName,labelProperty,
       <select disabled={readOnly} onClick={(e)=>{
         getOptions(tableName).then(options=>{
           const finalOptions = optional?
+          // if its optional, add the firstObj to the options
             [{id:"",[labelProperty]:"Choose an option"},...options]
             :options
           setOptions(finalOptions)
-          finalOptions.length==1 && onChangeValue(finalOptions[0])  
-          console.log(finalOptions);
+          onChangeValue(optional?finalOptions[1]:finalOptions[0])  
         })
       }
       } className="form-select form-select" name={tableName} onChange={e=>{
         const obj = options.find(option=>option[valueProperty]==e.target.value)
-        // console.log(options);
-        // console.log(e.target.value);
         onChangeValue(obj||options[0])
       }}>
         {options.map((option)=>{

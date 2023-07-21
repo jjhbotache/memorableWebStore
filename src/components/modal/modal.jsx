@@ -14,11 +14,11 @@ export default function Modal({title="",resolveFunction, options=[],cancelable, 
       <div className="modal-bg">
       </div>
       <div className={`modal-window  ${showModal ? "show" : ""}`}>
-        <h2 className='w-100'>{title}</h2>
+        <h2 className='w-100 mb-4'>{title}</h2>
         <div className="children">
           {children}
         </div>
-        <div className="w-100 px-2 d-flex justify-content-around flex-wrap">
+        <div className="w-100 px-2 d-flex justify-content-around flex-wrap mt-3">
           {options.map((option) => (
             <button className="btn " key={option.value} disabled={option.disabled} onClick={() => {resolveFunction(option.value);}}>{option.label}</button>
           ))}

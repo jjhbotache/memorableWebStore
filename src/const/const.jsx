@@ -29,6 +29,8 @@ export const primaryColorsAdminPath = "/primaryColorsAdmin";
 export const secondaryColorsAdminPath = "/secondaryColorsAdmin";
 export const tagsAdminPath = "/tagsAdmin";
 export const usersAdminPath = "/usersAdmin";
+export const otherAdminsPath = "/otherAdmins";
+
 
 
 
@@ -64,6 +66,10 @@ export const adminsTools = [
   {
     name: "Users",
     path: usersAdminPath,
+  },
+  {
+    name: "Others",
+    path: otherAdminsPath,
   },
 ];
 

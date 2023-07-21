@@ -1,0 +1,11 @@
+/* make classes for the first and last child of a container */
+.group > :first-child {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.group > :last-child {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+

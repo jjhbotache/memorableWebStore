@@ -12,6 +12,7 @@ import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmi
 import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
 import RealDesignsAdmin from "../pages/realDesignsAdmin/realDesignsAdmin";
 import DataAdmin from "../pages/dataAdmin/dataAdmin";
+import OtherAdmins from "../pages/othersAdmin/otherAdmins";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
   {
     path: "/usersAdmin",
     element: <DataAdmin title="Users admin" tableToAdmin="users" onDisplayProperty="last_name" propertiesToSearch={["first_name"]} customOrderToModal={['id', 'first_name', 'last_name', 'email', 'phone', 'password',]}/> 
+  },
+  {
+    path: "/otherAdmins",
+    element: <OtherAdmins/> ,
   },
   {
     path: "*",

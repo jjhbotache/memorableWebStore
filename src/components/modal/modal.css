@@ -24,8 +24,8 @@
   color: var(--colorPrimary);
   text-align: center;
 
-  height: 80vh;
-  max-height: 500px;
+  height: auto;
+  max-height: 580px;
   width: 80vw;
   max-width: 500px;
 

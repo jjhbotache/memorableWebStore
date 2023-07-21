@@ -164,3 +164,51 @@ export function customSort(order, list) {
     return indexA - indexB;
   });
 }
+
+export function ponerPuntos(numero) {
+  // made by bign
+  // Convertir el número a una cadena
+  let cadena = numero.toString();
+  // Crear un arreglo vacío para guardar los dígitos con puntos
+  let arreglo = [];
+  // Contar cuántos dígitos hay en la cadena
+  let digitos = cadena.length;
+  // Recorrer la cadena de derecha a izquierda
+  for (let i = digitos - 1; i >= 0; i--) {
+    // Agregar el dígito actual al arreglo
+    arreglo.unshift(cadena[i]);
+    // Si quedan más de tres dígitos y el índice actual es múltiplo de tres, agregar un punto
+    if (i > 0 && (digitos - i) % 3 == 0) {
+      arreglo.unshift(".");
+    }
+  }
+  // Unir el arreglo en una nueva cadena y devolverla
+  return arreglo.join("");
+}
+
+export function camelToSnake(str) {
+  return str.replace(/[A-Z]/g, match => `_${match.toLowerCase()}`);
+}
+
+export function areObjectsEqual(obj1, obj2) {
+  if (obj1 === obj2) {
+    return true;
+  }
+  if (obj1 == null || obj2 == null) {
+    return undefined;
+  }
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (const key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}

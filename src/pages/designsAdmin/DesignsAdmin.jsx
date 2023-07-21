@@ -7,10 +7,10 @@ import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
 import styles from "./DesignsAdmin.module.css";
+import SearchBar from '../../components/searchBar/searchBar';
 
 const DesignsAdmin = () => {
   verifyIsWhereItShould("admin")
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [designs, setDesigns] = useState([]);
   const [designsToRender, setDesignsToRender] = useState([]);
@@ -52,22 +52,6 @@ const DesignsAdmin = () => {
       
   }, []);
 
-  useEffect(() => {
-    const toSearch = search.trim()
-    if (toSearch) {
-      const filteredDesigns = designs.filter(design=>(
-        design.name.toLowerCase().includes(toSearch.toLowerCase()) ||
-        design.id.toString().includes(toSearch.toLowerCase()) ||
-        design.tags.some(tag=>tag.name.toLowerCase().includes(toSearch.toLowerCase()))
-      ))
-
-      setDesignsToRender(
-        cleanObjectList(filteredDesigns)
-      );
-    }else{
-      setDesignsToRender(designs);
-    }
-  }, [search]);
     
 
   async function putInEditor (design){
@@ -217,6 +201,29 @@ const DesignsAdmin = () => {
     }
   } 
 
+  function searchFunction(filter) {
+    let designsToRender = designs;
+
+    const toSearch = filter.input.trim()
+      
+
+    if(filter.input){
+      designsToRender = designsToRender.filter(design=>design.name.toLowerCase().includes(filter.input.toLowerCase()))
+      designsToRender = designs.filter(design=>(
+        design.name.toLowerCase().includes(toSearch.toLowerCase()) ||
+        design.id.toString().includes(toSearch.toLowerCase()) ||
+        design.tags.some(tag=>tag.name.toLowerCase().includes(toSearch.toLowerCase()))
+      ))
+    }
+    if(filter.tagsIds.size){
+      filter.tagsIds.forEach(tID => {
+        designsToRender = designsToRender.filter(design=>design.tags.some(tag=>tag.id == tID))
+      });
+    }
+    setDesignsToRender(
+      cleanObjectList(designsToRender)
+      )
+  }
 
   return !loading?
     !dataInEditor?
@@ -224,7 +231,8 @@ const DesignsAdmin = () => {
         <h1>Designs admin</h1>
         <hr />
         <div className="row mb-2">
-          <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} />
+          {/* <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} /> */}
+          <SearchBar tags={tagOptions} onFilter={searchFunction}/>
           <small className="form-text text-muted">Tags: {tagOptions.map(t=>t.name).join("/")}</small>
         </div>
         <div className="row g-2 d-flex justify-content-around">

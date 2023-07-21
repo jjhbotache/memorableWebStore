@@ -115,6 +115,7 @@ export default function PucharseOrdersAdmin() {
         msg : order.msg,
         deliveryDate  : date,
         deliveryPlace : order.id_delivery_place,
+        price : order.price,
         vaucher : order.id_vaucher,
         trulyPaid : order.paid==1,
       }
@@ -124,10 +125,6 @@ export default function PucharseOrdersAdmin() {
   }
 
   useEffect(() => {
-    // so we need to set the editModal to null
-    // so it can be closed
-
-    
     if (orderInEditModal) {
       const editingOrder = !!orderInEditModal.id;
       setEditModal( 
@@ -186,6 +183,13 @@ export default function PucharseOrdersAdmin() {
                       loadPreview(preview,e)
                     }
                   }
+                }/>
+              </div>
+              {/* price */}
+              <div className="mb-3 d-flex flex-column align-content-center justify-content-center gap-2" >
+                <label htmlFor="price" className="form-label mb-0 align-baseline">Price: </label>
+                <input disabled={editingOrder} type="number" className="form-control p-0 d-block mx-auto" name="price" value={orderInEditModal.price} onChange={
+                  (e)=>{setOrderInEditModal({...orderInEditModal,price:parseInt(e.target.value)})}
                 }/>
               </div>
               {/* truly paid */}
@@ -256,27 +260,49 @@ export default function PucharseOrdersAdmin() {
     }else{
       console.log("creating...");
       const formData = new FormData();
-      try {
-        formData.append("user_id", orderInEditModal.user.id);
-        formData.append("wine_id", orderInEditModal.wine.id);
-        formData.append("design_id", orderInEditModal.design.id);
-        formData.append("real_design_id", orderInEditModal.realDesign?.id || 0);
-        formData.append("amount", orderInEditModal.amount || 1);
-        formData.append("msg", orderInEditModal.msg || "-");
-        formData.append("primary_color_id", orderInEditModal.primaryColor.id);
-        formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
-        if (!orderInEditModal.deliveryDate) throw new Error("No date")
+      try {formData.append("user_id", orderInEditModal.user.id);
+      } catch (error) {alert("An error occurred when appending 'user_id'", error);return}
+      
+      try {formData.append("wine_id", orderInEditModal.wine.id);
+      } catch (error) {alert("An error occurred when appending 'wine_id'", error);return}
+      
+      try {formData.append("design_id", orderInEditModal.design.id);
+      } catch (error) {alert("An error occurred when appending 'design_id'", error);return}
+      
+      try {formData.append("real_design_id", orderInEditModal.realDesign?.id || 0);
+      } catch (error) {alert("An error occurred when appending 'real_design_id'", error);return}
+      
+      try {formData.append("amount", orderInEditModal.amount || 1);
+      } catch (error) {alert("An error occurred when appending 'amount'", error);return}
+      
+      try {formData.append("msg", orderInEditModal.msg || "-");
+      } catch (error) {alert("An error occurred when appending 'msg'", error);return}
+      
+      try {formData.append("primary_color_id", orderInEditModal.primaryColor.id);
+      } catch (error) {alert("An error occurred when appending 'primary_color_id'", error);return}
+      
+      try {formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
+      } catch (error) {alert("An error occurred when appending 'secondary_color_id'", error);return}
+      
+      try {if (!orderInEditModal.deliveryDate) throw new Error("No date");
         formData.append("delivery_date", orderInEditModal.deliveryDate);
-        if (!orderInEditModal.deliveryPlace) throw new Error("No address")
+      } catch (error) {alert("An error occurred when appending 'delivery_date'", error);return}
+      
+      try {if (!orderInEditModal.deliveryPlace) throw new Error("No address");
         formData.append("address", orderInEditModal.deliveryPlace);
-        if (!orderInEditModal.vaucher) throw new Error("No vaucher")
-        formData.append("vaucher",  orderInEditModal.vaucher);
-        formData.append("truly_paid", orderInEditModal.trulyPaid? (orderInEditModal.trulyPaid?1:0) : 0);
-      } catch (error) {
-        console.log(error);      
-        alert("Your are missing a field")
-        return
-      }
+      } catch (error) {alert("An error occurred when appending 'address'", error);return}
+      
+      try {if (!orderInEditModal.price) throw new Error("No Price");
+        formData.append("price", orderInEditModal.price);
+      } catch (error) {alert("An error occurred when appending 'price'", error);return}
+      
+      try {if (!orderInEditModal.vaucher) throw new Error("No vaucher");
+        formData.append("vaucher", orderInEditModal.vaucher);
+      } catch (error) {alert("An error occurred when appending 'vaucher'", error);return}
+      
+      try {formData.append("truly_paid", orderInEditModal.trulyPaid ? (orderInEditModal.trulyPaid ? 1 : 0) : 0);
+      } catch (error) {alert("An error occurred when appending 'truly_paid'", error);return}
+      
       // log each key-value pair
       for (var pair of formData.entries()) {
         console.log(pair[0] + ", " + pair[1]);
@@ -333,7 +359,7 @@ export default function PucharseOrdersAdmin() {
             <button onClick={e=>setOrderInEditModal({})} className="btn ">Add</button>
           </div>
         </div>
-        <div className="row d-flex justify-content-around gap-1">
+        <div className="row h-100 d-flex justify-content-between gap-2 gap-sm-1">
           {
           loadingData?
           <Spinner></Spinner>

@@ -41,7 +41,7 @@ export default function AdminDashboard() {
     <>
       {token?
       (
-        <div className="container">
+      <div className="container">
         <div className="row">
           <div className="col-12">
             <h1>Hello&nbsp;{localStorage.getItem("first_name")}</h1>
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
       )
       :
       (
-        <Modal title={`We need yoo to put your password:`}
+        <Modal title={`We need you to put your password:`}
         options={[{label:"done",value:1, disabled:checkingPassword}]}
         resolveFunction={checkPassword}
         >

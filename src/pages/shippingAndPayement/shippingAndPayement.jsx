@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './shippingAndPayement.css';
 import Modal from '../../components/modal/modal';
 import { apiRoute, userDashboardPath } from '../../const/const';
-import {getUserToken, setRequestConfig} from "../../functions/functions"
+import {getUserToken, ponerPuntos, setRequestConfig} from "../../functions/functions"
+import Spinner from '../../components/spinner/spinner';
 
 export default function ShippingAndPayement() {
   // shipping just save a shippingId:1
@@ -11,11 +12,18 @@ export default function ShippingAndPayement() {
   // payement just save an img
   const [payement, setPayement] = useState(null);
   const [wayOfPaying, setWayOfPaying] = useState();  
+  const [price, setPrice] = useState();
 
   const [pickUpPlace, setPickUpPlace] = useState(null);
 
   const input = useRef()
-  
+
+
+  useEffect(() => {
+    fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
+      setPrice(d.data)
+      }).catch(e=>console.log(e))
+  }, []);
 
   function handleSetShipping (shipping){
     shipping.shippingId?
@@ -65,6 +73,7 @@ export default function ShippingAndPayement() {
                 id_secondary_packing_color:order.primaryColor.id,
                 id_wine:order.wine.id_wine,
                 msg:`"${order.msg}"`,
+                price:price*order.amount,
   
                 id_user:localStorage.getItem("id"),
                 id_vaucher:"'"+savedVaucher.vaucher_route+"'"
@@ -110,16 +119,18 @@ export default function ShippingAndPayement() {
   }else{
     if (!shipping.shippingId) {
       if(wayOfShiping===1){
-        if (!pickUpPlace) fetch(apiRoute + "/pick-up-adress").then(json => json.json()).then(pickUpPlaceGotten => {
-          setPickUpPlace(pickUpPlaceGotten)
-        })
+        if (!pickUpPlace) fetch(apiRoute + "/open-csv-data/pick_up_adress",setRequestConfig()).then(re=>re.json()).then(d=>{
+          setPickUpPlace(d.data)
+          console.log(d.data);
+          }).catch(e=>console.log(e))
+
         modalToRender=
         <Modal title={`Do you want to pick up your order in the pick up place?`} options={[
           {label:'Yes', value:1},
           {label:'No', value:false}
         ]} resolveFunction={(value)=>handleSetShipping({shippingId:value})}>
           <h5><strong>Pick up place: </strong> </h5>
-          <h6>{pickUpPlace?pickUpPlace:"loading..."}</h6>
+          <h6 className='my-3'>{pickUpPlace?pickUpPlace:"loading..."}</h6>
           </Modal>
           
       }else{
@@ -151,6 +162,7 @@ export default function ShippingAndPayement() {
               ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
                 <img src="https://chart.apis.google.com/chart?cht=qr&chl=Hello&chs=248" alt="QR Nequi" className="img-fluid"/>
                 <hr/>
+                <h3>$&nbsp;{ponerPuntos(price)}</h3>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
               </Modal>
@@ -162,6 +174,7 @@ export default function ShippingAndPayement() {
                 {label:'cancel', value:false},
               ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
                 <hr/>
+                <h3>$&nbsp;{ponerPuntos(price)}</h3>
                 <h5>Account number:</h5>
                 <h6>1205-672235</h6>
                 <hr/>
@@ -175,6 +188,7 @@ export default function ShippingAndPayement() {
               ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
                 <img src="https://chart.apis.google.com/chart?cht=qr&chl=Hello&chs=248" alt="QR Nequi" className="img-fluid"/>
                 <hr/>
+                <h3>$&nbsp;{ponerPuntos(price)}</h3>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
               </Modal>  
@@ -190,6 +204,7 @@ export default function ShippingAndPayement() {
               ]} resolveFunction={()=>{
                 localStorage.getItem("token")&&window.location.assign(userDashboardPath)
                 }} >
+                  <Spinner/>
               </Modal>
             )
           }else{
