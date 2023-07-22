@@ -30,6 +30,10 @@ export const secondaryColorsAdminPath = "/secondaryColorsAdmin";
 export const tagsAdminPath = "/tagsAdmin";
 export const usersAdminPath = "/usersAdmin";
 export const otherAdminsPath = "/otherAdmins";
+export const addresesViewerPath = "/addressesViewer";
+export const addressUserAdminPath = "/addressUserAdmin";
+
+
 
 
 

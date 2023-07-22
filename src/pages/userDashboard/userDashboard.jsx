@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
-import { apiRoute, loginAndRegisterPath} from "../../const/const"
+import { addressUserAdminPath, adminDashboardPath, apiRoute, loginAndRegisterPath} from "../../const/const"
 import { logout, getUserToken, setRequestConfig, verifyIsWhereItShould, customSort } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import BuyItem from "../../components/buyItem/buyItem";
+import AddressItem from "../../components/addressItem/addressItem";
 
 export default function Dashboard() {
+  verifyIsWhereItShould()
+  if (localStorage.getItem("password")) return window.location.assign(adminDashboardPath)
+
+
   const [editingInfo, setEditingInfo] = useState(false);
   const [loadingUpdateInfo, setLoadingUpdateInfo] = useState(false);
   const [shoppings, setShoppings] = useState([]);
   const [loadingShoppings, setLoadingShoppings] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [loadignAddresses, setLoadignAddresses] = useState(false);
   
 
-  verifyIsWhereItShould()
   
   const userInfo = customSort(["id","first_name","last_name","email","phone"],Object.keys(localStorage)).map((key) => {
     // skip some properties
@@ -37,9 +43,19 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
-    fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
-      setShoppings(data)
-      console.log(data);
+    setLoadingShoppings(true)
+    setLoadignAddresses(true)
+    Promise.all([
+      fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()),
+      fetch(apiRoute + "/user/read/addresses/"+localStorage.getItem("id"), setRequestConfig()).then(re=>re.json())
+    ]).then(([shoppingsData, addressesData]) => {
+      setShoppings(shoppingsData)
+      console.log(shoppingsData);
+      setAddresses(addressesData)
+      console.log(addressesData);
+    }).finally(() => {
+      setLoadingShoppings(false)
+      setLoadignAddresses(false)
     })
   }, []);
 
@@ -108,9 +124,9 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1>dashboard</h1>
+      <h1 className="text-center mt-2">dashboard</h1>
       <div className="container-sm mx-sm-5 px-sm-5">
-        <div className="row mx-sm-5 p-sm-5">
+        <div className="row p-sm-5">
           <div className="accordion" id="userDashboadAccordion">
             {/* user */}
             <div className="accordion-item">
@@ -165,16 +181,48 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {/* addresses */}
+            <div className="accordion-item">
+              <h2 className="accordion-header">
+                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+                  Addresses
+                </button>
+              </h2>
+              <div id="collapse3" className="accordion-collapse collapse" aria-labelledby="heading3">
+                <div className="accordion-body">
+                  
+                {
+                localStorage.getItem("token")?(
+                  <>
+                  {addresses.map(address => (<AddressItem address={address} key={address.id}/>))}
+                  <a href={addressUserAdminPath} className="btn">Go to editor</a>
+                  </>
+                  )
+                  :loadignAddresses?
+                    <Spinner/>
+                  :
+                    <div className="d-grid gap-2">
+                      <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
+                        setLoadignAddresses(true)
+                        getUserToken().then(e => {
+                          fetch(apiRoute + "/user/read/addresses/"+localStorage.getItem("id"), setRequestConfig()).then(re=>re.json()).then((data) => {
+                            setAddresses(data)
+                            console.log(data);
+                          })
+                        }).finally(() => {
+                          setLoadingShoppings(false)
+                        })}
+                      }>see addresses</button>
+                    </div>
+
+                }
+                </div>
+              </div>
+            </div>
           </div>
           <button type="button" className=" btn btn-dark mx-auto d-block mt-3 w-50" onClick={logout}>Logout</button>
         </div>
       </div>
-
-
-
-      
-
-    
     </>
   )
 };

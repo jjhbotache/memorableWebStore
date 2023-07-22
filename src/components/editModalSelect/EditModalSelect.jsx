@@ -2,14 +2,15 @@ import { useState } from "react";
 import { apiRoute} from "../../const/const";
 import {setRequestConfig} from "../../functions/functions"
 
-export default function EditModalSelect({readOnly,label,tableName,labelProperty,valueProperty="id",firstObj={id:"",[labelProperty]:"Choose an option"},onChangeValue,optional}) {
+export default function EditModalSelect({children,readOnly,label,tableName,labelProperty,valueProperty="id",firstObj={id:"",[labelProperty]:"Choose an option"},onChangeValue,optional}) {
   const [options, setOptions] = useState([firstObj]);
 
   if (firstObj.id=="")readOnly=false
+  console.log(tableName,options);
     
   // }
   return (
-    <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
+    <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-1">
       <label htmlFor={tableName} className="form-label mb-0 align-baseline">{label}</label>
       <select disabled={readOnly} onClick={(e)=>{
         getOptions(tableName).then(options=>{
@@ -32,6 +33,7 @@ export default function EditModalSelect({readOnly,label,tableName,labelProperty,
 
 
       </select>
+      {children}
     </div>
   );
 

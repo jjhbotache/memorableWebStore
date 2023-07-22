@@ -90,4 +90,17 @@ hr{
   border-radius: 99999px;
 }
 
+a{
+  color: var(--colorPrimary) !important;
+  /* add a text shadow */
+  text-shadow: 0 0 0.15em rgb(255, 158, 231);
+}
+a:visited{
+  color: var(--colorPrimary) !important;
+}
+a:hover{
+  text-shadow: 0 0 0.15em rgb(255, 158, 231);
+  color: var(--colorPrimary) !important;
+}
+
 /* make inputs like a btn */

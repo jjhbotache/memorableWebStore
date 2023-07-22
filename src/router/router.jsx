@@ -13,6 +13,8 @@ import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
 import RealDesignsAdmin from "../pages/realDesignsAdmin/realDesignsAdmin";
 import DataAdmin from "../pages/dataAdmin/dataAdmin";
 import OtherAdmins from "../pages/othersAdmin/otherAdmins";
+import AddressesViewer from "../pages/addressesViewer/addressesViewer";
+import AddressUserAdmin from "../pages/addressUserAdmin/addressUserAdmin";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +84,14 @@ const router = createBrowserRouter([
   {
     path: "/otherAdmins",
     element: <OtherAdmins/> ,
+  },
+  {
+    path: "/addressesViewer/:id?",
+    element: <AddressesViewer/> ,
+  },
+  {
+    path: "/addressUserAdmin",
+    element: <AddressUserAdmin/> ,
   },
   {
     path: "*",

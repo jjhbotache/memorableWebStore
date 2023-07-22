@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { apiRoute } from "../../const/const";
-import { areObjectsEqual, camelToSnake, setRequestConfig } from "../../functions/functions";
+import { areObjectsEqual, camelToSnake, capitalizeFirstLetter, setRequestConfig } from "../../functions/functions";
 import Spinner from "../../components/spinner/spinner";
 import { useRef } from "react";
+import statesAndTowns from "../../jsons/statesAndTowns.json"
 
 export default function OtherAdmins() {
   const [loading, setLoading] = useState(false);
@@ -10,6 +11,11 @@ export default function OtherAdmins() {
     bottlePrice: 0,
     nationalShippingPrice: 0,
   });
+  const [options, setOptions] = useState({
+    state: [],
+    town: [],
+  });
+
   const data = useRef({})
 
 
@@ -19,6 +25,7 @@ export default function OtherAdmins() {
       new Promise((resolve,reject) => fetch(`${apiRoute}/read/addresses/1`,setRequestConfig()).then(res => res.json()).then(data => resolve(data)).catch(err => reject(err))),
       new Promise((resolve,reject) => fetch(`${apiRoute}/csv-data/bottle_price`,setRequestConfig()).then(res => res.json()).then(data => resolve(data.data)).catch(err => reject(err))),
       new Promise((resolve,reject) => fetch(`${apiRoute}/csv-data/national_shipping_price`,setRequestConfig()).then(res => res.json()).then(data => resolve(data.data)).catch(err => reject(err))),
+      // new Promise((resolve,reject) => fetch(`https://www.datos.gov.co/api/id/xdk5-pm3f.json?$query= select distinct departamento,c_digo_dane_del_departamento `,setRequestConfig()).then(res => res.json()).then(d => resolve(d)).catch(err => reject(err))),
     ])
     .then(([a,bp,nsp]) => {
       data.current = {
@@ -33,33 +40,41 @@ export default function OtherAdmins() {
     .finally(() => setLoading(false))
   }, [])
 
-  function saveData(key) {
+  async function saveData(key) {
     setLoading(true);
-    fetch(`${apiRoute}/csv-data/${camelToSnake(key)}`,setRequestConfig("PUT",{data:dataToAdmin[key]}))
-    .then(res => res.json())
-    .then(d=>{
-      alert(d.msg)
-      data.current[key] = dataToAdmin[key];
-    })
-    .catch(err => console.log(err))
-    .finally(() => setLoading(false))
+    if (!(key == "pickUpAdress")) {
+      fetch(`${apiRoute}/csv-data/${camelToSnake(key)}`,setRequestConfig("PUT",{data:dataToAdmin[key]}))
+      .then(res => res.json())
+      .then(d=>{
+        alert(d.msg)
+        data.current[key] = dataToAdmin[key];
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false))
+    }{
+      const res = await fetch(`${apiRoute}/update/addresses/1`,setRequestConfig("PUT",dataToAdmin[key]))
+      if (!res.ok) {
+        console.log("its not ok");
+        await res.json().then(d=>alert(d.msg))
+        setDataToAdmin(data.current)
+      }else{
+        console.log("its ok");
+        await res.json().then(d=>alert(d.msg))
+        data.current[key] = dataToAdmin[key];
+      }
+      setLoading(false)
+    }
+
   }
 
+  console.log(dataToAdmin);
   return loading ? 
     <div className="mt-2 h-100">
       <Spinner/>
     </div>
    : 
-// commune: 1
-// complement: "casa 3 pisos frente a colcable"
-// id: 1
-// neighbourhood: "pueblo nuevo"
-// number: "7-82"
-// state: "Tolima"
-// street: 13
-// town: "Ibagué"
     <div>
-      <h1 className="fs-4">Pucharse Orders Admin</h1>
+      <h1 className="fs-4 text-center">Pucharse Orders Admin</h1>
       <div className="container mx-sm-5 px-sm-5">
         <hr />
         <div className="row mx-md-5 px-md-5">
@@ -67,9 +82,24 @@ export default function OtherAdmins() {
             <label className="form-label">Pick up adress:</label>
             <div className="d-flex flex-column mb-3">
               <label className="form-label">State:</label>
-              <input type="text" className="form-control" value={dataToAdmin.pickUpAdress?.state} onChange={e=>setDataToAdmin({...dataToAdmin,pickUpAdress:{...dataToAdmin.pickUpAdress,state:e.target.value}})}/>
+              <input list="stateOptions" type="text" className="form-control" value={dataToAdmin.pickUpAdress?.state} onChange={e=>setDataToAdmin({...dataToAdmin,pickUpAdress:{...dataToAdmin.pickUpAdress,state:capitalizeFirstLetter(e.target.value)}})}/>
+              <datalist id="stateOptions">
+                {
+                  dataToAdmin.pickUpAdress?.state.lenght > 3 ?
+                   statesAndTowns.map(s => (s.departamento.toLowerCase()).includes(dataToAdmin.pickUpAdress?.state.toLowerCase()) && <option key={s.id} value={s.departamento}/>)
+                  : statesAndTowns.map(s => <option key={s.id} value={s.departamento}/>)
+                }
+              </datalist>
+
               <label className="form-label">Town:</label>
-              <input type="text" className="form-control" value={dataToAdmin.pickUpAdress?.town} onChange={e=>setDataToAdmin({...dataToAdmin,pickUpAdress:{...dataToAdmin.pickUpAdress,town:e.target.value}})} />
+              <input list="townOptions" type="text" className="form-control" value={dataToAdmin.pickUpAdress?.town} onChange={e=>setDataToAdmin({...dataToAdmin,pickUpAdress:{...dataToAdmin.pickUpAdress,town:capitalizeFirstLetter(e.target.value)}})} />
+              <datalist id="townOptions">
+                {
+                  dataToAdmin.pickUpAdress?.town.lenght > 3 ?
+                  statesAndTowns.find(s=>s.departamento==dataToAdmin.pickUpAdress?.state)?.ciudades.map(t=>t.toLowerCase().includes(dataToAdmin.pickUpAdress?.town.toLowerCase()) && <option key={t} value={t}/>) 
+                  : statesAndTowns.find(s=>s.departamento==dataToAdmin.pickUpAdress?.state)?.ciudades.map(t=> <option key={t} value={t}/>)
+                }
+              </datalist>
               <label className="form-label">Neighbourhood:</label>
               <input type="text" className="form-control" value={dataToAdmin.pickUpAdress?.neighbourhood} onChange={e=>setDataToAdmin({...dataToAdmin,pickUpAdress:{...dataToAdmin.pickUpAdress,neighbourhood:e.target.value}})} />
               <label className="form-label">Street:</label>

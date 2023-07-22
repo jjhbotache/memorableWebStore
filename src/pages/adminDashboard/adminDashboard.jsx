@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Modal from "../../components/modal/modal";
-import {adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
+import {addresesViewerPath, adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
 import {getUserToken, logout, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 
@@ -61,6 +61,14 @@ export default function AdminDashboard() {
               )
               )}
             </ul>
+              <hr />
+              <h3>Other tools</h3>
+            <ul>
+              <li className=" mb-2">
+                <a className="btn" href={addresesViewerPath}>Addreses Viewer</a>
+              </li>
+            </ul>
+
           </div>
         </div>
         <div className="row">

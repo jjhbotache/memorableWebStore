@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './buyItem.module.css';
 import { apiRoute } from '../../const/const';
+import { setRequestConfig } from '../../functions/functions';
 
 // made mostly by chatgpt
 
@@ -8,12 +9,12 @@ const BuyItem = ({ data,token,userId }) => {
   const { id, id_design,id_real_design, amount, delivery_date, id_delivery_place, id_packing_color, id_vaucher } = data;
   const [nameToUse, setNameToUse] = useState("No design");
 
-  useEffect(() => {
-    console.log("id_design",id_design);
-  }, [data])
+  // useEffect(() => {
+  //   console.log("id_design",id_design);
+  // }, [data])
 
   if (id_real_design) {
-    fetch(apiRoute+"/user/read/real_designs/"+userId).then(re=>re.json())
+    fetch(apiRoute+"/user/read/real_designs/"+id_real_design,setRequestConfig()).then(re=>re.json())
     .then(data=>{
       const design = data.find(design => design.id==id_real_design)
       setNameToUse(design.name)
@@ -21,7 +22,7 @@ const BuyItem = ({ data,token,userId }) => {
   }else if(id_design){
     fetch(apiRoute+"/read-anyone/designs").then(re=>re.json())
     .then(data=>{
-      console.log(data);
+      // console.log(data);
       const design = data.find(design => design.id==id_design)
       setNameToUse(design.name)
     })

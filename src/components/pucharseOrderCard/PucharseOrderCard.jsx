@@ -18,7 +18,7 @@ export default function PucharseOrderCard({order,onEdit,onDelete}){
 
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  console.log(order);
+  // console.log(order);
 
 
   useEffect(() => {

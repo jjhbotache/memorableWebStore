@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { apiRoute } from "../../const/const";
+import { addresesViewerPath, apiRoute } from "../../const/const";
 import {copyToClipboard, loadPreview, setRequestConfig} from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import PucharseOrderCard from "../../components/pucharseOrderCard/PucharseOrderCard";
@@ -69,7 +69,6 @@ export default function PucharseOrdersAdmin() {
 
 
   async function putInfoInModal(data){
-    
     function getDateFromStrign(fechaString) {
       try {
         const fecha = new Date(fechaString);
@@ -95,10 +94,11 @@ export default function PucharseOrdersAdmin() {
       // , deliveryDate
       // , paid
       // , vaucher
-      const [wine, primaryColor, secondaryColor] = await Promise.all([
+      const [wine, primaryColor, secondaryColor, deliveryPlace] = await Promise.all([
         order.id_wine ? fetch(apiRoute + "/read/wine_kinds/" + order.id_wine, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
         order.id_packing_color ? fetch(apiRoute + "/read/packing_colors/" + order.id_packing_color, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
         order.id_secondary_packing_color ? fetch(apiRoute + "/read/secondary_packing_colors/" + order.id_secondary_packing_color, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
+        order.id_delivery_place ? fetch(apiRoute + "/read/addresses/" + order.id_delivery_place, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
       ]);
       const date = getDateFromStrign(order.delivery_date);
   
@@ -114,7 +114,7 @@ export default function PucharseOrdersAdmin() {
         secondaryColor  : secondaryColor,
         msg : order.msg,
         deliveryDate  : date,
-        deliveryPlace : order.id_delivery_place,
+        deliveryPlace : deliveryPlace,
         price : order.price,
         vaucher : order.id_vaucher,
         trulyPaid : order.paid==1,
@@ -168,10 +168,10 @@ export default function PucharseOrdersAdmin() {
               </div>
               {/* address */}
               {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
-              <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
-                <label htmlFor="deliveryPlace" className="form-label mb-0 align-baseline">Delivery place: </label>
-                <input disabled={editingOrder} type="text" className="form-control p-0" value={orderInEditModal.deliveryPlace} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryPlace:e.target.value})} name="deliveryPlace" />
-              </div>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,deliveryPlace:obj})} label="Address:" tableName="addresses" labelProperty="id" firstObj={orderInEditModal.deliveryPlace}>
+                <a href={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</a>
+              </EditModalSelect>
+              
               {/* vaucher */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2" >
                 <label htmlFor="vaucher" className="form-label mb-0 align-baseline">Vaucher: </label>
@@ -226,7 +226,7 @@ export default function PucharseOrdersAdmin() {
       formData.append("primary_color_id", orderInEditModal.primaryColor.id);
       formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
       formData.append("delivery_date", orderInEditModal.deliveryDate);
-      formData.append("address", orderInEditModal.deliveryPlace);
+      formData.append("address", orderInEditModal.deliveryPlace.id);
       formData.append("oldVaucher", oldVaucher.current);
       formData.append("vaucher",  orderInEditModal.vaucher instanceof File?orderInEditModal.vaucher:oldVaucher.current);
       formData.append("truly_paid", orderInEditModal.trulyPaid?1:0);
@@ -259,6 +259,7 @@ export default function PucharseOrdersAdmin() {
 
     }else{
       console.log("creating...");
+      console.log(orderInEditModal);
       const formData = new FormData();
       try {formData.append("user_id", orderInEditModal.user.id);
       } catch (error) {alert("An error occurred when appending 'user_id'", error);return}
@@ -288,8 +289,8 @@ export default function PucharseOrdersAdmin() {
         formData.append("delivery_date", orderInEditModal.deliveryDate);
       } catch (error) {alert("An error occurred when appending 'delivery_date'", error);return}
       
-      try {if (!orderInEditModal.deliveryPlace) throw new Error("No address");
-        formData.append("address", orderInEditModal.deliveryPlace);
+      try {if (!orderInEditModal.deliveryPlace.id) throw new Error("No address");
+        formData.append("address", orderInEditModal.deliveryPlace.id);
       } catch (error) {alert("An error occurred when appending 'address'", error);return}
       
       try {if (!orderInEditModal.price) throw new Error("No Price");
