@@ -10,7 +10,7 @@ export default function AdminDesignCard({design,onDelete,onEdit}) {
         </div>
         <h5 className="card-title p-1">{design.id + ") " + design.name}</h5>
         <div className="card-body d-grid align-content-end justify-content-end">
-        <small class={`form-text text-muted pb-1 ${styles.slidingText}`}>{design.tags.map(t=>t.name).join(" / ")}</small>
+        <small class={`form-text text-muted pb-1 ${styles.slidingText} ${styles.small}`}>{design.tags.map(t=>t.name).join(" / ")}</small>
           <div className="d-flex">
             <button type="button" className={`btn ${styles.btnFirst}`} onClick={()=>{onEdit(design)}}>edit</button>
             <a type="button" className={`btn ${styles.btnMiddle}`} href={apiRoute +"/" +(design.ai||design.dxf) +"/" + localStorage.getItem("token")}><i className="fi fi-br-download"></i></a>

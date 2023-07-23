@@ -28,7 +28,7 @@ export default function BuyNow() {
           </div>
         </div>
         <div className="row d-flex justify-content-center gap-4">
-          <img src={apiRoute+"/"+design.img+"/-"} className="img-fluid rounded-4"/>
+          <img src={apiRoute+"/get_file/"+design.img+"/-"} className="img-fluid rounded-4"/>
           <div className="text-center">
             <h1 >{design.name}</h1>
             <h2>$&nbsp;{price?ponerPuntos(price):"--.---"}</h2>

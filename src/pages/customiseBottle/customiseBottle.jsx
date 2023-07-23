@@ -70,7 +70,7 @@ export default function CustomiseBottle() {
       <div className={` container-fluid ${styles.customiseBottleContainer}`}>
         <div className="row w-100 gap-4 gap-sm-0">
           <div className="col-12 col-sm-5 d-grid align-content-center">
-            <img className="img-fluid" src={apiRoute+"/"+designGotten.current.img+"/-"} alt={designGotten.current.name} />
+            <img className="img-fluid" src={apiRoute+"/get_file/"+designGotten.current.img+"/-"} alt={designGotten.current.name} />
             <h2 className="mt-2">{designGotten.current.name}</h2>
           </div>
 

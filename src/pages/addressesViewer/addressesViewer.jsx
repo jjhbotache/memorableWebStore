@@ -77,7 +77,7 @@ export default function AddressesViewer() {
                       <p>{dataInEditor[key]}</p>
                       :
                       <ul>
-                        {Object.keys(dataInEditor[key]).map((key2,index2) => (
+                        {Object.keys(dataInEditor[key]).filter(k=>!(k=="password")).map((key2,index2) => (
                           <li key={index2} className=" text-start " >{key2}: {dataInEditor[key][key2]}</li>
                         ))}
                       </ul>
@@ -95,7 +95,7 @@ export default function AddressesViewer() {
         <h1 className="text-center">Addresses viewer</h1>
         <hr className="my-4"/>
         <AdminHeader onSearch={i=>search(i)} />
-        <div className="row gap-3 gap-sm-0 pt-3">
+        <div className="row gap-3 gap-sm-0 pt-3 d-flex justify-content-between">
           {/* address cards */}
           {addresses.map((address) => {
             return (

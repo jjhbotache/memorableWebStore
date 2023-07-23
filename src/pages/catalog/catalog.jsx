@@ -38,6 +38,13 @@ export default function Catalog() {
       console.log(err);
     }
     ).finally(()=>setLoading(false));
+
+
+    fetch("https://www.datos.gov.co/resource/xdk5-pm3f.json").then(re=>re.json()).then(d=>{
+      console.log(d)
+    }
+    )
+
   }, []);
 
   function designClicked(design) {

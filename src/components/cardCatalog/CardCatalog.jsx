@@ -20,12 +20,12 @@ export default function CardCatalog({design,onClick}) {
 
   return(
     <div className={`col-12 col-sm-5 col-md-3  ${styles.cardCatalog}`} onClick={onClick}>
-      <img src={apiRoute+"/"+design.img+"/-"} alt={design.name} />
+      <img src={apiRoute+"/get_file/"+design.img+"/-"} alt={design.name} />
       <div className={styles.cardCatalogOverlay}>
         {/* get the height of the parent element */}
         <h2 ref={title} className={classForTheTitle}>{design.name}</h2>
       </div>
-      <small className={`form-text text-muted pb-1 ${styles.slidingText}`}>{design.tags.map(t=>t.name).join(" / ") || " - no tags - "}</small>
+      <small className={`form-text text-muted pb-1 ${styles.slidingText + styles.small}`}>{design.tags.map(t=>t.name).join(" / ") || " - no tags - "}</small>
     </div>
   )
 };

@@ -22,7 +22,7 @@ export default function Modal({title="",resolveFunction, options=[],cancelable, 
           {options.map((option) => (
             <button className="btn " key={option.value} disabled={option.disabled} onClick={() => {resolveFunction(option.value);}}>{option.label}</button>
           ))}
-          {cancelable && <button className="btn " onClick={() => {resolveFunction(0);}}>Cancel</button>}
+          {cancelable && (<button className="btn btn-dark w-50 w-sm-25 mx-5 my-2" onClick={() => {resolveFunction(0);}}>Cancel</button>)}
         </div>
       </div>
     </article>

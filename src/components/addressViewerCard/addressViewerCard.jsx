@@ -17,7 +17,7 @@ export default function AddressViewerCard({address,onDelete,onWatch}) {
 
 
   return(
-  <div className="col-12 col-sm-6 col-md-4">
+  <div className="col-12 col-sm-5 col-md-3 mt-sm-2">
     <div className="card h-100 p-1">
       <div className="card-body d-flex flex-column justify-content-between">
         <h5 className="card-title">{address.id+") "+ address.state +"-"+ address.town}</h5>

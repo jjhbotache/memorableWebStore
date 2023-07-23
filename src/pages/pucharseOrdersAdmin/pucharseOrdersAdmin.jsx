@@ -175,7 +175,7 @@ export default function PucharseOrdersAdmin() {
               {/* vaucher */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2" >
                 <label htmlFor="vaucher" className="form-label mb-0 align-baseline">Vaucher: </label>
-                <img ref={preview} src={apiRoute + "/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
+                <img ref={preview} src={apiRoute + "/get_file/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
                 <input disabled={editingOrder} accept=".png" type="file" className="form-control p-0" name="vaucher" onChange={
                   (e)=>{
                     if (e.target.files[0]) {
@@ -235,6 +235,7 @@ export default function PucharseOrdersAdmin() {
       fetch(apiRoute + "/update_pucharse_orders/" + orderInEditModal.id, setRequestConfig("PUT", formData, true)).then((response) => response.json()).then((data) => {
         console.log(data);
         setSearch("")
+
         const infoStr = 
         "Name: " + orderInEditModal.user.first_name + " " + orderInEditModal.user.last_name +
         "\nEmail: " + orderInEditModal.user.email +
@@ -244,12 +245,11 @@ export default function PucharseOrdersAdmin() {
         // Email: ${orderInEditModal.user.email}
         // Phone: ${orderInEditModal.user.phone}`;
         console.log(infoStr);
-        if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the phone number?")){
-          // copyToClipboard(orderInEditModal.user.phone)
+        if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the user info?")){
           copyToClipboard(infoStr)
         }
 
-        window.location.reload();
+        
       }).catch((error) => {
         alert("check all the fields needed");
         console.error(error);

@@ -17,7 +17,7 @@
   overflow: hidden;
   background: var(--colorTertiary);
 }
-small{
+.small{
   /* add a shadown */
 
   text-shadow: 0px 0px 10px rgba(255, 0, 157, 0.75);

@@ -4,6 +4,7 @@ import { logout, getUserToken, setRequestConfig, verifyIsWhereItShould, customSo
 import Spinner from "../../components/spinner/spinner";
 import BuyItem from "../../components/buyItem/buyItem";
 import AddressItem from "../../components/addressItem/addressItem";
+import "./userDashboard.css"
 
 export default function Dashboard() {
   verifyIsWhereItShould()
@@ -47,9 +48,10 @@ export default function Dashboard() {
     setLoadignAddresses(true)
     Promise.all([
       fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()),
-      fetch(apiRoute + "/user/read/addresses/"+localStorage.getItem("id"), setRequestConfig()).then(re=>re.json())
+      fetch(apiRoute + "/user/read/addresses", setRequestConfig()).then(re=>re.json())
     ]).then(([shoppingsData, addressesData]) => {
       setShoppings(shoppingsData)
+      // save shoppings in local storage
       console.log(shoppingsData);
       setAddresses(addressesData)
       console.log(addressesData);
@@ -130,36 +132,40 @@ export default function Dashboard() {
           <div className="accordion" id="userDashboadAccordion">
             {/* user */}
             <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <h2 className="accordion-header" id="heading1">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                   Profile
                 </button>
               </h2>
-              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#userDashboad">
+              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#userDashboadAccordion">
                 <div className="accordion-body">
                 <form className="container" onSubmit={onsubmitUserInfo}>
                   {userInfo}
                   {loadingUpdateInfo && <Spinner/>}
-                  <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
+                  <button type="submit" className={"btn btn-white mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
                 </form>
                 </div>
               </div>
             </div>
             {/* shoppings */}
             <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+              <h2 className="accordion-header" id="heading2">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
                   Shoppings
                 </button>
               </h2>
-              <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboad">
+              <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboadAccordion">
                 <div className="accordion-body">
                   
                 {
                 localStorage.getItem("token")?
-                shoppings.map(shopping =>
-                  <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />
-                )
+                <div className="accordion" id="shoppingsAccordion">
+                  {shoppings.map(shopping =>
+                    <div key={shopping.id} className="mb-2">
+                      <BuyItem data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} accordionContainerId="shoppingsAccordion" />
+                    </div>
+                  )}
+                </div>
                 :loadingShoppings?
                   <Spinner/>
                 :
@@ -168,6 +174,7 @@ export default function Dashboard() {
                     setLoadingShoppings(true)
                     getUserToken().then(e => {
                       fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
+                        setShoppings([])
                         setShoppings(data)
                         console.log(data);
                       })
@@ -183,19 +190,21 @@ export default function Dashboard() {
             </div>
             {/* addresses */}
             <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+              <h2 className="accordion-header" id="heading3">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
                   Addresses
                 </button>
               </h2>
               <div id="collapse3" className="accordion-collapse collapse" aria-labelledby="heading3">
                 <div className="accordion-body">
-                  
                 {
                 localStorage.getItem("token")?(
                   <>
+                  <div className="d-flex align-items-center flex-column" >
+                    <a href={addressUserAdminPath} className="btn btn-white">Go to editor</a>
+                    <small className="form-text text-muted mb-4">Create, edit or delete your addresses from here</small>
+                  </div>
                   {addresses.map(address => (<AddressItem address={address} key={address.id}/>))}
-                  <a href={addressUserAdminPath} className="btn">Go to editor</a>
                   </>
                   )
                   :loadignAddresses?

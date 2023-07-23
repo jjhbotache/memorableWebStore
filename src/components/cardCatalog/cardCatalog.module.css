@@ -63,7 +63,7 @@ h2:hover{
 
 
 
-small{
+.small{
   /* add a shadown */
 
   text-shadow: 0px 0px 10px rgba(255, 54, 178, 0.75);

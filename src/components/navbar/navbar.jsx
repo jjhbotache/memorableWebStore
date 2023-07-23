@@ -13,7 +13,7 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
     }
 
     return(
-      <li className="nav-item" key={link.path}>
+      <li className="nav-item d-flex justify-content-center" key={link.path}>
         <a href={link.path} className={ link.active ? "nav-link active" : "nav-link" } >{link.name}</a>
       </li>
   )})
@@ -33,7 +33,7 @@ return (
                 {pagesToShow}
               </ul>
               {
-                localStorage.getItem("id")&&<a onClick={logout} className="nav-link" style={{ color: 'rgb(164 1 1)' }}>Logout</a>
+                localStorage.getItem("id")&&<a onClick={logout} className="nav-link mx-auto" style={{ color: 'rgb(164 1 1)' }}>Logout</a>
               }
 
               

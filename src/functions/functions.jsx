@@ -100,20 +100,8 @@ export function logout() {
 }
 
 export function copyToClipboard(str) {
-  // Crear un elemento de texto temporal
   str=str.toString()
-  const tempInput = document.createElement("textarea");
-  tempInput.value = str;
-  
-  // Agregar el elemento al DOM
-  document.body.appendChild(tempInput);
-  
-  // Seleccionar y copiar el contenido del elemento
-  tempInput.select();
-  document.execCommand("copy");
-
-  // Eliminar el elemento temporal del DOM
-  document.body.removeChild(tempInput);
+  navigator.clipboard.writeText(str)
 }
 
 export function loadPreview(imgTag, e) {

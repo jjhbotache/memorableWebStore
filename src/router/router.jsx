@@ -15,11 +15,32 @@ import DataAdmin from "../pages/dataAdmin/dataAdmin";
 import OtherAdmins from "../pages/othersAdmin/otherAdmins";
 import AddressesViewer from "../pages/addressesViewer/addressesViewer";
 import AddressUserAdmin from "../pages/addressUserAdmin/addressUserAdmin";
+import { Outlet } from "react-router-dom";
+import { catalogPath } from "../const/const";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage/>,
+    element: (
+      <>
+        <h1>holi</h1>
+        <Outlet/>
+      </>
+    ),
+    loader:()=> {
+      const permissions = "public";
+      if (permissions==="public") {
+        window.location.assign(catalogPath);
+      }
+      return null
+    },
+    children: [
+      { 
+        index:true,
+        element: <LandingPage/> 
+      },
+    ],
+    // use children property
   },
   {
     path: "/catalog",

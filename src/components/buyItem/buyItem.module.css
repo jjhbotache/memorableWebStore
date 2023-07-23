@@ -2,3 +2,7 @@
   max-width: 200px;
   max-height: 200px;
 }
+.bg{
+  background-color: var(--colorTertiary) !important;
+  box-shadow: inset 0px 0px 0.4em 0px rgba(0,0,0,0.75) !important;
+}

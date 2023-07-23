@@ -14,6 +14,7 @@ export default function ShippingAndPayement() {
   const [wayOfPaying, setWayOfPaying] = useState();  
   const [price, setPrice] = useState();
 
+  const [addresses, setAddresses] = useState([]);
   const [pickUpPlace, setPickUpPlace] = useState(null);
 
   const input = useRef()
@@ -26,10 +27,12 @@ export default function ShippingAndPayement() {
   }, []);
 
   function handleSetShipping (shipping){
-    shipping.shippingId?
-      setShipping(shipping)
-    :
+    if (!!(shipping.shippingId)===false) {
       setWayOfShiping()
+      setShipping({})
+    }else{
+      setShipping(shipping)
+    }
   }
   async function handlePayement(value) {
     console.log("paying");
@@ -67,7 +70,7 @@ export default function ShippingAndPayement() {
               const finalOrder = {
                 
                 amount:order.amount,
-                id_delivery_place:shipping.shippingId===1?"\"Ibague Tolima Calle 13 #7-82\"":shipping.shippingId.toString(),
+                id_delivery_place:shipping.shippingId,
                 id_design:order.design.id,
                 id_packing_color:order.primaryColor.id,
                 id_secondary_packing_color:order.primaryColor.id,
@@ -107,6 +110,15 @@ export default function ShippingAndPayement() {
     }
   }
 
+  console.clear();
+  console.log("shipping",shipping);
+  console.log("payement",payement);
+  console.log("wayOfPaying",wayOfPaying);
+  console.log("wayOfShiping",wayOfShiping);
+  console.log("price",price);
+  console.log("pickUpPlace",pickUpPlace);
+  // clean the console
+
   
   let modalToRender;
   // logic to show modals
@@ -117,40 +129,40 @@ export default function ShippingAndPayement() {
         {label:'Send it', value:2}
       ]} resolveFunction={(way)=>setWayOfShiping(way)}/>
   }else{
-    if (!shipping.shippingId) {
+    if (!(!!(shipping.shippingId))) {
       if(wayOfShiping===1){
-        if (!pickUpPlace) fetch(apiRoute + "/open-csv-data/pick_up_adress",setRequestConfig()).then(re=>re.json()).then(d=>{
-          setPickUpPlace(d.data)
-          console.log(d.data);
-          }).catch(e=>console.log(e))
+        // get the pick up place
+        pickUpPlace || fetch(apiRoute + "/user/read/addresses/1",setRequestConfig()).then(re=>re.json()).then(d=>setPickUpPlace(d[0])).catch(e=>console.log(e))
 
         modalToRender=
         <Modal title={`Do you want to pick up your order in the pick up place?`} options={[
           {label:'Yes', value:1},
-          {label:'No', value:false}
-        ]} resolveFunction={(value)=>handleSetShipping({shippingId:value})}>
-          <h5><strong>Pick up place: </strong> </h5>
-          <h6 className='my-3'>{pickUpPlace?pickUpPlace:"loading..."}</h6>
-          </Modal>
+        ]} cancelable resolveFunction={(value)=>handleSetShipping({shippingId:value})}>
+          <h3 className='text-start mx-4'><strong>Pick up place: </strong> </h3>
+          <ul className='text-start'>
+            <li><h5>{pickUpPlace? (pickUpPlace.state+" - "+pickUpPlace.town) : "loading..."}</h5></li>
+            <li><h5>{pickUpPlace? (pickUpPlace.neighbourhood+" / Str "+pickUpPlace.street+" - "+pickUpPlace.number) : "loading..." }</h5></li>
+          </ul>
+        </Modal>
           
       }else{
+        // get the addresses
+        addresses.length===0 && fetch(apiRoute + "/user/read/addresses",setRequestConfig()).then(re=>re.json()).then(d=>setAddresses(d)).catch(e=>console.log(e))
+
         modalToRender=
-        <Modal title='To which address would you like to send your order?' options={[
-          {label:'1', value:1},
-          {label:'2', value:2},
-          {label:'3', value:3},
-          {label:'4', value:4},
-          {label:'cancel', value:false},
-        ]} resolveFunction={(value)=>handleSetShipping({shippingId:value})}/>
+        <Modal title='To which address would you like to send your order?' options={
+          addresses.map(address=>({label:address.name, value:address.id}))
+        } cancelable resolveFunction={value=>handleSetShipping({shippingId:value})}/>
       }
     }else{
       if (!wayOfPaying) {
         modalToRender=
-          <Modal title='How would you like to pay?' options={[
+          <Modal title='How would you like to pay?' cancelable options={[
             {label:'Nequi', value:1},
             {label:'Bancolombia', value:2},
             {label:'Daviplata', value:3},
-          ]} resolveFunction={(value)=>{setWayOfPaying(value)}}/>
+            // {label:'Daviplata', value:false},
+          ]} resolveFunction={value=>{!(value==0)? setWayOfPaying(value) : handleSetShipping({shippingId:value}) }}/>
       }else{
         if (payement === null) {
           switch (wayOfPaying) {
