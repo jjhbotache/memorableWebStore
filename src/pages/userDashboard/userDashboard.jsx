@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { apiRoute, loginAndRegisterPath} from "../../const/const"
+import { addressUserAdminPath, adminDashboardPath, apiRoute, loginAndRegisterPath} from "../../const/const"
 import { logout, getUserToken, setRequestConfig, verifyIsWhereItShould, customSort } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import BuyItem from "../../components/buyItem/buyItem";
+import AddressItem from "../../components/addressItem/addressItem";
+import "./userDashboard.css"
 
 export default function Dashboard() {
+  verifyIsWhereItShould()
+  if (localStorage.getItem("password")) return window.location.assign(adminDashboardPath)
+
+
   const [editingInfo, setEditingInfo] = useState(false);
   const [loadingUpdateInfo, setLoadingUpdateInfo] = useState(false);
   const [shoppings, setShoppings] = useState([]);
   const [loadingShoppings, setLoadingShoppings] = useState(false);
+  const [addresses, setAddresses] = useState([]);
+  const [loadignAddresses, setLoadignAddresses] = useState(false);
   
 
-  verifyIsWhereItShould()
   
   const userInfo = customSort(["id","first_name","last_name","email","phone"],Object.keys(localStorage)).map((key) => {
     // skip some properties
@@ -37,9 +44,20 @@ export default function Dashboard() {
   })
 
   useEffect(() => {
-    fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
-      setShoppings(data)
-      console.log(data);
+    setLoadingShoppings(true)
+    setLoadignAddresses(true)
+    Promise.all([
+      fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()),
+      fetch(apiRoute + "/user/read/addresses", setRequestConfig()).then(re=>re.json())
+    ]).then(([shoppingsData, addressesData]) => {
+      setShoppings(shoppingsData)
+      // save shoppings in local storage
+      console.log(shoppingsData);
+      setAddresses(addressesData)
+      console.log(addressesData);
+    }).finally(() => {
+      setLoadingShoppings(false)
+      setLoadignAddresses(false)
     })
   }, []);
 
@@ -108,50 +126,55 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1>dashboard</h1>
+      <h1 className="text-center mt-2">dashboard</h1>
       <div className="container-sm mx-sm-5 px-sm-5">
-        <div className="row mx-sm-5 p-sm-5">
+        <div className="row p-sm-5">
           <div className="accordion" id="userDashboadAccordion">
             {/* user */}
             <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <h2 className="accordion-header" id="heading1">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                   Profile
                 </button>
               </h2>
-              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#userDashboad">
+              <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#userDashboadAccordion">
                 <div className="accordion-body">
                 <form className="container" onSubmit={onsubmitUserInfo}>
                   {userInfo}
                   {loadingUpdateInfo && <Spinner/>}
-                  <button type="submit" className={"btn mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
+                  <button type="submit" className={"btn btn-white mt-1 " + (loadingUpdateInfo==true && "d-none")} disabled={loadingUpdateInfo}>{editingInfo?"save":"edit"}</button>
                 </form>
                 </div>
               </div>
             </div>
             {/* shoppings */}
             <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+              <h2 className="accordion-header" id="heading2">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
                   Shoppings
                 </button>
               </h2>
-              <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboad">
+              <div id="collapse2" className="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#userDashboadAccordion">
                 <div className="accordion-body">
                   
                 {
                 localStorage.getItem("token")?
-                shoppings.map(shopping =>
-                  <BuyItem key={shopping.id} data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} />
-                )
+                <div className="accordion" id="shoppingsAccordion">
+                  {shoppings.map(shopping =>
+                    <div key={shopping.id} className="mb-2">
+                      <BuyItem data={shopping} token={localStorage.getItem("token")} userId={localStorage.getItem("id")} accordionContainerId="shoppingsAccordion" />
+                    </div>
+                  )}
+                </div>
                 :loadingShoppings?
                   <Spinner/>
                 :
-                <div class="d-grid gap-2">
+                <div className="d-grid gap-2">
                   <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
                     setLoadingShoppings(true)
                     getUserToken().then(e => {
                       fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
+                        setShoppings([])
                         setShoppings(data)
                         console.log(data);
                       })
@@ -165,16 +188,50 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {/* addresses */}
+            <div className="accordion-item">
+              <h2 className="accordion-header" id="heading3">
+                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+                  Addresses
+                </button>
+              </h2>
+              <div id="collapse3" className="accordion-collapse collapse" aria-labelledby="heading3">
+                <div className="accordion-body">
+                {
+                localStorage.getItem("token")?(
+                  <>
+                  <div className="d-flex align-items-center flex-column" >
+                    <a href={addressUserAdminPath} className="btn btn-white">Go to editor</a>
+                    <small className="form-text text-muted mb-4">Create, edit or delete your addresses from here</small>
+                  </div>
+                  {addresses.map(address => (<AddressItem address={address} key={address.id}/>))}
+                  </>
+                  )
+                  :loadignAddresses?
+                    <Spinner/>
+                  :
+                    <div className="d-grid gap-2">
+                      <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
+                        setLoadignAddresses(true)
+                        getUserToken().then(e => {
+                          fetch(apiRoute + "/user/read/addresses/"+localStorage.getItem("id"), setRequestConfig()).then(re=>re.json()).then((data) => {
+                            setAddresses(data)
+                            console.log(data);
+                          })
+                        }).finally(() => {
+                          setLoadingShoppings(false)
+                        })}
+                      }>see addresses</button>
+                    </div>
+
+                }
+                </div>
+              </div>
+            </div>
           </div>
           <button type="button" className=" btn btn-dark mx-auto d-block mt-3 w-50" onClick={logout}>Logout</button>
         </div>
       </div>
-
-
-
-      
-
-    
     </>
   )
 };

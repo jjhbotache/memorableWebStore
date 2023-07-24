@@ -3,6 +3,7 @@ import '../../styles/layout.css';
 import '../../styles/config.css';
 import "./navbar.css"
 import { logout } from "../../functions/functions";
+import { shoppingCartPath } from "../../const/const";
 
 
 export default function Navbar({links,pathsWhereNotToDisplay}) {
@@ -15,8 +16,9 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
     }
 
     return(
-      <li className={ link.active ? "nav-item capitalize border-bottom border-danger px-2" : "nav-item border-bottom border-white capitalize px-2" } key={link.path}>
-        <a href={link.path} className={ link.active ? "nav-link active" : "nav-link" } >{link.name}</a>
+      /* nav-item capitalize border-bottom border-danger px-2" : "nav-item border-bottom border-white capitalize px-2 */
+      <li className="nav-item d-flex justify-content-center" key={link.path}>
+        <a href={link.path} className={ (link.active ? "nav-link active" : "nav-link") + " w-100" } >{link.name}</a>
       </li>
   )})
 return (
@@ -33,10 +35,9 @@ return (
             <div className="collapse navbar-collapse nav-links" id="navbarSupportedContent">
               <ul className="navbar-nav me-4 mx-4 pb-0 gap-3">
                 {pagesToShow}
+                {localStorage.getItem("id_shopping_cart")&&<li className="nav-item d-flex justify-content-center" > <a href={shoppingCartPath} className="nav-link w-100">Shopping cart</a></li>}
+                {localStorage.getItem("id")&&<li className="nav-item d-flex justify-content-center" > <a onClick={logout} className="nav-link w-100" style={{ color: 'rgb(164 1 1)' }}>Logout</a></li>}
               </ul>
-              {
-                localStorage.getItem("id")&&<a onClick={logout} className="nav-link" style={{ color: 'rgb(164 1 1)' }}>Logout</a>
-              }
 
               
             </div>

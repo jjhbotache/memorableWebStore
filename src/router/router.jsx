@@ -12,11 +12,36 @@ import PucharseOrdersAdmin from "../pages/pucharseOrdersAdmin/pucharseOrdersAdmi
 import DesignsAdmin from "../pages/designsAdmin/DesignsAdmin";
 import RealDesignsAdmin from "../pages/realDesignsAdmin/realDesignsAdmin";
 import DataAdmin from "../pages/dataAdmin/dataAdmin";
+import OtherAdmins from "../pages/othersAdmin/otherAdmins";
+import AddressesViewer from "../pages/addressesViewer/addressesViewer";
+import AddressUserAdmin from "../pages/addressUserAdmin/addressUserAdmin";
+import { Outlet } from "react-router-dom";
+import { catalogPath } from "../const/const";
+import ShoppingCart from "../pages/shoppingCart/shoppingCart";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage/>,
+    element: (
+      <>
+        <h1>holi</h1>
+        <Outlet/>
+      </>
+    ),
+    loader:()=> {
+      const permissions = "public";
+      if (permissions==="public") {
+        window.location.assign(catalogPath);
+      }
+      return null
+    },
+    children: [
+      { 
+        index:true,
+        element: <LandingPage/> 
+      },
+    ],
+    // use children property
   },
   {
     path: "/catalog",
@@ -35,7 +60,7 @@ const router = createBrowserRouter([
     element: <AdminDashboard/>,
   },
   {
-    path: "/customiseBottle",
+    path: "/customiseBottle/:id?",
     element: <CustomiseBottle/>,
   },
   {
@@ -43,7 +68,7 @@ const router = createBrowserRouter([
     element: <BuyNow/> ,
   },
   {
-    path: "/shippingAndPayement",
+    path: "/shippingAndPayement/:cart?",
     element: <ShippingAndPayement/> ,
   },
   {
@@ -77,6 +102,22 @@ const router = createBrowserRouter([
   {
     path: "/usersAdmin",
     element: <DataAdmin title="Users admin" tableToAdmin="users" onDisplayProperty="last_name" propertiesToSearch={["first_name"]} customOrderToModal={['id', 'first_name', 'last_name', 'email', 'phone', 'password',]}/> 
+  },
+  {
+    path: "/otherAdmins",
+    element: <OtherAdmins/> ,
+  },
+  {
+    path: "/addressesViewer/:id?",
+    element: <AddressesViewer/> ,
+  },
+  {
+    path: "/addressUserAdmin",
+    element: <AddressUserAdmin/> ,
+  },
+  {
+    path: "/shoppingCart",
+    element: <ShoppingCart/> ,
   },
   {
     path: "*",

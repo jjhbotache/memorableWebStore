@@ -16,7 +16,7 @@ export function setRequestConfig(methodGotten="GET",bodyGotten,jsonFalse=false) 
   if (localStorage.getItem("password")!=="-") {headers["password"] = localStorage.getItem("password")}
   if (methodGotten!="GET" && !jsonFalse) {headers['Content-Type'] = 'application/json' }
   config.headers = headers;
-  console.log(config);
+  // console.log(config);
   return config;
 }
 
@@ -100,20 +100,8 @@ export function logout() {
 }
 
 export function copyToClipboard(str) {
-  // Crear un elemento de texto temporal
   str=str.toString()
-  const tempInput = document.createElement("textarea");
-  tempInput.value = str;
-  
-  // Agregar el elemento al DOM
-  document.body.appendChild(tempInput);
-  
-  // Seleccionar y copiar el contenido del elemento
-  tempInput.select();
-  document.execCommand("copy");
-
-  // Eliminar el elemento temporal del DOM
-  document.body.removeChild(tempInput);
+  navigator.clipboard.writeText(str)
 }
 
 export function loadPreview(imgTag, e) {
@@ -163,4 +151,69 @@ export function customSort(order, list) {
 
     return indexA - indexB;
   });
+}
+
+export function ponerPuntos(numero) {
+  // made by bign
+  // Convertir el número a una cadena
+  let cadena = numero.toString();
+  // Crear un arreglo vacío para guardar los dígitos con puntos
+  let arreglo = [];
+  // Contar cuántos dígitos hay en la cadena
+  let digitos = cadena.length;
+  // Recorrer la cadena de derecha a izquierda
+  for (let i = digitos - 1; i >= 0; i--) {
+    // Agregar el dígito actual al arreglo
+    arreglo.unshift(cadena[i]);
+    // Si quedan más de tres dígitos y el índice actual es múltiplo de tres, agregar un punto
+    if (i > 0 && (digitos - i) % 3 == 0) {
+      arreglo.unshift(".");
+    }
+  }
+  // Unir el arreglo en una nueva cadena y devolverla
+  return arreglo.join("");
+}
+
+export function camelToSnake(str) {
+  return str.replace(/[A-Z]/g, match => `_${match.toLowerCase()}`);
+}
+
+export function areObjectsEqual(obj1, obj2) {
+  if (obj1 === obj2) {
+    return true;
+  }
+  if (obj1 == null || obj2 == null) {
+    return undefined;
+  }
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (const key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export async function shoppingCartSync(newCartObj) {
+    // update the cart
+    return await fetch(consts.apiRoute + "/update-anyone/shopping_carts/"+localStorage.getItem("id_shopping_cart"),setRequestConfig("PUT",{cart:JSON.stringify(newCartObj)})).then(re=>re.json())
+}
+
+export async function shoppingCartGet() {
+  return await fetch(consts.apiRoute + "/read-anyone/shopping_carts/"+localStorage.getItem("id_shopping_cart")).then(re=>re.json())
+  .then(d=>{
+    // console.log(d);
+    return JSON.parse(d[0].cart)
+  })
 }

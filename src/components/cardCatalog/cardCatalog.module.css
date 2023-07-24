@@ -10,7 +10,7 @@
   border: var(--colorPrimary) solid 3px;
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 
-  overflow-y: hidden;
+  overflow: hidden;
 } 
 
 
@@ -20,25 +20,91 @@
   border: none !important;
   border-radius: 20px 20px 0 0;
 }
-.cardCatalog h2{
+.cardCatalogOverlay{
 
-  text-align: center;
-
-  
+  text-align: center; 
 
   background-color: var(--colorSecondary);
   padding: 0.3em 0.2em;
   margin: auto 0;
-  border-radius: 0 0 20px 20px;
+  /* border-radius: 0 0 20px 20px; */
 
-  font-size: 1.5em;
+  
 
   height: 100%;
   width: 100%;
   max-height: 15vh;
-  overflow-y: hidden;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+
+  /* add an nverted boxshadown */
+  box-shadow: inset 0px 0px 11px -2px rgba(0,0,0,0.75);
 }
 
-.cardCatalog h2:hover{
+/* .cardCatalog h2:hover{
   overflow-y: auto;
+} */
+
+
+h2{
+  font-size: 1.2em;
+  padding: 0;
 }
+h2:hover{
+  /* animation-play-state: paused; */
+  animation: none;
+}
+.slideUp{
+  animation: slideBottom 7s ease-in-out infinite; 
+}
+
+
+
+.small{
+  /* add a shadown */
+
+  text-shadow: 0px 0px 10px rgba(255, 54, 178, 0.75);
+  color: var(--colorPrimary);
+  min-height: 2em;
+}
+
+.slidingText {
+  display: inline-block;
+  animation: slideRight 15s ease-in-out infinite; 
+}
+.slidingText:hover{
+  text-shadow: 0px 0px 8px rgb(255, 0, 251) !important;
+  animation-play-state: paused;
+}
+
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(-200%);
+  }
+  20%{
+    transform: translateX(-10%);
+  }
+  80%{
+    transform: translateX(10%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+@keyframes slideBottom {
+  0% {
+    transform: translateY(0%);
+  }
+  95%{
+    transform: translateY(-70%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+

@@ -2,15 +2,16 @@ import { useEffect,useRef,useState } from "react";
 import ColorSelect from "../../components/colorSelect/colorSelect";
 import Counter from "../../components/counter/counter";
 import Select from "../../components/select/select";
-import { apiRoute, buyNowPath, catalogPath, loginAndRegisterPath } from "../../const/const";
+import { apiRoute, buyNowPath, catalogPath, loginAndRegisterPath, shoppingCartPath } from "../../const/const";
 import styles from "./customiseBottle.module.css";
-import { setRequestConfig } from "../../functions/functions";
-
+import { setRequestConfig, shoppingCartGet, shoppingCartSync } from "../../functions/functions";
+import { useParams} from "react-router-dom";
 
 const defaultAmount = 1;
 export default function CustomiseBottle() {
+  const {id:idPreOrderToCustomise} = useParams();
   const designGotten = useRef(JSON.parse(localStorage.getItem("design")))
-  if (!designGotten.current) window.location.assign(catalogPath)
+  if (!designGotten?.current && idPreOrderToCustomise == undefined) window.location.assign(catalogPath)
 
   const [readyToOrder, setReadyToOrder] = useState(false);
   const [wines, setWines] = useState([]);
@@ -19,7 +20,7 @@ export default function CustomiseBottle() {
 
 
   const [order, setOrder] = useState({
-    design: null,
+    design: designGotten.current,
     wine: null,
     amount: null,
     primaryColor: null,
@@ -28,12 +29,24 @@ export default function CustomiseBottle() {
   
   
   useEffect(() => {
-    const firstOrder = {
-        ...order, 
-        design: designGotten.current,
-        amount: defaultAmount,
-      };
-    setOrder(firstOrder)
+    if (idPreOrderToCustomise) {
+      shoppingCartGet().then(orders=>{
+        // console.log(orders);
+        const preOrder =  orders.find(o=>o.id==idPreOrderToCustomise)
+        setOrder({...preOrder,
+          amount: defaultAmount,
+          primaryColor: null,
+          secondaryColor: null,
+        })
+      })
+    }else{
+      const firstOrder = {
+          ...order, 
+          design: order.design,
+          amount: defaultAmount,
+        };
+      setOrder(firstOrder)
+    }
 
     fetch(apiRoute + "/read-anyone/wine_kinds").then(re=>re.json()).then(data=>{
       setWines(data)
@@ -48,12 +61,13 @@ export default function CustomiseBottle() {
     }
     ).catch(err=>{console.log(err);})
 
+    
   }, []);
 
   useEffect(() => {
     if (order.design && order.wine && order.amount && order.primaryColor && order.secondaryColor) setReadyToOrder(true);
     else setReadyToOrder(false);
-    console.log(order);
+    // console.log(order);
   }, [order]);
 
   function onBuyNow() {
@@ -65,18 +79,61 @@ export default function CustomiseBottle() {
     :window.location.assign(loginAndRegisterPath)
   }
 
+  async function addToCart() {
+    !(localStorage.getItem("id")&&!localStorage.getItem("password")) && window.location.assign(loginAndRegisterPath)
+
+    // if the cart is the default one, create a new one
+    if (localStorage.getItem("id_shopping_cart")==1) {
+      // get the cart from localstorage
+      fetch(apiRoute + "/insert-anyone/shopping_carts",setRequestConfig("POST",{cart:"'"+JSON.stringify([{id:1,...order}])+"'"})).then(re=>re.json()).then(data=>{
+        localStorage.setItem("id_shopping_cart",data.id);
+        fetch(apiRoute + "/set-shopping-cart/"+data.id+"/"+localStorage.getItem("id"),setRequestConfig("PUT")).then(re=>re.json()).then(data=>{console.log(data);}
+        ).catch(err=>{console.log(err);})
+
+        console.log(data.msg);
+        window.location.assign(shoppingCartPath);
+      }).catch(err=>{console.log(err);})
+    }else{
+      if (!idPreOrderToCustomise) {
+        shoppingCartGet().then(cart=>{
+          // add the new order to the cart
+          cart.push({id:cart.length+1,...order});
+          console.log(cart);
+  
+          // // update the cart
+          shoppingCartSync(cart).then(d=>{
+            console.log(d.msg);
+            window.location.assign(shoppingCartPath);
+          })
+        })
+      }else{
+        shoppingCartGet().then(cart=>{
+          // add the new order to the cart
+          const index = cart.findIndex(o=>o.id==idPreOrderToCustomise)
+          cart[index] = {...order,id:idPreOrderToCustomise};
+          console.log(cart);
+  
+          // // update the cart
+          shoppingCartSync(cart).then(d=>{
+            console.log(d.msg);
+            window.location.assign(shoppingCartPath);
+          })
+        })
+      }
+    }
+  }
   return(
     <>
       <div className={` container-fluid ${styles.customiseBottleContainer}`}>
         <div className="row w-100 gap-4 gap-sm-0">
           <div className="col-12 col-sm-5 d-grid align-content-center">
-            <img className="img-fluid" src={apiRoute+"/"+designGotten.current.img+"/-"} alt={designGotten.current.name} />
-            <h2 className="mt-2">{designGotten.current.name}</h2>
+            <img className="img-fluid" src={apiRoute+"/get_file/"+order.design?.img+"/-"} alt={order.design?.name} />
+            <h2 className="mt-2">{order.design?.name}</h2>
           </div>
 
           <div className="col-12 col-sm-7 gap-3 px-sm-2 d-flex flex-column justify-content-center align-content-between">
             <div className="col-12">
-              <Select options={wines} defaultValue="" label="Kind of wine:" onChange={(e)=>{setOrder({...order,wine:e})}} />
+              <Select options={wines} defaultValue={!idPreOrderToCustomise? {label:"Choose your wine",value:""} : {label:order.wine?.name,value:order.wine?.id}} label="Kind of wine:" onChange={(e)=>{setOrder({...order,wine:e})}} />
             </div>
 
             <div className="col-12">
@@ -93,16 +150,14 @@ export default function CustomiseBottle() {
 
             <div className="col-12">
               <label htmlFor="msg">Message:</label>
-              <textarea className="form-control" rows={4} placeholder="Describe how do you want to customise your bottle..." onChange={(e)=>{setOrder({...order,msg:e.target.value})}} ></textarea>
+              <textarea className="form-control" rows={4} placeholder="Describe how do you want to customise your bottle..." value={order.msg} onChange={(e)=>{setOrder({...order,msg:e.target.value})}} ></textarea>
             </div>
 
             <div className="col-12">
-              <button className="btn btn-white d-block mx-auto my-2" disabled> add to shopping cart</button>
+              <button className="btn btn-white d-block mx-auto my-2" onClick={addToCart} disabled={!readyToOrder}> {!idPreOrderToCustomise?"add to shopping cart":"Update order"}</button>
               <button className="btn d-block mx-auto" onClick={onBuyNow} disabled={!readyToOrder}> buy now</button>
             </div>
           </div>
-
-          
         </div>
       </div>
     </>

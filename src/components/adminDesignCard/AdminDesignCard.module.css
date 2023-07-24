@@ -13,3 +13,34 @@
   border-left: none !important;
   border-right: none !important;
 }
+.card{
+  overflow: hidden;
+  background: var(--colorTertiary);
+}
+.small{
+  /* add a shadown */
+
+  text-shadow: 0px 0px 10px rgba(255, 0, 157, 0.75);
+  color: var(--colorPrimary);
+}
+
+.slidingText {
+  display: inline-block;
+  animation: slideRight 15s linear infinite; /* Aquí puedes ajustar la duración y otras propiedades de la animación */
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(-180%);
+  }
+  20%{
+    transform: translateX(-20%);
+  }
+  80%{
+    transform: translateX(20%);
+  }
+  100% {
+    transform: translateX(180%);
+  }
+}
+

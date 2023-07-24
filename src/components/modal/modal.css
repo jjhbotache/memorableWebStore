@@ -24,9 +24,11 @@
   color: var(--colorPrimary);
   text-align: center;
 
-  height: 80vh;
-  max-height: 500px;
-  width: 80vw;
+  height: auto;
+  max-height: 535px;
+  
+  width: auto;
+  min-width: 50vw;
   max-width: 500px;
 
   padding: 2em 0.6em  ;

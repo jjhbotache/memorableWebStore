@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { apiRoute } from "../../const/const";
+import { addresesViewerPath, apiRoute } from "../../const/const";
 import {copyToClipboard, loadPreview, setRequestConfig} from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import PucharseOrderCard from "../../components/pucharseOrderCard/PucharseOrderCard";
@@ -69,7 +69,6 @@ export default function PucharseOrdersAdmin() {
 
 
   async function putInfoInModal(data){
-    
     function getDateFromStrign(fechaString) {
       try {
         const fecha = new Date(fechaString);
@@ -95,10 +94,11 @@ export default function PucharseOrdersAdmin() {
       // , deliveryDate
       // , paid
       // , vaucher
-      const [wine, primaryColor, secondaryColor] = await Promise.all([
+      const [wine, primaryColor, secondaryColor, deliveryPlace] = await Promise.all([
         order.id_wine ? fetch(apiRoute + "/read/wine_kinds/" + order.id_wine, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
         order.id_packing_color ? fetch(apiRoute + "/read/packing_colors/" + order.id_packing_color, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
         order.id_secondary_packing_color ? fetch(apiRoute + "/read/secondary_packing_colors/" + order.id_secondary_packing_color, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
+        order.id_delivery_place ? fetch(apiRoute + "/read/addresses/" + order.id_delivery_place, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
       ]);
       const date = getDateFromStrign(order.delivery_date);
   
@@ -114,7 +114,8 @@ export default function PucharseOrdersAdmin() {
         secondaryColor  : secondaryColor,
         msg : order.msg,
         deliveryDate  : date,
-        deliveryPlace : order.id_delivery_place,
+        deliveryPlace : deliveryPlace,
+        price : order.price,
         vaucher : order.id_vaucher,
         trulyPaid : order.paid==1,
       }
@@ -124,10 +125,6 @@ export default function PucharseOrdersAdmin() {
   }
 
   useEffect(() => {
-    // so we need to set the editModal to null
-    // so it can be closed
-
-    
     if (orderInEditModal) {
       const editingOrder = !!orderInEditModal.id;
       setEditModal( 
@@ -171,14 +168,14 @@ export default function PucharseOrdersAdmin() {
               </div>
               {/* address */}
               {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
-              <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
-                <label htmlFor="deliveryPlace" className="form-label mb-0 align-baseline">Delivery place: </label>
-                <input disabled={editingOrder} type="text" className="form-control p-0" value={orderInEditModal.deliveryPlace} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryPlace:e.target.value})} name="deliveryPlace" />
-              </div>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,deliveryPlace:obj})} label="Address:" tableName="addresses" labelProperty="id" firstObj={orderInEditModal.deliveryPlace}>
+                <a href={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</a>
+              </EditModalSelect>
+              
               {/* vaucher */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2" >
                 <label htmlFor="vaucher" className="form-label mb-0 align-baseline">Vaucher: </label>
-                <img ref={preview} src={apiRoute + "/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
+                <img ref={preview} src={apiRoute + "/get_file/" + orderInEditModal.vaucher + `/${localStorage.getItem("token")}`} className="img-fluid rounded-top" alt="Img"/>
                 <input disabled={editingOrder} accept=".png" type="file" className="form-control p-0" name="vaucher" onChange={
                   (e)=>{
                     if (e.target.files[0]) {
@@ -186,6 +183,13 @@ export default function PucharseOrdersAdmin() {
                       loadPreview(preview,e)
                     }
                   }
+                }/>
+              </div>
+              {/* price */}
+              <div className="mb-3 d-flex flex-column align-content-center justify-content-center gap-2" >
+                <label htmlFor="price" className="form-label mb-0 align-baseline">Price: </label>
+                <input disabled={editingOrder} type="number" className="form-control p-0 d-block mx-auto" name="price" value={orderInEditModal.price} onChange={
+                  (e)=>{setOrderInEditModal({...orderInEditModal,price:parseInt(e.target.value)})}
                 }/>
               </div>
               {/* truly paid */}
@@ -222,7 +226,7 @@ export default function PucharseOrdersAdmin() {
       formData.append("primary_color_id", orderInEditModal.primaryColor.id);
       formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
       formData.append("delivery_date", orderInEditModal.deliveryDate);
-      formData.append("address", orderInEditModal.deliveryPlace);
+      formData.append("address", orderInEditModal.deliveryPlace.id);
       formData.append("oldVaucher", oldVaucher.current);
       formData.append("vaucher",  orderInEditModal.vaucher instanceof File?orderInEditModal.vaucher:oldVaucher.current);
       formData.append("truly_paid", orderInEditModal.trulyPaid?1:0);
@@ -231,6 +235,7 @@ export default function PucharseOrdersAdmin() {
       fetch(apiRoute + "/update_pucharse_orders/" + orderInEditModal.id, setRequestConfig("PUT", formData, true)).then((response) => response.json()).then((data) => {
         console.log(data);
         setSearch("")
+
         const infoStr = 
         "Name: " + orderInEditModal.user.first_name + " " + orderInEditModal.user.last_name +
         "\nEmail: " + orderInEditModal.user.email +
@@ -240,12 +245,11 @@ export default function PucharseOrdersAdmin() {
         // Email: ${orderInEditModal.user.email}
         // Phone: ${orderInEditModal.user.phone}`;
         console.log(infoStr);
-        if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the phone number?")){
-          // copyToClipboard(orderInEditModal.user.phone)
+        if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the user info?")){
           copyToClipboard(infoStr)
         }
 
-        window.location.reload();
+        
       }).catch((error) => {
         alert("check all the fields needed");
         console.error(error);
@@ -255,28 +259,51 @@ export default function PucharseOrdersAdmin() {
 
     }else{
       console.log("creating...");
+      console.log(orderInEditModal);
       const formData = new FormData();
-      try {
-        formData.append("user_id", orderInEditModal.user.id);
-        formData.append("wine_id", orderInEditModal.wine.id);
-        formData.append("design_id", orderInEditModal.design.id);
-        formData.append("real_design_id", orderInEditModal.realDesign?.id || 0);
-        formData.append("amount", orderInEditModal.amount || 1);
-        formData.append("msg", orderInEditModal.msg || "-");
-        formData.append("primary_color_id", orderInEditModal.primaryColor.id);
-        formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
-        if (!orderInEditModal.deliveryDate) throw new Error("No date")
+      try {formData.append("user_id", orderInEditModal.user.id);
+      } catch (error) {alert("An error occurred when appending 'user_id'", error);return}
+      
+      try {formData.append("wine_id", orderInEditModal.wine.id);
+      } catch (error) {alert("An error occurred when appending 'wine_id'", error);return}
+      
+      try {formData.append("design_id", orderInEditModal.design.id);
+      } catch (error) {alert("An error occurred when appending 'design_id'", error);return}
+      
+      try {formData.append("real_design_id", orderInEditModal.realDesign?.id || 0);
+      } catch (error) {alert("An error occurred when appending 'real_design_id'", error);return}
+      
+      try {formData.append("amount", orderInEditModal.amount || 1);
+      } catch (error) {alert("An error occurred when appending 'amount'", error);return}
+      
+      try {formData.append("msg", orderInEditModal.msg || "-");
+      } catch (error) {alert("An error occurred when appending 'msg'", error);return}
+      
+      try {formData.append("primary_color_id", orderInEditModal.primaryColor.id);
+      } catch (error) {alert("An error occurred when appending 'primary_color_id'", error);return}
+      
+      try {formData.append("secondary_color_id", orderInEditModal.secondaryColor.id);
+      } catch (error) {alert("An error occurred when appending 'secondary_color_id'", error);return}
+      
+      try {if (!orderInEditModal.deliveryDate) throw new Error("No date");
         formData.append("delivery_date", orderInEditModal.deliveryDate);
-        if (!orderInEditModal.deliveryPlace) throw new Error("No address")
-        formData.append("address", orderInEditModal.deliveryPlace);
-        if (!orderInEditModal.vaucher) throw new Error("No vaucher")
-        formData.append("vaucher",  orderInEditModal.vaucher);
-        formData.append("truly_paid", orderInEditModal.trulyPaid? (orderInEditModal.trulyPaid?1:0) : 0);
-      } catch (error) {
-        console.log(error);      
-        alert("Your are missing a field")
-        return
-      }
+      } catch (error) {alert("An error occurred when appending 'delivery_date'", error);return}
+      
+      try {if (!orderInEditModal.deliveryPlace.id) throw new Error("No address");
+        formData.append("address", orderInEditModal.deliveryPlace.id);
+      } catch (error) {alert("An error occurred when appending 'address'", error);return}
+      
+      try {if (!orderInEditModal.price) throw new Error("No Price");
+        formData.append("price", orderInEditModal.price);
+      } catch (error) {alert("An error occurred when appending 'price'", error);return}
+      
+      try {if (!orderInEditModal.vaucher) throw new Error("No vaucher");
+        formData.append("vaucher", orderInEditModal.vaucher);
+      } catch (error) {alert("An error occurred when appending 'vaucher'", error);return}
+      
+      try {formData.append("truly_paid", orderInEditModal.trulyPaid ? (orderInEditModal.trulyPaid ? 1 : 0) : 0);
+      } catch (error) {alert("An error occurred when appending 'truly_paid'", error);return}
+      
       // log each key-value pair
       for (var pair of formData.entries()) {
         console.log(pair[0] + ", " + pair[1]);
@@ -303,9 +330,10 @@ export default function PucharseOrdersAdmin() {
     if (confirm(`Are you sure about deleting ${order.id} order?`)) {
       setLoading(true)
       fetch(apiRoute+"/erase/pucharse_orders/"+order.id,setRequestConfig("DELETE")).then(re=>re.json()).then(r=>{
-        alert("order deleted successfully");
         setPucharseOrdersRendered(pucharseOrders.filter(o=>o.id!=order.id))
         setPucharseOrders(pucharseOrders.filter(o=>o.id!=order.id))
+        setSearch("")
+        alert("order deleted successfully");
       })
       .catch(e=>{alert("there was an error deleting the order");console.log(e)})
       .finally(setLoading(false))
@@ -322,7 +350,7 @@ export default function PucharseOrdersAdmin() {
           <div className="col-9 ">
             <div className="row">
               <div className="col-10">
-                <input onChange={e=>{setSearch(e.target.value)}} type="text" className="form-control" aria-describedby="helpId" placeholder=""/>
+                <input onChange={e=>{setSearch(e.target.value)}} value={search} type="text" className="form-control" aria-describedby="helpId" placeholder=""/>
               </div>
               <div className="col-2 d-flex justify-content-center align-content-center">
                 <i className="fi fi-br-search d-grid align-items-center"></i>
@@ -333,7 +361,7 @@ export default function PucharseOrdersAdmin() {
             <button onClick={e=>setOrderInEditModal({})} className="btn ">Add</button>
           </div>
         </div>
-        <div className="row d-flex justify-content-around gap-1">
+        <div className="row h-100 d-flex justify-content-around gap-2 gap-sm-1">
           {
           loadingData?
           <Spinner></Spinner>

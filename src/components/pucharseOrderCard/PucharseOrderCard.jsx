@@ -18,7 +18,7 @@ export default function PucharseOrderCard({order,onEdit,onDelete}){
 
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
-  console.log(order);
+  // console.log(order);
 
 
   useEffect(() => {
@@ -41,14 +41,14 @@ export default function PucharseOrderCard({order,onEdit,onDelete}){
   return !deleted?
     (
     !loading?
-      <div className="col-12 col-sm-5 col-md-4 h-100">
-        <div className="card">
-          <div className="card-body">
-          <div className=" card-img p-3">
-            {(realDesign.img || design.img)&&
-            <img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/" +(realDesign.img || design.img) +"/" + localStorage.getItem("token")} alt="Has no image" />
-            }
-          </div>
+      <div className="col-12 col-sm-5 col-md-3 d-flex">
+        <div className="card h-100">
+          <div className="card-body d-flex flex-column justify-content-between">
+            <div className=" card-img p-1">
+              {(realDesign.img || design.img)&&
+              <img className=" img-fluid p-2 rounded-4" src={ apiRoute +"/get_file/" +(realDesign.img || design.img) +"/" + localStorage.getItem("token")} alt="Has no image" />
+              }
+            </div>
             <h5 className="card-title mb-3">{order.id + ") " + ( design.name || realDesign.name || "has no design")}</h5>
             <p className="card-text mb-0"> <strong>Customer: &nbsp;</strong> {user.first_name + " " + user.last_name}</p>
             <p className="card-text mb-0"> <strong>Designed: &nbsp;</strong> {order.id_real_design?"✅":"❌"}</p>

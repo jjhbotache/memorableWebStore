@@ -1,16 +1,15 @@
-.poc-f{
-  /* delete the border radious of the right side */
+.btnFirst,.btnMiddle{
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
-.poc-l{
-  /* delete the border radious of the left side */
+.btnLast,.btnMiddle{
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
 }
-.poc-l,.poc-f{
+.btnLast,.btnFirst,.btnMiddle{
   border:solid 2px var(--colorPrimary) !important;
 }
-.card{
-  box-shadow: 0px 0px 10px -2px rgba(0,0,0,0.75);
+.btnMiddle{
+  border-left: none !important;
+  border-right: none !important;
 }

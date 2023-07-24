@@ -1,0 +1,5 @@
+.accordion-body{
+  background: var(--colorSecondary);
+  /* add an inter box shadow */
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}

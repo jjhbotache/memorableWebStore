@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Modal from "../../components/modal/modal";
-import {adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
+import {addresesViewerPath, adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
 import {getUserToken, logout, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
     <>
       {token?
       (
-        <div className="container">
+      <div className="container">
         <div className="row">
           <div className="col-12">
             <h1>Hello&nbsp;{localStorage.getItem("first_name")}</h1>
@@ -61,6 +61,14 @@ export default function AdminDashboard() {
               )
               )}
             </ul>
+              <hr />
+              <h3>Other tools</h3>
+            <ul>
+              <li className=" mb-2">
+                <a className="btn" href={addresesViewerPath}>Addreses Viewer</a>
+              </li>
+            </ul>
+
           </div>
         </div>
         <div className="row">
@@ -73,7 +81,7 @@ export default function AdminDashboard() {
       )
       :
       (
-        <Modal title={`We need yoo to put your password:`}
+        <Modal title={`We need you to put your password:`}
         options={[{label:"done",value:1, disabled:checkingPassword}]}
         resolveFunction={checkPassword}
         >
