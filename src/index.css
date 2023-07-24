@@ -42,18 +42,17 @@ body,#root{
   --bs-btn-color: var(--colorPrimary) !important;
   --bs-btn-bg: var(--colorSecondary) !important;
   border-radius: 9999px !important;
+  border: 1px solid var(--colorPrimary) !important;
 }
 .btn-white{
   --bs-btn-color: var(--colorPrimary) !important;
   --bs-btn-bg: var(--colorTertiary) !important;
-  border: 2px solid ;
-  border-color: var(--colorPrimary) !important;
+  border: 1px solid var(--colorPrimary) !important;
 }
 .btn-dark{
   --bs-btn-color: var(--colorTertiary) !important;
   --bs-btn-bg: var(--colorPrimary) !important;
-  border: 2px solid ;
-  border-color: var(--colorPrimary) !important;
+  border: 1px solid var(--colorPrimary) !important;
 }
 /* add a transition to de buttons */
 .btn:hover{
@@ -71,6 +70,7 @@ body,#root{
 .btn-white:hover{--bs-btn-hover-bg:var(--colorTertiaryHover) !important;}
 
 .btn:active{
+  transition: 0.2s;
   box-shadow: inset 0 0 1em 0px rgb(0, 0, 0);
 }
 
@@ -78,9 +78,9 @@ body,#root{
 img{
   border:solid 2px var(--colorPrimary) !important;
   padding: 0.2em !important;
+  transition: all 0.05s ease-in-out;
 }
 img:hover{
-  transition: all 0.2s ease-in-out;
   transform: scale(1.01);
   cursor: pointer;
   box-shadow: 0 0 0.2em var(--colorPrimary);
@@ -113,6 +113,18 @@ a:visited{
 a:hover{
   text-shadow: 0 0 0.15em rgb(255, 158, 231);
   color: var(--colorPrimary) !important;
+}
+
+.navbar-toggler{
+  border: 2px solid var(--colorPrimary) !important;
+  border-radius: 0.3em !important;
+  color: var(--colorPrimary) !important;
+  background-color: var(--colorSecondary) !important;
+}
+.navbar-toggler:focus{
+  border-width: 3px !important;
+  outline: 0 !important;
+  box-shadow: none !important;
 }
 
 /* make inputs like a btn */

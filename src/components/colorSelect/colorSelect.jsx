@@ -13,7 +13,7 @@ export default function ColorSelect({label,colors,onChange}) {
   return(
     <div className="input-group d-flex justify-content-between" >
       <div className="d-flex">
-        <label className="input-group-text" htmlFor="inputGroupSelect01">{label}</label>
+        <label className="input-group-text px-1" htmlFor="inputGroupSelect01">{label}</label>
         <select onChange={changed}>
           <option>❔</option>
           {

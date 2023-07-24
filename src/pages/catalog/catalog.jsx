@@ -40,10 +40,6 @@ export default function Catalog() {
     ).finally(()=>setLoading(false));
 
 
-    fetch("https://www.datos.gov.co/resource/xdk5-pm3f.json").then(re=>re.json()).then(d=>{
-      console.log(d)
-    }
-    )
 
   }, []);
 
@@ -83,7 +79,7 @@ export default function Catalog() {
             <SearchBar tags={tagOptions} onFilter={search}/>
           </div>
         </div>
-        <div className="row d-flex justify-content-around gap-5">
+        <div className="row d-flex justify-content-around gap-2">
           {designsToRender.map(design=><CardCatalog design={design} key={design.id} onClick={()=>{designClicked(design)}}/>)}
         </div>
       </div>

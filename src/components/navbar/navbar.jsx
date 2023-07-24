@@ -1,6 +1,7 @@
 import React from "react";
 import "./navbar.css"
 import { logout } from "../../functions/functions";
+import { shoppingCartPath } from "../../const/const";
 
 
 export default function Navbar({links,pathsWhereNotToDisplay}) {
@@ -14,7 +15,7 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
 
     return(
       <li className="nav-item d-flex justify-content-center" key={link.path}>
-        <a href={link.path} className={ link.active ? "nav-link active" : "nav-link" } >{link.name}</a>
+        <a href={link.path} className={ (link.active ? "nav-link active" : "nav-link") + " w-100" } >{link.name}</a>
       </li>
   )})
 return (
@@ -31,10 +32,9 @@ return (
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 {pagesToShow}
+                {localStorage.getItem("id_shopping_cart")&&<li className="nav-item d-flex justify-content-center" > <a href={shoppingCartPath} className="nav-link w-100">Shopping cart</a></li>}
+                {localStorage.getItem("id")&&<li className="nav-item d-flex justify-content-center" > <a onClick={logout} className="nav-link w-100" style={{ color: 'rgb(164 1 1)' }}>Logout</a></li>}
               </ul>
-              {
-                localStorage.getItem("id")&&<a onClick={logout} className="nav-link mx-auto" style={{ color: 'rgb(164 1 1)' }}>Logout</a>
-              }
 
               
             </div>

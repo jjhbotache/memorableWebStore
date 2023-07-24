@@ -7,25 +7,25 @@ export default function CardCatalog({design,onClick}) {
   const title = useRef();
 
   if (title.current && classForTheTitle === "") {
-    console.log(title.current);
+    // console.log(title.current);
     const height = title.current.scrollHeight;
     const parentHeight = title.current.parentNode.clientHeight - 16;
-    console.log(height, parentHeight);
+    // console.log(height, parentHeight);
     if (parseInt( height) > parseInt(parentHeight)) {
-      console.log("changed");
+      // console.log("changed");
       setClassForTheTitle(styles.slideUp);
     }
   }
     
 
   return(
-    <div className={`col-12 col-sm-5 col-md-3  ${styles.cardCatalog}`} onClick={onClick}>
+    <div className={`col-5 col-md-3 mb-2  ${styles.cardCatalog}`} onClick={onClick}>
       <img src={apiRoute+"/get_file/"+design.img+"/-"} alt={design.name} />
       <div className={styles.cardCatalogOverlay}>
         {/* get the height of the parent element */}
         <h2 ref={title} className={classForTheTitle}>{design.name}</h2>
       </div>
-      <small className={`form-text text-muted pb-1 ${styles.slidingText + styles.small}`}>{design.tags.map(t=>t.name).join(" / ") || " - no tags - "}</small>
+      <small className={`form-text text-muted pb-1 ${styles.slidingText} ${styles.small}`}>{design.tags.map(t=>t.name).join(" / ") || " - no tags - "}</small>
     </div>
   )
 };

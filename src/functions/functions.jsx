@@ -204,3 +204,16 @@ export function areObjectsEqual(obj1, obj2) {
 export function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export async function shoppingCartSync(newCartObj) {
+    // update the cart
+    return await fetch(consts.apiRoute + "/update-anyone/shopping_carts/"+localStorage.getItem("id_shopping_cart"),setRequestConfig("PUT",{cart:JSON.stringify(newCartObj)})).then(re=>re.json())
+}
+
+export async function shoppingCartGet() {
+  return await fetch(consts.apiRoute + "/read-anyone/shopping_carts/"+localStorage.getItem("id_shopping_cart")).then(re=>re.json())
+  .then(d=>{
+    // console.log(d);
+    return JSON.parse(d[0].cart)
+  })
+}

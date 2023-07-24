@@ -330,9 +330,10 @@ export default function PucharseOrdersAdmin() {
     if (confirm(`Are you sure about deleting ${order.id} order?`)) {
       setLoading(true)
       fetch(apiRoute+"/erase/pucharse_orders/"+order.id,setRequestConfig("DELETE")).then(re=>re.json()).then(r=>{
-        alert("order deleted successfully");
         setPucharseOrdersRendered(pucharseOrders.filter(o=>o.id!=order.id))
         setPucharseOrders(pucharseOrders.filter(o=>o.id!=order.id))
+        setSearch("")
+        alert("order deleted successfully");
       })
       .catch(e=>{alert("there was an error deleting the order");console.log(e)})
       .finally(setLoading(false))
@@ -349,7 +350,7 @@ export default function PucharseOrdersAdmin() {
           <div className="col-9 ">
             <div className="row">
               <div className="col-10">
-                <input onChange={e=>{setSearch(e.target.value)}} type="text" className="form-control" aria-describedby="helpId" placeholder=""/>
+                <input onChange={e=>{setSearch(e.target.value)}} value={search} type="text" className="form-control" aria-describedby="helpId" placeholder=""/>
               </div>
               <div className="col-2 d-flex justify-content-center align-content-center">
                 <i className="fi fi-br-search d-grid align-items-center"></i>
@@ -360,7 +361,7 @@ export default function PucharseOrdersAdmin() {
             <button onClick={e=>setOrderInEditModal({})} className="btn ">Add</button>
           </div>
         </div>
-        <div className="row h-100 d-flex justify-content-between gap-2 gap-sm-1">
+        <div className="row h-100 d-flex justify-content-around gap-2 gap-sm-1">
           {
           loadingData?
           <Spinner></Spinner>

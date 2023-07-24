@@ -2,28 +2,48 @@ import React, { useState, useRef, useEffect } from 'react';
 import './shippingAndPayement.css';
 import Modal from '../../components/modal/modal';
 import { apiRoute, userDashboardPath } from '../../const/const';
-import {getUserToken, ponerPuntos, setRequestConfig} from "../../functions/functions"
+import {getUserToken, ponerPuntos, setRequestConfig, shoppingCartGet, shoppingCartSync} from "../../functions/functions"
 import Spinner from '../../components/spinner/spinner';
+import { useParams } from 'react-router-dom';
 
 export default function ShippingAndPayement() {
   // shipping just save a shippingId:1
   const [shipping, setShipping] = useState({});  
   const [wayOfShiping, setWayOfShiping] = useState();  
   // payement just save an img
-  const [payement, setPayement] = useState(null);
+  const [vaucherImg, setVaucherImg] = useState(null);
   const [wayOfPaying, setWayOfPaying] = useState();  
   const [price, setPrice] = useState();
 
   const [addresses, setAddresses] = useState([]);
   const [pickUpPlace, setPickUpPlace] = useState(null);
 
+  const [total, setTotal] = useState(0);
+
   const input = useRef()
 
+  const {cart} = useParams();
+  const [preOrders, setPreOrders] = useState([]);
 
   useEffect(() => {
-    fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
-      setPrice(d.data)
-      }).catch(e=>console.log(e))
+    getUserToken().then(t=>{
+      fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
+        const localPrice = d.data
+        setPrice(localPrice)
+        if (cart) {
+          shoppingCartGet().then(d=>{
+            setPreOrders(d);
+            const bottles = d.reduce((a, po) => a + po.amount, 0);
+            console.log(bottles);
+            setTotal(bottles*localPrice)
+          }).catch(err=>console.log(err))
+        }
+        else{
+          setTotal(JSON.parse(localStorage.getItem("order")).amount*price)
+        }
+        }).catch(e=>console.log(e))
+  
+    })
   }, []);
 
   function handleSetShipping (shipping){
@@ -38,7 +58,7 @@ export default function ShippingAndPayement() {
     console.log("paying");
     const vaucher = input.current.files[0];
     if (vaucher) {
-      setPayement(vaucher);
+      setVaucherImg(vaucher);
       if (vaucher instanceof File) {
         const logic = async ()=>{
           if (await getUserToken()) {
@@ -51,7 +71,7 @@ export default function ShippingAndPayement() {
               return data
             }).catch(error=>{
               console.log(error);
-              setPayement(null)
+              setVaucherImg(null)
               return false
             })
             console.log(savedVaucher);
@@ -64,41 +84,111 @@ export default function ShippingAndPayement() {
               // id_secondary_packing_color:3
               // id_wine:"2"
               // msg:"''"
-              
-              const order = JSON.parse(localStorage.getItem("order"));
-              
-              const finalOrder = {
+              if (!cart==1) {
+                // buy one bottle
+                const order = JSON.parse(localStorage.getItem("order"));
                 
-                amount:order.amount,
-                id_delivery_place:shipping.shippingId,
-                id_design:order.design.id,
-                id_packing_color:order.primaryColor.id,
-                id_secondary_packing_color:order.primaryColor.id,
-                id_wine:order.wine.id_wine,
-                msg:`"${order.msg}"`,
-                price:price*order.amount,
-  
-                id_user:localStorage.getItem("id"),
-                id_vaucher:"'"+savedVaucher.vaucher_route+"'"
+                const finalOrder = {
+                  
+                  amount:order.amount,
+                  id_delivery_place:shipping.shippingId,
+                  id_design:order.design.id,
+                  id_packing_color:order.primaryColor.id,
+                  id_secondary_packing_color:order.primaryColor.id,
+                  id_wine:order.wine.id_wine,
+                  msg:`"${order.msg}"`,
+                  price:price*order.amount,
+    
+                  id_user:localStorage.getItem("id"),
+                  id_vaucher:"'"+savedVaucher.vaucher_route+"'"
+                }
+                fetch(apiRoute+"/user/create/pucharse_orders",setRequestConfig("POST",JSON.stringify(finalOrder))).then(re=>re.json()).then((data) => {
+                  console.log(data);
+                  alert("Your order has been created");
+                  alert( "Remember that if it exists any problem, will be notice you to your phone or email registered")
+                  // delete the order from the local storage
+                  localStorage.removeItem("order");
+                  window.location.assign(userDashboardPath);
+                }).catch((e) => {
+                  console.log(e);
+                  alert("There was an error saving your vaucher, try changing the file name");
+                  fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedVaucher}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
+                  setVaucherImg(null)
+                })
+              }else{
+                // buy many bottles
+                const finalOrders = preOrders.map(order=>{
+                  return {
+                    amount:order.amount,
+                    id_delivery_place:shipping.shippingId,
+                    id_design:order.design.id,
+                    id_packing_color:order.primaryColor.id,
+                    id_secondary_packing_color:order.primaryColor.id,
+                    id_wine:order.wine.id_wine,
+                    msg:`"${order.msg}"`,
+                    price:price*order.amount,
+      
+                    id_user:localStorage.getItem("id"),
+                    id_vaucher:"'"+savedVaucher.vaucher_route+"'"
+                  }
+                }
+                )
+                console.log(finalOrders);
+                const createPurchaseOrders = async (finalOrders) => {
+                  try {
+                    const promises = finalOrders.map((order) =>
+                      fetch(apiRoute + "/user/create/pucharse_orders", setRequestConfig("POST", JSON.stringify(order)))
+                        .then((response) => response.json())
+                    );
+                
+                    const responses = await Promise.all(promises);
+                
+                    responses.forEach((data) => {
+                      console.log(data);
+                    });
+                
+                    console.log("Your orders have been created");
+                    
+                
+                    // delete the order from the local storage
+                    localStorage.removeItem("order");
+                    window.location.assign(userDashboardPath);
+                  } catch (error) {
+                    console.log(error);
+                    alert("There was an error saving your voucher, try changing the file name");
+                
+                    // You can also use Promise.all to delete the voucher files in parallel
+                    const deletePromises = finalOrders.map((order) =>
+                      fetch(apiRoute + "/delete-voucher-file", setRequestConfig("DELETE", JSON.stringify({ route: order.savedVaucher })))
+                        .then((response) => response.json())
+                    );
+                    
+                
+                    await Promise.all(deletePromises);
+
+                
+                    setVaucherImg(null);
+                  }
+                };
+                // Call the function with your finalOrders array
+                createPurchaseOrders(finalOrders).then((error) => {
+                    alert("Remember that if there is any problem, you will be notified to your registered phone or email");
+                    shoppingCartSync([])
+                }).catch(e=>{
+                  console.log(e);
+                  alert("There was an error. Try changing the file name and try againg");
+                  setVaucherImg(null)
+                })
+                
+                
+
               }
-              fetch(apiRoute+"/user/create/pucharse_orders",setRequestConfig("POST",JSON.stringify(finalOrder))).then(re=>re.json()).then((data) => {
-                console.log(data);
-                alert("Your order has been created");
-                alert( "Remember that if it exists any problem, will be notice you to your phone or email registered")
-                // delete the order from the local storage
-                localStorage.removeItem("order");
-                window.location.assign(userDashboardPath);
-              }).catch((e) => {
-                console.log(e);
-                alert("There was an error saving your vaucher, try changing the file name");
-                fetch(apiRoute+"/delete-voucher-file",setRequestConfig("DELETE",JSON.stringify({route:savedVaucher}))).then(response=>response.json()).then(data=>{console.log(data);}).catch(e => console.log(e))
-                setPayement(null)
-              })
+
             }else{
               alert("There was an error saving your vaucher");
             }            
           }else{
-            setPayement(null)
+            setVaucherImg(null)
             alert("You must confirm your email to pay");
           }
           
@@ -110,13 +200,16 @@ export default function ShippingAndPayement() {
     }
   }
 
-  console.clear();
-  console.log("shipping",shipping);
-  console.log("payement",payement);
-  console.log("wayOfPaying",wayOfPaying);
-  console.log("wayOfShiping",wayOfShiping);
-  console.log("price",price);
-  console.log("pickUpPlace",pickUpPlace);
+  // console.clear();
+  // console.log("shipping",shipping);
+  // console.log("payement",vaucherImg);
+  // console.log("wayOfPaying",wayOfPaying);
+  // console.log("wayOfShiping",wayOfShiping);
+  // console.log("price",price);
+  // console.log("pickUpPlace",pickUpPlace);
+  // console.log("preOrders",preOrders);
+  console.log("total",total);
+
   // clean the console
 
   
@@ -132,7 +225,7 @@ export default function ShippingAndPayement() {
     if (!(!!(shipping.shippingId))) {
       if(wayOfShiping===1){
         // get the pick up place
-        pickUpPlace || fetch(apiRoute + "/user/read/addresses/1",setRequestConfig()).then(re=>re.json()).then(d=>setPickUpPlace(d[0])).catch(e=>console.log(e))
+        pickUpPlace || fetch(apiRoute + "/pick-up-adress2",setRequestConfig()).then(re=>re.json()).then(d=>setPickUpPlace(d[0])).catch(e=>console.log(e))
 
         modalToRender=
         <Modal title={`Do you want to pick up your order in the pick up place?`} options={[
@@ -164,17 +257,17 @@ export default function ShippingAndPayement() {
             // {label:'Daviplata', value:false},
           ]} resolveFunction={value=>{!(value==0)? setWayOfPaying(value) : handleSetShipping({shippingId:value}) }}/>
       }else{
-        if (payement === null) {
+        if (vaucherImg === null) {
           switch (wayOfPaying) {
             case 1:
               modalToRender = 
               <Modal title='Scan the QR code to pay' options={[
                 {label:'Payed', value:true},
                 {label:'cancel', value:false},
-              ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
+              ]} resolveFunction={(payed)=>payed?setVaucherImg(undefined):setWayOfPaying()}>
                 <img src="https://chart.apis.google.com/chart?cht=qr&chl=Hello&chs=248" alt="QR Nequi" className="img-fluid"/>
                 <hr/>
-                <h3>$&nbsp;{ponerPuntos(price)}</h3>
+                <h3>$&nbsp;{ponerPuntos(total)}</h3>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
               </Modal>
@@ -184,9 +277,9 @@ export default function ShippingAndPayement() {
               <Modal title='Here is the account number' options={[
                 {label:'Payed', value:true},
                 {label:'cancel', value:false},
-              ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
+              ]} resolveFunction={(payed)=>payed?setVaucherImg(undefined):setWayOfPaying()}>
                 <hr/>
-                <h3>$&nbsp;{ponerPuntos(price)}</h3>
+                <h3>$&nbsp;{ponerPuntos(total)}</h3>
                 <h5>Account number:</h5>
                 <h6>1205-672235</h6>
                 <hr/>
@@ -197,10 +290,10 @@ export default function ShippingAndPayement() {
               <Modal title='Scan the QR code to pay' options={[
                 {label:'Payed', value:true},
                 {label:'cancel', value:false},
-              ]} resolveFunction={(payed)=>payed?setPayement(undefined):setWayOfPaying()}>
+              ]} resolveFunction={(payed)=>payed?setVaucherImg(undefined):setWayOfPaying()}>
                 <img src="https://chart.apis.google.com/chart?cht=qr&chl=Hello&chs=248" alt="QR Nequi" className="img-fluid"/>
                 <hr/>
-                <h3>$&nbsp;{ponerPuntos(price)}</h3>
+                <h3>$&nbsp;{ponerPuntos(total)}</h3>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
               </Modal>  
@@ -208,7 +301,7 @@ export default function ShippingAndPayement() {
           }
         }else{
           // if payement is a file
-          if (payement instanceof File) {
+          if (vaucherImg instanceof File) {
 
             modalToRender=(
               <Modal title="We are verifying it's you " options={[

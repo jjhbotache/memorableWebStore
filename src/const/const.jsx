@@ -32,6 +32,8 @@ export const usersAdminPath = "/usersAdmin";
 export const otherAdminsPath = "/otherAdmins";
 export const addresesViewerPath = "/addressesViewer";
 export const addressUserAdminPath = "/addressUserAdmin";
+export const shoppingCartPath = "/shoppingCart";
+
 
 
 

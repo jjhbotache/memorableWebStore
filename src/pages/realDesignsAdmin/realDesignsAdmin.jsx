@@ -7,6 +7,7 @@ import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
 import styles from "../designsAdmin/DesignsAdmin.module.css";
+import LoadingView from '../../components/loadingView/loadingView';
 
 export default function RealDesignsAdmin() {
   verifyIsWhereItShould("admin")
@@ -201,8 +202,6 @@ export default function RealDesignsAdmin() {
       </Modal>
   :
     (
-      <div className="d-flex justify-content-center align-content-center" style={{height: "90vh"}}>
-        <Spinner />
-      </div>
+      <LoadingView />
     )
 }

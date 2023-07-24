@@ -17,6 +17,7 @@ import AddressesViewer from "../pages/addressesViewer/addressesViewer";
 import AddressUserAdmin from "../pages/addressUserAdmin/addressUserAdmin";
 import { Outlet } from "react-router-dom";
 import { catalogPath } from "../const/const";
+import ShoppingCart from "../pages/shoppingCart/shoppingCart";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
     element: <AdminDashboard/>,
   },
   {
-    path: "/customiseBottle",
+    path: "/customiseBottle/:id?",
     element: <CustomiseBottle/>,
   },
   {
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
     element: <BuyNow/> ,
   },
   {
-    path: "/shippingAndPayement",
+    path: "/shippingAndPayement/:cart?",
     element: <ShippingAndPayement/> ,
   },
   {
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
   {
     path: "/addressUserAdmin",
     element: <AddressUserAdmin/> ,
+  },
+  {
+    path: "/shoppingCart",
+    element: <ShoppingCart/> ,
   },
   {
     path: "*",

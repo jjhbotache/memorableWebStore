@@ -1,0 +1,28 @@
+{
+    "id": 1,
+    "design": {
+        "ai": "ai/drink-wine-feel-fine.ai",
+        "id": 29,
+        "img": "img/drink-wine-feel-fine.png",
+        "name": "drink wine feel fine",
+        "tags": [
+            {
+                "id": 2,
+                "name": "Anniversary"
+            }
+        ]
+    },
+    "wine": {
+        "id": 2,
+        "name": "tempranillo"
+    },
+    "amount": 1,
+    "primaryColor": {
+        "color": "red",
+        "id": 1
+    },
+    "secondaryColor": {
+        "color": "white",
+        "id": 2
+    }
+}
