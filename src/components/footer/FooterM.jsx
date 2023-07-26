@@ -10,11 +10,11 @@ const footer = () => {
         <div className="col-12 col-md-4 d-none d-md-block d-flex justify-content-center align-items-center">
           <img
             src={logo}
-            className="img-fluid" // Agregamos la clase "img-fluid" para que la imagen sea responsive
+            className="img-fluid"
             alt=""
             style={{
-              width: "100%", // Aseguramos que la imagen ocupe todo el ancho del contenedor
-              height: "100%", // Aseguramos que la imagen ocupe todo el alto del contenedor
+              width: "100%",
+              height: "100%",
             }}
           />
         </div>
