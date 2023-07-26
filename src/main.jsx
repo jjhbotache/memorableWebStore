@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import ReactDOM from 'react-dom/client'
+import Footer from './components/footer/FooterM'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,5 +23,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <>
     <Navbar links={linksToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
     <RouterProvider router={router}/>
+    <Footer />
   </>
 )
