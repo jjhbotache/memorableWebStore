@@ -1,27 +1,26 @@
 .title {
-    font-size: 3vh;
+  font-size: 3vh;
 }
 
 .icon-social-media {
-    color: #000;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-  }
-  
+  color: #000;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
 
-  .icon-social-media:hover {
-    background-color: #ccc;
-    transform: scale(1.2);
-  }
+.icon-social-media:hover {
+  background-color: #ccc;
+  transform: scale(1.2);
+}
 
-  img{
-    border: none;
-    padding: 0.2em !important;
-    transition: all 0.05s ease-in-out;
-  }
-  img:hover{
-    transform: scale(1.01);
-    cursor: pointer;
-  }
+img {
+  border: none;
+  padding: 0.2em !important;
+  transition: all 0.05s ease-in-out;
+}
+img:hover {
+  transform: scale(1.01);
+  cursor: pointer;
+}/* NO SUPE COMO QUITAR EL HPTA BORDER Y EL HOVER DEL IMG, AYUDA JAJAJA */
