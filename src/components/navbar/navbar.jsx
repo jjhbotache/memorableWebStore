@@ -17,8 +17,8 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
 
     return(
       /* nav-item capitalize border-bottom border-danger px-2" : "nav-item border-bottom border-white capitalize px-2 */
-      <li className="nav-item d-flex justify-content-center" key={link.path}>
-        <a href={link.path} className={ (link.active ? "nav-link active" : "nav-link") + " w-100" } >{link.name}</a>
+      <li className="nav-item d-flex justify-content-center text-capitalize" key={link.path}>
+        <a href={link.path} className={ (link.active ? "nav-link active border-bottom bg-white bg-opacity-25" : "nav-link border-bottom" ) + "px-4 rounded-4" } >{link.name}</a>
       </li>
   )})
 return (
@@ -33,13 +33,11 @@ return (
             </button>
 
             <div className="collapse navbar-collapse nav-links" id="navbarSupportedContent">
-              <ul className="navbar-nav me-4 mx-4 pb-0 gap-3">
+              <ul className="navbar-nav me-4 mx-4 pb-0  bg-white bg-opacity-25 rounded-4">
                 {pagesToShow}
                 {localStorage.getItem("id_shopping_cart")&&<li className="nav-item d-flex justify-content-center" > <a href={shoppingCartPath} className="nav-link w-100">Shopping cart</a></li>}
                 {localStorage.getItem("id")&&<li className="nav-item d-flex justify-content-center" > <a onClick={logout} className="nav-link w-100" style={{ color: 'rgb(164 1 1)' }}>Logout</a></li>}
               </ul>
-
-              
             </div>
 
           </div>

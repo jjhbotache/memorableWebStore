@@ -130,3 +130,4 @@ a:hover{
 div *:is(button, input, a) {
   font-weight: 600; /* Puedes cambiar a 800 según tus necesidades */
 }
+
