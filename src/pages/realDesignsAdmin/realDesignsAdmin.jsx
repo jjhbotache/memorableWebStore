@@ -6,8 +6,8 @@ import { convertToFileName, loadPreview, setRequestConfig, verifyIsWhereItShould
 import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
-import styles from "../designsAdmin/DesignsAdmin.module.css";
 import LoadingView from '../../components/loadingView/loadingView';
+import styles from "./realDesigns.module.css"
 
 export default function RealDesignsAdmin() {
   verifyIsWhereItShould("admin")
@@ -177,7 +177,7 @@ export default function RealDesignsAdmin() {
             <img
               ref={imgPreview}
               src={apiRoute + "/" + dataInEditor.img + `/${localStorage.getItem("token")}`}
-              className={`img-fluid rounded-top ${styles.imgPreview}`}
+              className={`img-fluid rounded-top  ${styles.imgPreview}`}
             />
             <br/>
             <label htmlFor="img" className="form-label">Image</label>

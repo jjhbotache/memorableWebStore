@@ -12,7 +12,8 @@ export const linksToShowInNavbar = [
 export const whereNotToDisplay = [
   "/"
 ]
-export const apiRoute = "http://127.0.0.1:1000"
+// export const apiRoute = "http://127.0.0.1:1000"
+export const apiRoute = "https://school-stage-project-back.onrender.com"
 
 export const adminDashboardPath = "/adminDashboard";
 export const userDashboardPath = "/userDashboard";
