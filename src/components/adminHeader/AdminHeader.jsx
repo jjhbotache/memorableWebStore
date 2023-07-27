@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from './AdminHeader.module.css'; 
+import styles from './adminHeader.module.css'; 
 
 export default function AdminHeader({onSearch, onAdd}) {
 
