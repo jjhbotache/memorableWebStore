@@ -7,6 +7,7 @@ import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
 import LoadingView from '../../components/loadingView/loadingView';
 import "./realDesigns.css"
+// changed
 
 export default function RealDesignsAdmin() {
   verifyIsWhereItShould("admin")
