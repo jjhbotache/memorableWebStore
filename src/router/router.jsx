@@ -20,28 +20,32 @@ import { catalogPath } from "../const/const";
 import ShoppingCart from "../pages/shoppingCart/shoppingCart";
 
 const router = createBrowserRouter([
+  // {
+  //   path: "/",
+  //   element: (
+  //     <>
+  //       <h1>holi</h1>
+  //       <Outlet/>
+  //     </>
+  //   ),
+  //   loader:()=> {
+  //     const permissions = "public";
+  //     if (permissions==="public") {
+  //       window.location.assign(catalogPath);
+  //     }
+  //     return null
+  //   },
+  //   children: [
+  //     { 
+  //       index:true,
+  //       element: <LandingPage/> 
+  //     },
+  //   ],
+  //   // use children property
+  // },
   {
     path: "/",
-    element: (
-      <>
-        <h1>holi</h1>
-        <Outlet/>
-      </>
-    ),
-    loader:()=> {
-      const permissions = "public";
-      if (permissions==="public") {
-        window.location.assign(catalogPath);
-      }
-      return null
-    },
-    children: [
-      { 
-        index:true,
-        element: <LandingPage/> 
-      },
-    ],
-    // use children property
+    element: <LandingPage/>,
   },
   {
     path: "/catalog",

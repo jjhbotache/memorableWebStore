@@ -27,6 +27,9 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
     setLoading(true);
     fetch(apiRoute + "/read/"+tableToAdmin,setRequestConfig()).then(re=>re.json()).then(data=>{
       console.log(data);
+      if (tableToAdmin=="users") {
+         data = data.filter(user=> user.password == null)
+      }
       setDataGotten(data)
       setCardsToRender(data)
       // for each data, get the fields to edit (exept id)

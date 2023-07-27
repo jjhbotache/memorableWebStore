@@ -74,10 +74,15 @@ export default function Dashboard() {
         setLoadingUpdateInfo(true)
         const infoToChange = []
         Object.keys(data).forEach(async key => {
+          console.log(key, data[key]);
           if (data[key] !== "") {
             key in ["phone","id"]
-            ? infoToChange.push({[key]:data[key]})
-            : infoToChange.push({[key]:"'"+data[key]+"'"})
+            ? infoToChange.push({[key]:parseInt(data[key])})
+            : infoToChange.push({[key]:
+              // "'"+
+              data[key]
+              // +"'"
+            })
           }
         })
         console.log(infoToChange);
