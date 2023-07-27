@@ -217,3 +217,31 @@ export async function shoppingCartGet() {
     return JSON.parse(d[0].cart)
   })
 }
+
+export function checkMail(email){
+	var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	if (filter.test(email)) {
+		return true;
+	}
+	return false;
+}
+
+export function checkName(nombre) {
+  const exregNombre = /^[a-zA-ZÀ-ÿ]+( [a-zA-ZÀ-ÿ]+){0,5}$/;
+  // Verificar si el nombre cumple con la expresión regular
+  if (exregNombre.test(nombre)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function checkLastName(apellido) {
+  const exregApellido = /^[a-zA-ZÀ-ÿ]+ ?([a-zA-ZÀ-ÿ]+)?$/;
+  // Verificar si el apellido cumple con la expresión regular
+  if (exregApellido.test(apellido)) {
+    return true;
+  } else {
+    return false;
+  }
+}

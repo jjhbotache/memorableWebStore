@@ -6,7 +6,7 @@ import { cleanObjectList, convertToFileName, loadPreview, setRequestConfig, veri
 import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
-import styles from "./DesignsAdmin.module.css";
+import styles from "./designsAdmin.module.css";
 import SearchBar from '../../components/searchBar/searchBar';
 
 const DesignsAdmin = () => {

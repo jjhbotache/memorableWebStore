@@ -141,8 +141,11 @@ export default function PucharseOrdersAdmin() {
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,user:obj})} label="User:" tableName="users" labelProperty="last_name" firstObj={orderInEditModal.user}/>
               {/* design */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,design:obj})} label="Design: " tableName="designs" labelProperty="name" firstObj={orderInEditModal.design}/>
-              {/* real design */}
-              <EditModalSelect optional onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,realDesign:obj})} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
+                {/* real design */}
+                <EditModalSelect optional onChangeValue={obj=>{
+                  console.log(obj);
+                  setOrderInEditModal({...orderInEditModal,realDesign:obj})
+                }} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
               {/* amount */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="amount" className="form-label mb-0 align-baseline">Amount: </label>
@@ -248,7 +251,7 @@ export default function PucharseOrdersAdmin() {
         if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the user info?")){
           copyToClipboard(infoStr)
         }
-
+        window.location.reload();
         
       }).catch((error) => {
         alert("check all the fields needed");
@@ -339,7 +342,6 @@ export default function PucharseOrdersAdmin() {
       .finally(setLoading(false))
     }
   }
-
 
   return !orderInEditModal?
     <div>

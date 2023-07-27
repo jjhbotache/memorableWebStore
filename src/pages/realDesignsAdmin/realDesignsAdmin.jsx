@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Spinner from '../../components/spinner/spinner';
 import AdminHeader from '../../components/adminHeader/AdminHeader';
 import { apiRoute } from '../../const/const';
 import { convertToFileName, loadPreview, setRequestConfig, verifyIsWhereItShould } from '../../functions/functions';
 import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
-import styles from "../designsAdmin/DesignsAdmin.module.css";
 import LoadingView from '../../components/loadingView/loadingView';
+import "./realDesigns.css"
+// changed
 
 export default function RealDesignsAdmin() {
   verifyIsWhereItShould("admin")
@@ -148,7 +148,7 @@ export default function RealDesignsAdmin() {
   return !loading?
     !dataInEditor?
       <div className="container">
-        <h1>DesignsAdmin</h1>
+        <h1>Real designs admin</h1>
         <hr />
         <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} />
         <div className="row gap-2">
@@ -177,7 +177,7 @@ export default function RealDesignsAdmin() {
             <img
               ref={imgPreview}
               src={apiRoute + "/" + dataInEditor.img + `/${localStorage.getItem("token")}`}
-              className={`img-fluid rounded-top ${styles.imgPreview}`}
+              className="img-fluid rounded-top  imgPreview"
             />
             <br/>
             <label htmlFor="img" className="form-label">Image</label>
