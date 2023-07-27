@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Spinner from '../../components/spinner/spinner';
 import AdminHeader from '../../components/adminHeader/AdminHeader';
 import { apiRoute } from '../../const/const';
 import { convertToFileName, loadPreview, setRequestConfig, verifyIsWhereItShould } from '../../functions/functions';
@@ -7,7 +6,7 @@ import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
 import LoadingView from '../../components/loadingView/loadingView';
-import styles from "./realDesigns.module.css"
+import "./realDesigns.css"
 
 export default function RealDesignsAdmin() {
   verifyIsWhereItShould("admin")
@@ -177,7 +176,7 @@ export default function RealDesignsAdmin() {
             <img
               ref={imgPreview}
               src={apiRoute + "/" + dataInEditor.img + `/${localStorage.getItem("token")}`}
-              className={`img-fluid rounded-top  ${styles.imgPreview}`}
+              className="img-fluid rounded-top  imgPreview"
             />
             <br/>
             <label htmlFor="img" className="form-label">Image</label>

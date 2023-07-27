@@ -13,7 +13,7 @@ export default function AdminDesignCard({design,onDelete,onEdit}) {
         <small className={`form-text text-muted pb-1 ${styles.slidingText} ${styles.small}`}>{(design.tags||[]).map(t=>t.name).join(" / ")}</small>
           <div className="d-flex">
             <button type="button" className={`btn ${styles.btnFirst}`} onClick={()=>{onEdit(design)}}>edit</button>
-            <a type="button" className={`btn ${styles.btnMiddle}`} href={apiRoute +"/" +(design.ai||design.dxf) +"/" + localStorage.getItem("token")}><i className="fi fi-br-download"></i></a>
+            <a type="button" className={`btn ${styles.btnMiddle}`} href={apiRoute +"/get_file/" +(design.ai||design.dxf) +"/" + localStorage.getItem("token")}><i className="fi fi-br-download"></i></a>
             <button type="button" className={`btn btn-dark ${styles.btnLast}`} onClick={()=>{onDelete(design)}}>Delete</button>
           </div>
         </div>
