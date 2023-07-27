@@ -4,7 +4,7 @@ import "./PucharseOrderCard.css";
 import order from "../../mocks/order.json";
 import { apiRoute } from "../../const/const";
 import { setRequestConfig } from "../../functions/functions";
-
+// 
 import "./pucharseOrderCard.css";
 import Spinner from "../spinner/spinner";
 import Modal from "../modal/modal";
