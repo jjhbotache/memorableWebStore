@@ -23,6 +23,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <>
     <Navbar links={linksToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
     <RouterProvider router={router}/>
-    <Footer />
+
   </>
 )
