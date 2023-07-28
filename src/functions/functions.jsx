@@ -245,3 +245,39 @@ export function checkLastName(apellido) {
     return false;
   }
 }
+
+function getPermissions(lsItems=["email","password","id","first_name","last_name","phone"]) {
+  // for each item in lsItems
+  // if it is not in the localStorage
+  // redirect to loginAndRegisterPath
+
+  for (const item of lsItems) {
+    if (!localStorage.getItem(item)) {return {
+      name:"public",
+      adminLevel:0
+    }}
+  }
+  return  (localStorage.getItem("password")&&localStorage.getItem("token"))?
+  {
+    name:"admin",
+    adminLevel:2
+  }
+  :{
+    name:"user",
+    adminLevel:1
+  }
+   
+}
+
+export function loader(permissionsNeeded={name:"public",adminLevel:0}) {
+  // public, admin, user
+  const currentPermissions = getPermissions();
+
+  if (currentPermissions.adminLevel<permissionsNeeded) {
+    if(currentPermissions.name=="user") window.location.assign(userDashboardPath);
+    window.location.assign(loginAndRegisterPath);
+    return null
+  }
+ return null     
+
+}
