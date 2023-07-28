@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './shippingAndPayement.css';
 import Modal from '../../components/modal/modal';
-import { apiRoute, userDashboardPath } from '../../const/const';
+import { addressUserAdminPath, apiRoute, userDashboardPath } from '../../const/const';
 import {getUserToken, ponerPuntos, setRequestConfig, shoppingCartGet, shoppingCartSync} from "../../functions/functions"
 import Spinner from '../../components/spinner/spinner';
 import { useParams } from 'react-router-dom';
@@ -27,6 +27,7 @@ export default function ShippingAndPayement() {
 
   useEffect(() => {
     getUserToken().then(t=>{
+      (!t)&&window.location.reload()
       fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
         const localPrice = d.data
         setPrice(localPrice)
@@ -43,7 +44,7 @@ export default function ShippingAndPayement() {
         }
         }).catch(e=>console.log(e))
   
-    })
+    }).catch(e=>window.location.reload())
   }, []);
 
   function handleSetShipping (shipping){
@@ -123,9 +124,9 @@ export default function ShippingAndPayement() {
                     id_delivery_place:shipping.shippingId,
                     id_design:order.design.id,
                     id_packing_color:order.primaryColor.id,
-                    id_secondary_packing_color:order.primaryColor.id,
-                    id_wine:order.wine.id_wine,
-                    msg:`"${order.msg}"`,
+                    id_secondary_packing_color:order.secondaryColor.id,
+                    id_wine:order.wine.id,
+                    msg:`"${order.msg||""}"`,
                     price:price*order.amount,
       
                     id_user:localStorage.getItem("id"),
@@ -172,8 +173,8 @@ export default function ShippingAndPayement() {
                 };
                 // Call the function with your finalOrders array
                 createPurchaseOrders(finalOrders).then((error) => {
-                    alert("Remember that if there is any problem, you will be notified to your registered phone or email");
                     shoppingCartSync([])
+                    alert("Remember that if there is any problem, you will be notified to your registered phone or email");
                 }).catch(e=>{
                   console.log(e);
                   alert("There was an error. Try changing the file name and try againg");
@@ -245,7 +246,9 @@ export default function ShippingAndPayement() {
         modalToRender=
         <Modal title='To which address would you like to send your order?' options={
           addresses.map(address=>({label:address.name, value:address.id}))
-        } cancelable resolveFunction={value=>handleSetShipping({shippingId:value})}/>
+        } cancelable resolveFunction={value=>handleSetShipping({shippingId:value})}>
+          <a href={addressUserAdminPath} >Add a new address</a>
+        </Modal>
       }
     }else{
       if (!wayOfPaying) {
@@ -333,7 +336,14 @@ export default function ShippingAndPayement() {
     <div className="container SAP-modal d-flex justify-content-center align-content-center" >
       <div className="row d-flex justify-content-center align-content-center">
         <div className="col-12 ">
-          {modalToRender}
+          {localStorage.getItem("token")?
+            modalToRender
+            :
+            <>
+            <h1>Please, confirm your address</h1>
+            <Spinner/>
+            </>
+          }
         </div>
       </div>
     </div>

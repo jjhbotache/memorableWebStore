@@ -33,8 +33,8 @@ return (
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 {pagesToShow}
                 {(localStorage.getItem("id_shopping_cart") && !localStorage.getItem("password"))&&<li className="nav-item d-flex justify-content-center" > <a href={shoppingCartPath} className="nav-link w-100">Shopping cart</a></li>}
-                {localStorage.getItem("id")&&<li className="nav-item d-flex justify-content-center" > <a onClick={logout} className="nav-link ms-auto " style={{ color: 'rgb(164 1 1)' }}>Logout</a></li>}
               </ul>
+              {localStorage.getItem("id")&&<li className="nav-item d-flex justify-content-center" > <a onClick={logout} className="nav-link text-danger">Logout</a></li>}
 
               
             </div>

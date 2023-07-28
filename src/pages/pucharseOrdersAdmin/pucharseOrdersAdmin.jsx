@@ -141,18 +141,18 @@ export default function PucharseOrdersAdmin() {
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,user:obj})} label="User:" tableName="users" labelProperty="last_name" firstObj={orderInEditModal.user}/>
               {/* design */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,design:obj})} label="Design: " tableName="designs" labelProperty="name" firstObj={orderInEditModal.design}/>
-                {/* real design */}
-                <EditModalSelect optional onChangeValue={obj=>{
-                  console.log(obj);
-                  setOrderInEditModal({...orderInEditModal,realDesign:obj})
-                }} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
+              {/* real design */}
+              <EditModalSelect optional onChangeValue={obj=>{
+                console.log(obj);
+                setOrderInEditModal({...orderInEditModal,realDesign:obj})
+              }} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
               {/* amount */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
                 <label htmlFor="amount" className="form-label mb-0 align-baseline">Amount: </label>
                 <input type="number" disabled={editingOrder} className="form-control mx-auto" name="amount" defaultValue={orderInEditModal.amount?undefined:1}  value={orderInEditModal.amount} onChange={(e)=>{setOrderInEditModal({...orderInEditModal,amount:e.target.value>=1?e.target.value:1})}} />
               </div>
               {/* wine */}
-              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={!(orderInEditModal.wine=={})?orderInEditModal.wine:undefined }/>
+              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,wine:obj})} label="Wine: " tableName="wine_kinds" labelProperty="name" firstObj={orderInEditModal.wine}/>
               {/* primaryColor */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,primaryColor:obj})} label="Primary packing color:" tableName="packing_colors" labelProperty="color" firstObj={orderInEditModal.primaryColor}/>
               {/* secondaryColor */}
