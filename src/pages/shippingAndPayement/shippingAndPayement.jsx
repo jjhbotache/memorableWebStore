@@ -29,8 +29,9 @@ export default function ShippingAndPayement() {
     getUserToken().then(t=>{
       (!t)&&window.location.reload()
       fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
-        const localPrice = d.data
+        const localPrice = parseInt(d.data[0])
         setPrice(localPrice)
+        console.log("localPrice",localPrice);
         if (cart) {
           shoppingCartGet().then(d=>{
             setPreOrders(d);
@@ -40,7 +41,7 @@ export default function ShippingAndPayement() {
           }).catch(err=>console.log(err))
         }
         else{
-          setTotal(JSON.parse(localStorage.getItem("order")).amount*price)
+          setTotal(parseInt( JSON.parse(localStorage.getItem("order")).amount)*localPrice)
         }
         }).catch(e=>console.log(e))
   

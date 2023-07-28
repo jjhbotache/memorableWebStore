@@ -26,7 +26,7 @@ export default function PucharseOrdersAdmin() {
   useEffect(() => {
     setLoadingData(true)
     fetch(apiRoute + "/read/pucharse_orders", setRequestConfig("GET")).then((response) => response.json()).then((pucharseOrders) => {
-      // console.log(pucharseOrders);
+      console.log(pucharseOrders);
       setPucharseOrders(pucharseOrders)
       setPucharseOrdersRendered(pucharseOrders)
         
@@ -135,7 +135,7 @@ export default function PucharseOrdersAdmin() {
           setEditModal(null)
           setSearch("")
         }} 
-        options={[{label:"Cancel",value:0}]}>
+        options={[{label:"Exit",value:0}]}>
             <form className=" d-flex flex-column align-content-center justify-content-center w-100" onSubmit={editorModalSubmited}>
               {/* user */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,user:obj})} label="User:" tableName="users" labelProperty="last_name" firstObj={orderInEditModal.user}/>
@@ -191,7 +191,7 @@ export default function PucharseOrdersAdmin() {
               {/* price */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-center gap-2" >
                 <label htmlFor="price" className="form-label mb-0 align-baseline">Price: </label>
-                <input disabled={editingOrder} type="number" className="form-control p-0 d-block mx-auto" name="price" value={orderInEditModal.price} onChange={
+                <input disabled={editingOrder} type="number" className="form-control p-0 d-block mx-auto" style={{minWidth:"200px"}} name="price" value={orderInEditModal.price} onChange={
                   (e)=>{setOrderInEditModal({...orderInEditModal,price:parseInt(e.target.value)})}
                 }/>
               </div>
@@ -223,7 +223,7 @@ export default function PucharseOrdersAdmin() {
       formData.append("user_id", orderInEditModal.user.id);
       formData.append("wine_id", orderInEditModal.wine.id);
       formData.append("design_id", orderInEditModal.design.id);
-      formData.append("real_design_id", orderInEditModal.realDesign.id || null);
+      formData.append("real_design_id", orderInEditModal.realDesign?.id || null);
       formData.append("amount", orderInEditModal.amount);
       formData.append("msg", orderInEditModal.msg);
       formData.append("primary_color_id", orderInEditModal.primaryColor.id);

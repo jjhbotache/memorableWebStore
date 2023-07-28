@@ -151,7 +151,7 @@ export default function RealDesignsAdmin() {
         <h1>Real designs admin</h1>
         <hr />
         <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} />
-        <div className="row gap-2">
+        <div className="row gap-2 mt-4">
           {
             designsToRender.map(design =>(
             <AdminDesignCard key={design.id} design={design} 
@@ -183,7 +183,11 @@ export default function RealDesignsAdmin() {
             <label htmlFor="img" className="form-label">Image</label>
             <input accept='.png' type="file" className="form-control p-1" name="img" onChange={e=>{
               if (e.target.files[0]) {
-                setDataInEditor({...dataInEditor,img:e.target.files[0]})
+                setDataInEditor({
+                  ...dataInEditor,
+                  img:e.target.files[0],
+                  name:e.target.files[0].name.split(".")[0]
+                })
                 loadPreview(imgPreview,e);
               }
             }}/>
