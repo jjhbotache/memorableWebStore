@@ -4,7 +4,7 @@ export default function SimpleDataCard({data,onDelete,onEdit,onDisplayProperty="
   return(
     <div className="col-12 col-md-6 col-lg-4 ">
       <div className="card h-100 d-flex flex-column justify-content-between">
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between p-1">
           <h5 className="card-title">{data.id + ") " + data[onDisplayProperty]}</h5>
           {
             onDisplayProperty=="color" && <div className={`d-block m-2 `} style={{backgroundColor: data.color, height: "50px", width: "50px", borderRadius: "1em", border: "var(--colorPrimary) solid 1px"}}></div>

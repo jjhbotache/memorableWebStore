@@ -14,6 +14,7 @@ export default function ShippingAndPayement() {
   const [vaucherImg, setVaucherImg] = useState(null);
   const [wayOfPaying, setWayOfPaying] = useState();  
   const [price, setPrice] = useState();
+  const [shippingPrice, setShippingPrice] = useState(0);
 
   const [addresses, setAddresses] = useState([]);
   const [pickUpPlace, setPickUpPlace] = useState(null);
@@ -43,8 +44,14 @@ export default function ShippingAndPayement() {
         else{
           setTotal(parseInt( JSON.parse(localStorage.getItem("order")).amount)*localPrice)
         }
-        }).catch(e=>console.log(e))
-  
+      }).catch(e=>console.log(e))
+
+      fetch(apiRoute + "/open-csv-data/national_shipping_price",setRequestConfig()).then(re=>re.json()).then(d=>{
+        const sp = parseInt(d.data[0]);
+        setShippingPrice(sp)
+        console.log("shippingPrice",sp);
+      }).catch(e=>console.log(e))
+      
     }).catch(e=>window.location.reload())
   }, []);
 
@@ -98,8 +105,8 @@ export default function ShippingAndPayement() {
                   id_packing_color:order.primaryColor.id,
                   id_secondary_packing_color:order.primaryColor.id,
                   id_wine:order.wine.id_wine,
-                  msg:`"${order.msg}"`,
-                  price:price*order.amount,
+                  msg:`"${order.msg||""}"`,
+                  price:price*order.amount+(!(wayOfShiping==1)?shippingPrice:0),
     
                   id_user:localStorage.getItem("id"),
                   id_vaucher:"'"+savedVaucher.vaucher_route+"'"
@@ -128,7 +135,7 @@ export default function ShippingAndPayement() {
                     id_secondary_packing_color:order.secondaryColor.id,
                     id_wine:order.wine.id,
                     msg:`"${order.msg||""}"`,
-                    price:price*order.amount,
+                    price:price*order.amount+(!(wayOfShiping==1)?shippingPrice:0),
       
                     id_user:localStorage.getItem("id"),
                     id_vaucher:"'"+savedVaucher.vaucher_route+"'"
@@ -222,7 +229,13 @@ export default function ShippingAndPayement() {
       <Modal title='Do you want to pick up your order or we send it to you?' options={[
         {label:'Pick up', value:1},
         {label:'Send it', value:2}
-      ]} resolveFunction={(way)=>setWayOfShiping(way)}/>
+      ]} resolveFunction={(way)=>setWayOfShiping(way)}>
+        <h3 className='text-start mx-4'><strong>Shipping price: </strong> </h3>
+        <ul className='text-start'>
+          <li><h5>Local: $&nbsp;{0}</h5></li>
+          <li><h5>National: $&nbsp;{ponerPuntos(shippingPrice)}</h5></li>
+        </ul>
+      </Modal>
   }else{
     if (!(!!(shipping.shippingId))) {
       if(wayOfShiping===1){
@@ -271,7 +284,7 @@ export default function ShippingAndPayement() {
               ]} resolveFunction={(payed)=>payed?setVaucherImg(undefined):setWayOfPaying()}>
                 <img src="https://chart.apis.google.com/chart?cht=qr&chl=Hello&chs=248" alt="QR Nequi" className="img-fluid"/>
                 <hr/>
-                <h3>$&nbsp;{ponerPuntos(total)}</h3>
+                <h3>$&nbsp;{ponerPuntos(total+(!(wayOfShiping==1)?shippingPrice:0))}</h3>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
               </Modal>
@@ -283,7 +296,7 @@ export default function ShippingAndPayement() {
                 {label:'cancel', value:false},
               ]} resolveFunction={(payed)=>payed?setVaucherImg(undefined):setWayOfPaying()}>
                 <hr/>
-                <h3>$&nbsp;{ponerPuntos(total)}</h3>
+                <h3>$&nbsp;{ponerPuntos(total+(!(wayOfShiping==1)?shippingPrice:0))}</h3>
                 <h5>Account number:</h5>
                 <h6>1205-672235</h6>
                 <hr/>
@@ -297,7 +310,7 @@ export default function ShippingAndPayement() {
               ]} resolveFunction={(payed)=>payed?setVaucherImg(undefined):setWayOfPaying()}>
                 <img src="https://chart.apis.google.com/chart?cht=qr&chl=Hello&chs=248" alt="QR Nequi" className="img-fluid"/>
                 <hr/>
-                <h3>$&nbsp;{ponerPuntos(total)}</h3>
+                <h3>$&nbsp;{ponerPuntos(total+(!(wayOfShiping==1)?shippingPrice:0))}</h3>
                 <h5>Phone number</h5>
                 <h6>3012167977</h6>
               </Modal>  

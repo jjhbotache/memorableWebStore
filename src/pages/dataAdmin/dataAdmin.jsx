@@ -117,7 +117,7 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
         setDataInEditor({})
         if (tableToAdmin=="users") {creating.current = true}
       }} />
-      <div className="row gap-2">
+      <div className="row gap-2 mt-2 mt-sm-4">
           {
             cardsToRender.map(data =>(
             <SimpleDataCard key={data.id} data={data} 

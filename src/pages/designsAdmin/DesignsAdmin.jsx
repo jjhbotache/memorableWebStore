@@ -232,7 +232,7 @@ const DesignsAdmin = () => {
         <hr />
         <div className="row mb-2">
           {/* <AdminHeader onSearch={input=>setSearch(input)} onAdd={() => setDataInEditor({})} /> */}
-          <SearchBar tags={tagOptions} onFilter={searchFunction}/>
+          <SearchBar tags={tagOptions} onFilter={searchFunction} onAdd={() => setDataInEditor({})}/>
           <small className="form-text text-muted">Tags: {tagOptions.map(t=>t.name).join("/")}</small>
         </div>
         <div className="row g-2 d-flex justify-content-around">

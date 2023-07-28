@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./searchBar.module.css";
 import { useEffect } from "react";
 
-export default function SearchBar({tags,onFilter}) {
+export default function SearchBar({tags,onFilter,onAdd}) {
   const [filter,setFilter] = useState({input:"",tagsIds:new Set()});
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function SearchBar({tags,onFilter}) {
             </div>
           </div>
         </div>
-        <div className="col-12 col-sm-1 d-flex justify-content-center">
+        <div className="col-12 col-sm-1 d-flex justify-content-center gap-1">
           <div className="dropdown">
             <button className="btn btn-dark dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
@@ -55,6 +55,7 @@ export default function SearchBar({tags,onFilter}) {
               ))}
             </div>
           </div>
+          {onAdd&&<button type="button" className="btn btn-white" onClick={onAdd}>add</button>}
         </div>
     </div>
   )
