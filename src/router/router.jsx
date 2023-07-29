@@ -55,7 +55,6 @@ const router = createBrowserRouter([
   {
     path: "/loginAndRegister",
     element: <LoginAndRegister/>,
-
   },
   {
     path: "/userDashboard",
