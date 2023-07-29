@@ -1,7 +1,5 @@
 // import the order json mock
 import { useEffect, useState } from "react";
-import "./PucharseOrderCard.css";
-import order from "../../mocks/order.json";
 import { apiRoute } from "../../const/const";
 import { setRequestConfig } from "../../functions/functions";
 // 
