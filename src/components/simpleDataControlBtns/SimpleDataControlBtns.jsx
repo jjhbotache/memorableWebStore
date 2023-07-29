@@ -1,4 +1,4 @@
-import styles from "./SimpleDataControlBtns.module.css";
+import styles from "./simpleDataControlBtns.module.css";
 export default function SimpleDataControlBtns({onEdit,onDelete}) {
   return(
     <div className="d-flex">

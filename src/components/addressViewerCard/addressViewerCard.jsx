@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import styles from './addressViewerCard.module.css';
+// import styles from './addressViewerCard.module.css';
 import { useState } from 'react';
 import { apiRoute } from '../../const/const';
 import { setRequestConfig } from '../../functions/functions';
