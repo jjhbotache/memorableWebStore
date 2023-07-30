@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './landingPage.module.css';
+import { Link } from 'react-router-dom';
 
 
 export default function LandingPage() {
@@ -8,7 +9,7 @@ export default function LandingPage() {
       <div className={styles.bg}>
         <h1 >MEMORABLE</h1>
         <h2>Best wines that you would taste</h2>
-        <a className={`btn mx-auto ${styles.a_lp}`} href='/catalog'>watch designs</a>
+        <Link className={`btn mx-auto ${styles.a_lp}`} to='/catalog'>watch designs</Link>
       </div>
     </main>
   );
