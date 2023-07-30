@@ -8,8 +8,10 @@ import { apiRoute } from "../../const/const";
 import { customSort, setRequestConfig } from "../../functions/functions";
 import Modal from "../../components/modal/modal";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AddressesViewer() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [dataInEditor, setDataInEditor] = useState(null);

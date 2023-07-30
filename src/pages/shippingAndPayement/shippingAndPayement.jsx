@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './shippingAndPayement.css';
 import Modal from '../../components/modal/modal';
-import { addressUserAdminPath, apiRoute, userDashboardPath } from '../../const/const';
+import { addressUserAdminPath, apiRoute, shippingAndPayementPath, userDashboardPath } from '../../const/const';
 import {getUserToken, ponerPuntos, setRequestConfig, shoppingCartGet, shoppingCartSync} from "../../functions/functions"
 import Spinner from '../../components/spinner/spinner';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 export default function ShippingAndPayement() {
+  const navigate = useNavigate();
   // shipping just save a shippingId:1
   const [shipping, setShipping] = useState({});  
   const [wayOfShiping, setWayOfShiping] = useState();  
@@ -28,7 +29,7 @@ export default function ShippingAndPayement() {
 
   useEffect(() => {
     getUserToken().then(t=>{
-      (!t)&&window.location.reload()
+      (!t)&&navigate(shippingAndPayementPath)
       fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
         const localPrice = parseInt(d.data[0])
         setPrice(localPrice)
@@ -52,7 +53,7 @@ export default function ShippingAndPayement() {
         console.log("shippingPrice",sp);
       }).catch(e=>console.log(e))
       
-    }).catch(e=>window.location.reload())
+    }).catch(e=>navigate(shippingAndPayementPath))
   }, []);
 
   function handleSetShipping (shipping){
@@ -117,7 +118,7 @@ export default function ShippingAndPayement() {
                   alert( "Remember that if it exists any problem, will be notice you to your phone or email registered")
                   // delete the order from the local storage
                   localStorage.removeItem("order");
-                  window.location.assign(userDashboardPath);
+                  navigate(userDashboardPath);
                 }).catch((e) => {
                   console.log(e);
                   alert("There was an error saving your vaucher, try changing the file name");
@@ -161,7 +162,7 @@ export default function ShippingAndPayement() {
                 
                     // delete the order from the local storage
                     localStorage.removeItem("order");
-                    window.location.assign(userDashboardPath);
+                    navigate(userDashboardPath);
                   } catch (error) {
                     console.log(error);
                     alert("There was an error saving your voucher, try changing the file name");
@@ -261,7 +262,7 @@ export default function ShippingAndPayement() {
         <Modal title='To which address would you like to send your order?' options={
           addresses.map(address=>({label:address.name, value:address.id}))
         } cancelable resolveFunction={value=>handleSetShipping({shippingId:value})}>
-          <a href={addressUserAdminPath} >Add a new address</a>
+          <Link to={addressUserAdminPath} >Add a new address</Link>
         </Modal>
       }
     }else{
@@ -324,7 +325,7 @@ export default function ShippingAndPayement() {
               <Modal title="We are verifying it's you " options={[
                 {label:'Done', value:1},
               ]} resolveFunction={()=>{
-                localStorage.getItem("token")&&window.location.assign(userDashboardPath)
+                localStorage.getItem("token")&&navigate(userDashboardPath)
                 }} >
                   <Spinner/>
               </Modal>

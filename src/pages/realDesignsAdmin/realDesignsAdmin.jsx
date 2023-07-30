@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import AdminHeader from '../../components/adminHeader/AdminHeader';
-import { apiRoute } from '../../const/const';
+import { apiRoute, realDesignsAdminPath } from '../../const/const';
 import { convertToFileName, loadPreview, setRequestConfig, verifyIsWhereItShould } from '../../functions/functions';
 import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
 import LoadingView from '../../components/loadingView/loadingView';
 import "./realDesigns.css"
+import { useNavigate } from 'react-router-dom';
 // changed
 
 export default function RealDesignsAdmin() {
-  verifyIsWhereItShould("admin")
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [designs, setDesigns] = useState([]);
@@ -101,7 +103,7 @@ export default function RealDesignsAdmin() {
           setLoading(false)
         })
       }
-      window.location.reload();
+      navigate(realDesignsAdminPath);
     }else{
       // create
       if (
@@ -121,7 +123,7 @@ export default function RealDesignsAdmin() {
         .then(respuesta=>respuesta.text())
         .then(data=>{
           alert(data);
-          window.location.reload();
+          navigate(realDesignsAdminPath);
         }).catch(e=>{alert("somethig went wrong:",e);
         }).finally(()=>{
           setLoading(false);

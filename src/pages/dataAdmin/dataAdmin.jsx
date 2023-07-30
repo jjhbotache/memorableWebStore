@@ -8,8 +8,11 @@ import { cleanObjectList, customSort, setRequestConfig, verifyIsWhereItShould } 
 import { apiRoute } from "../../const/const";
 import { useRef } from "react";
 import styles from "./dataAdmin.module.css";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function DataAdmin({title="no title",tableToAdmin="", onDisplayProperty,propertiesToSearch=["id"],customOrderToModal}) {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [dataInEditor, setDataInEditor] = useState(null);
   const [dataGotten, setDataGotten] = useState([]);  
@@ -73,7 +76,7 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
     console.log(dataObj);
 
     // check each property value and surround it with quotes if it is a string
-    for (const key in dataObj) {  if (typeof dataObj[key] === "string") dataObj[key] = `"${dataObj[key]}"`  }
+    // for (const key in dataObj) {  if (typeof dataObj[key] === "string") dataObj[key] = `"${dataObj[key]}"`  }
 
     console.log(creating.current);
     console.log((dataInEditor.id && (creating.current==undefined)));
@@ -82,7 +85,9 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
       // editing
       fetch(apiRoute + "/update/"+tableToAdmin+"/"+dataInEditor.id,setRequestConfig("PUT",dataObj)).then(re=>re.json()).then(data=>{
         console.log(data);
-        window.location.reload();
+        // reload the window usign the navigate hook
+        const url = "/"+window.location.href.split('/').pop()
+        navigate(url)
       }).catch(err=>{
         console.log(err);
       });
@@ -90,7 +95,8 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
       // adding
       fetch(apiRoute + "/insert/"+tableToAdmin,setRequestConfig("POST",dataObj)).then(re=>re.json()).then(data=>{
         console.log(data);
-        window.location.reload();
+        const url = "/"+window.location.href.split('/').pop()
+        navigate(url)
       }).catch(err=>{console.log(err);});
     }
 
@@ -147,7 +153,7 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
                   (["packing_colors","secondary_packing_colors"].includes(tableToAdmin) && !(field=="id"))&& (
                     <>
                     <div className={`d-block mx-auto mt-2 ${styles.preview}`} style={{backgroundColor: dataInEditor[field],}}></div>
-                    <a href="https://www.w3.org/TR/css-color-3/#svg-color" target="_blank">Want to know about more color names?</a>
+                    <Link to="https://www.w3.org/TR/css-color-3/#svg-color" target="_blank">Want to know about more color names?</Link>
                     </>
                   )
                 }

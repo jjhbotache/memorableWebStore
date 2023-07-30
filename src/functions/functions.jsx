@@ -96,7 +96,7 @@ export async function getUserToken() {
 
 export function logout() {
   localStorage.clear();
-  window.location.assign(loginAndRegisterPath)
+  return loginAndRegisterPath
 }
 
 export function copyToClipboard(str) {
@@ -246,7 +246,7 @@ export function checkLastName(apellido) {
   }
 }
 
-function getPermissions(lsItems=["email","password","id","first_name","last_name","phone"]) {
+function getPermissions(lsItems=["email","id","first_name","last_name","phone"]) {
   // for each item in lsItems
   // if it is not in the localStorage
   // redirect to loginAndRegisterPath
@@ -269,14 +269,13 @@ function getPermissions(lsItems=["email","password","id","first_name","last_name
    
 }
 
-export function loader(permissionsNeeded={name:"public",adminLevel:0}) {
+export function getRedirectUrl(permissionsNeeded={name:"public",adminLevel:0}) {
   // public, admin, user
   const currentPermissions = getPermissions();
 
-  if (currentPermissions.adminLevel<permissionsNeeded) {
-    if(currentPermissions.name=="user") window.location.assign(userDashboardPath);
-    window.location.assign(loginAndRegisterPath);
-    return null
+  if (currentPermissions.adminLevel<permissionsNeeded.adminLevel) {
+    if(currentPermissions.name=="user") return userDashboardPath;
+    return loginAndRegisterPath;
   }
  return null     
 

@@ -3,10 +3,13 @@ import Modal from "../../components/modal/modal";
 import {addresesViewerPath, adminsTools, apiRoute, designsAdminPath, pucharseOrdersAdminPath, realDesignsAdminPath} from "../../const/const"
 import {getUserToken, logout, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+
   const [token, setToken] = useState(localStorage.getItem("token"));
 
 
@@ -15,7 +18,6 @@ export default function AdminDashboard() {
 
   const passwordInput = useRef()
   // verify that a password exists
-  verifyIsWhereItShould()
 
   function checkPassword(value) {
     console.log("checking...");
@@ -56,7 +58,7 @@ export default function AdminDashboard() {
             <ul>
               {adminsTools.map(tool =>(
                 <li key={tool.name} className=" mb-2">
-                  <a className="btn" href={tool.path}>{tool.name}</a>
+                  <Link className="btn" to={tool.path}>{tool.name}</Link>
                 </li>
               )
               )}
@@ -65,7 +67,7 @@ export default function AdminDashboard() {
               <h3>Other tools</h3>
             <ul>
               <li className=" mb-2">
-                <a className="btn" href={addresesViewerPath}>Addreses Viewer</a>
+                <Link className="btn" to={addresesViewerPath}>Addreses Viewer</Link>
               </li>
             </ul>
 
@@ -74,7 +76,7 @@ export default function AdminDashboard() {
         <div className="row">
           <div className="col-12">
             <hr />
-            <button className="btn btn-dark btn-danger" onClick={logout}>Logout</button>
+            <button className="btn btn-dark btn-danger" onClick={e=>navigate(logout())}>Logout</button>
           </div>
         </div>
       </div>

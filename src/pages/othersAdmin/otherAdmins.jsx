@@ -4,8 +4,10 @@ import { areObjectsEqual, camelToSnake, capitalizeFirstLetter, setRequestConfig 
 import Spinner from "../../components/spinner/spinner";
 import { useRef } from "react";
 import statesAndTowns from "../../jsons/statesAndTowns.json"
+import { useNavigate } from "react-router-dom";
 
 export default function OtherAdmins() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [dataToAdmin, setDataToAdmin] = useState({
     bottlePrice: 0,

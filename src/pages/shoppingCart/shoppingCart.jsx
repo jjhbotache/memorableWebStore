@@ -2,11 +2,13 @@ import { useRef, useState } from "react";
 import LoadingView from "../../components/loadingView/loadingView";
 import { useEffect } from "react";
 import { ponerPuntos, setRequestConfig, shoppingCartGet, shoppingCartSync } from "../../functions/functions";
-import { apiRoute, catalogPath, shippingAndPayementPath } from "../../const/const";
+import { apiRoute, catalogPath, shippingAndPayementPath, shoppingCartPath } from "../../const/const";
 import PreOrderCard from "../../components/preOrderCard/preOrderCard";
 import StickyBottomModal from "../../components/stickyBottomModal/stickyBottomModal";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ShoppingCart() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [preOrders, setPreOrders] = useState([]);
   const [bottlePrice, setBottlePrice] = useState(0);
@@ -51,7 +53,7 @@ export default function ShoppingCart() {
     const newPreOrders = preOrders.filter(p=>p.id!==id);
     setPreOrders(newPreOrders);
     shoppingCartSync(newPreOrders).then(
-      ()=>window.location.reload()
+      ()=>navigate(shoppingCartPath)
     )
 
   }
@@ -74,7 +76,7 @@ export default function ShoppingCart() {
       <h1>There aren't any products in the cart</h1>
       <h6>See the designs in the catalog:</h6>
       <div className="w-100 d-flex justify-content-center align-items-center" style={{height:"30vh"}}>
-        <a href={catalogPath} className="btn ">Catalog</a>
+        <Link to={catalogPath} className="btn ">Catalog</Link>
       </div>
       </>
       // link to redirect to catalog
@@ -91,7 +93,7 @@ export default function ShoppingCart() {
             <h4>Bottles: {preOrders.reduce((p, a,) => p+a.amount, 0)}</h4>
           </div>
           <div className="col-6 d-flex justify-content-center align-items-center">
-            <a href={shippingAndPayementPath+"/1"} className="btn btn-white ms-auto">Buy</a>
+            <Link to={shippingAndPayementPath+"/1"} className="btn btn-white ms-auto">Buy</Link>
           </div>
         </div>
       </div>

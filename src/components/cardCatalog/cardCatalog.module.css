@@ -9,10 +9,17 @@
 
   border: var(--colorPrimary) solid 3px;
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-
+  cursor: pointer;
+  
   overflow: hidden;
+
+  transition: all 0.1s ease-in-out;
 } 
 
+.cardCatalog:hover{
+  box-shadow: 0px 0px 1em 0px rgba(0,0,0,0.75);
+  transform: scale(1.02);
+}
 
 .cardCatalog img{
   width: 100%;

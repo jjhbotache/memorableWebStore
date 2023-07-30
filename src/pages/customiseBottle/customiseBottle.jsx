@@ -5,13 +5,14 @@ import Select from "../../components/select/select";
 import { apiRoute, buyNowPath, catalogPath, loginAndRegisterPath, shoppingCartPath } from "../../const/const";
 import styles from "./customiseBottle.module.css";
 import { setRequestConfig, shoppingCartGet, shoppingCartSync } from "../../functions/functions";
-import { useParams} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 
 const defaultAmount = 1;
 export default function CustomiseBottle() {
+  const navigate = useNavigate();
   const {id:idPreOrderToCustomise} = useParams();
   const designGotten = useRef(JSON.parse(localStorage.getItem("design")))
-  if (!designGotten?.current && idPreOrderToCustomise == undefined) window.location.assign(catalogPath)
+  if (!designGotten?.current && idPreOrderToCustomise == undefined) navigate(catalogPath)
 
   const [readyToOrder, setReadyToOrder] = useState(false);
   const [wines, setWines] = useState([]);
@@ -75,12 +76,12 @@ export default function CustomiseBottle() {
     localStorage.setItem("order", JSON.stringify(order));
     // redirect to checkout
     (localStorage.getItem("id")&&!localStorage.getItem("password")) 
-    ?window.location.assign(buyNowPath)
-    :window.location.assign(loginAndRegisterPath)
+    ?navigate(buyNowPath)
+    :navigate(loginAndRegisterPath)
   }
 
   async function addToCart() {
-    !(localStorage.getItem("id")&&!localStorage.getItem("password")) && window.location.assign(loginAndRegisterPath)
+    !(localStorage.getItem("id")&&!localStorage.getItem("password")) && navigate(loginAndRegisterPath)
 
     // if the cart is the default one, create a new one
     if (localStorage.getItem("id_shopping_cart")==1) {
@@ -91,7 +92,7 @@ export default function CustomiseBottle() {
         ).catch(err=>{console.log(err);})
 
         console.log(data.msg);
-        window.location.assign(shoppingCartPath);
+        navigate(shoppingCartPath);
       }).catch(err=>{console.log(err);})
     }else{
       if (!idPreOrderToCustomise) {
@@ -103,7 +104,7 @@ export default function CustomiseBottle() {
           // // update the cart
           shoppingCartSync(cart).then(d=>{
             console.log(d.msg);
-            window.location.assign(shoppingCartPath);
+            navigate(shoppingCartPath);
           })
         })
       }else{
@@ -116,7 +117,7 @@ export default function CustomiseBottle() {
           // // update the cart
           shoppingCartSync(cart).then(d=>{
             console.log(d.msg);
-            window.location.assign(shoppingCartPath);
+            navigate(shoppingCartPath);
           })
         })
       }

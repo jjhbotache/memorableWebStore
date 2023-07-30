@@ -3,13 +3,15 @@ import "./loginAndRegister.css"
 import Spinner from "../../components/spinner/spinner";
 import LoginForm from "../../components/loginForm/loginForm";
 import RegisterForm from "../../components/registerForm/registerForm";
-import { adminDashboardPath, apiRoute, catalogPath, shippingAndPayementPath, userDashboardPath} from "../../const/const";
+import { adminDashboardPath, apiRoute, catalogPath, loginAndRegisterPath, shippingAndPayementPath, userDashboardPath} from "../../const/const";
 import {checkLastName, checkMail, checkName, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
+import { useNavigate } from "react-router-dom";
 
 
 export default function LoginAndRegister() {
   const [login, setLogin] = useState(true);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   verifyIsWhereItShould()
 
   function loginAction(e) {
@@ -31,7 +33,7 @@ export default function LoginAndRegister() {
         result[key] && localStorage.setItem(key.toString(),(result[key]).toString())
       }
       // redirect to the corresponding dashboard 
-      window.location.assign(
+      navigate(
         localStorage.password?
         adminDashboardPath
         :
@@ -110,7 +112,8 @@ export default function LoginAndRegister() {
         }
         alert("Se ha creado tu usuario correctamente")
         // reload
-        window.location.reload()
+        // window.location.reload()
+        navigate(loginAndRegisterPath)
       })
       .catch(error => 
         {console.error(error);

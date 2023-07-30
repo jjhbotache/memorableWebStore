@@ -5,9 +5,10 @@ import Spinner from "../../components/spinner/spinner";
 import BuyItem from "../../components/buyItem/buyItem";
 import AddressItem from "../../components/addressItem/addressItem";
 import "./userDashboard.css"
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  verifyIsWhereItShould()
+  // verifyIsWhereItShould()
   if (localStorage.getItem("password")) return window.location.assign(adminDashboardPath)
 
 
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [loadingShoppings, setLoadingShoppings] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [loadignAddresses, setLoadignAddresses] = useState(false);
+  const navigate = useNavigate();
   
 
   
@@ -175,7 +177,7 @@ export default function Dashboard() {
                   <Spinner/>
                 :
                 <div className="d-grid gap-2">
-                  <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
+                  <button type="button"className="btn btn-white w-sm-25 d-block mx-auto" onClick={e=>{
                     setLoadingShoppings(true)
                     getUserToken().then(e => {
                       fetch(apiRoute + "/read_pucharse_orders", setRequestConfig()).then(re=>re.json()).then((data) => {
@@ -216,7 +218,7 @@ export default function Dashboard() {
                     <Spinner/>
                   :
                     <div className="d-grid gap-2">
-                      <button type="button"className="btn w-sm-25 d-block mx-auto" onClick={e=>{
+                      <button type="button"className="btn btn-white w-sm-25 d-block mx-auto" onClick={e=>{
                         setLoadignAddresses(true)
                         getUserToken().then(e => {
                           fetch(apiRoute + "/user/read/addresses/"+localStorage.getItem("id"), setRequestConfig()).then(re=>re.json()).then((data) => {
@@ -234,7 +236,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          <button type="button" className=" btn btn-dark mx-auto d-block mt-3 w-50" onClick={logout}>Logout</button>
+          <button type="button" className=" btn btn-dark mx-auto d-block mt-3 w-50" onClick={e=>navigate(logout())}>Logout</button>
         </div>
       </div>
     </>

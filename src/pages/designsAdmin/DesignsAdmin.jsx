@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Spinner from '../../components/spinner/spinner';
 import AdminHeader from '../../components/adminHeader/AdminHeader';
-import { apiRoute } from '../../const/const';
+import { apiRoute, designsAdminPath } from '../../const/const';
 import { cleanObjectList, convertToFileName, loadPreview, setRequestConfig, verifyIsWhereItShould } from '../../functions/functions';
 import AdminDesignCard from '../../components/adminDesignCard/AdminDesignCard';
 import Modal from '../../components/modal/modal';
 import { useRef } from 'react';
 import styles from "./designsAdmin.module.css";
 import SearchBar from '../../components/searchBar/searchBar';
+import { useNavigate } from 'react-router-dom';
 
 const DesignsAdmin = () => {
-  verifyIsWhereItShould("admin")
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [designs, setDesigns] = useState([]);
   const [designsToRender, setDesignsToRender] = useState([]);
@@ -146,7 +148,8 @@ const DesignsAdmin = () => {
 
           }
       });
-      window.location.reload();
+      navigate(designsAdminPath);
+      
     }else{
       // create
       if (
@@ -177,7 +180,7 @@ const DesignsAdmin = () => {
             .catch(error => console.log(error))
           });
 
-          window.location.reload();
+          navigate(designsAdminPath);
         }).catch(e=>{alert("somethig went wrong:",e);
         }).finally(()=>{
           setLoading(false);

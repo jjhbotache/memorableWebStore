@@ -3,8 +3,10 @@ import { apiRoute, shippingAndPayementPath } from "../../const/const";
 import "./buyNow.css";
 import { useEffect } from "react";
 import { ponerPuntos, setRequestConfig } from "../../functions/functions";
+import { useNavigate } from "react-router-dom";
 
 export default function BuyNow() {
+  const navigate = useNavigate();
   const order = JSON.parse(localStorage.getItem("order"));
   // get the design from the localStorage
   const {design} = order;
@@ -33,7 +35,7 @@ export default function BuyNow() {
             <h1 >{design.name}</h1>
             <h2>$&nbsp;{price?ponerPuntos(price):"--.---"}</h2>
           </div>
-          <button className="btn " onClick={()=>{window.location.assign(shippingAndPayementPath)}}>finish buy</button>
+          <button className="btn " onClick={()=>{navigate(shippingAndPayementPath)}}>finish buy</button>
         </div>
       </div>
     </>

@@ -1,12 +1,15 @@
 import { useEffect, useState, useRef } from "react";
-import { addresesViewerPath, apiRoute } from "../../const/const";
+import { addresesViewerPath, apiRoute, pucharseOrdersAdminPath } from "../../const/const";
 import {copyToClipboard, loadPreview, setRequestConfig} from "../../functions/functions"
 import Spinner from "../../components/spinner/spinner";
 import PucharseOrderCard from "../../components/pucharseOrderCard/PucharseOrderCard";
 import Modal from "../../components/modal/modal";
 import EditModalSelect from "../../components/editModalSelect/EditModalSelect";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PucharseOrdersAdmin() {
+  const navigate = useNavigate(); 
+
   const [pucharseOrders, setPucharseOrders] = useState([]);
   const [pucharseOrdersRendered, setPucharseOrdersRendered] = useState([]);
 
@@ -172,7 +175,7 @@ export default function PucharseOrdersAdmin() {
               {/* address */}
               {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,deliveryPlace:obj})} label="Address:" tableName="addresses" labelProperty="id" firstObj={orderInEditModal.deliveryPlace}>
-                <a href={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</a>
+                <Link to={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</Link>
               </EditModalSelect>
               
               {/* vaucher */}
@@ -251,7 +254,7 @@ export default function PucharseOrdersAdmin() {
         if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the user info?")){
           copyToClipboard(infoStr)
         }
-        window.location.reload();
+        navigate(pucharseOrdersAdminPath);
         
       }).catch((error) => {
         alert("check all the fields needed");
@@ -315,7 +318,7 @@ export default function PucharseOrdersAdmin() {
       setLoading(true);
       fetch(apiRoute + "/create/pucharse_orders", setRequestConfig("POST", formData, true)).then((response) => response.json()).then((data) => {
         console.log(data);
-        window.location.reload();
+        navigate(pucharseOrdesAdminPath);
       } 
       ).catch((error) => {
         console.error(error);

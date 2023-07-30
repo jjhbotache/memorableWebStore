@@ -1,4 +1,4 @@
-import { apiRoute } from '../../const/const';
+import { apiRoute, customiseBottlePath } from '../../const/const';
 import styles from './catalog.module.css';
 import CardCatalog from '../../components/cardCatalog/CardCatalog';
 import { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import Spinner from '../../components/spinner/spinner';
 import { ponerPuntos, setRequestConfig } from '../../functions/functions';
 import SearchBar from '../../components/searchBar/searchBar';
 import Modal from '../../components/modal/modal';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 
 export default function Catalog() {
@@ -15,6 +16,8 @@ export default function Catalog() {
   const [loading, setLoading] = useState(false);
   const [price, setPrice] = useState();
   const [warned, setWarned] = useState(localStorage.getItem("priceWarned"));
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -46,7 +49,7 @@ export default function Catalog() {
   function designClicked(design) {
     // save the design in the localStorage
     localStorage.setItem("design", JSON.stringify(design));
-    window.location.href = "/customiseBottle";
+    navigate(customiseBottlePath);
   }
 
   function search(filter) {

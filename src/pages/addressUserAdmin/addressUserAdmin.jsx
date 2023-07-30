@@ -1,5 +1,5 @@
-import { useSearchParams } from "react-router-dom";
-import { apiRoute, userDashboardPath } from "../../const/const";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { addressUserAdminPath, apiRoute, userDashboardPath } from "../../const/const";
 import { setRequestConfig, verifyIsWhereItShould } from "../../functions/functions";
 import { useEffect, useRef, useState } from "react";
 import Spinner from "../../components/spinner/spinner";
@@ -8,6 +8,7 @@ import AddressItem from "../../components/addressItem/addressItem";
 import Modal from "../../components/modal/modal";
 
 export default function AddressUserAdmin() {
+  const navigate = useNavigate();
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -18,7 +19,7 @@ export default function AddressUserAdmin() {
   const allAddresses = useRef(addresses);
 
   verifyIsWhereItShould("user");
-  if(localStorage.getItem("password")) return window.location.assign(userDashboardPath)
+  if(localStorage.getItem("password")) return navigate(userDashboardPath)
 
   useEffect(() => {
 
@@ -75,7 +76,8 @@ export default function AddressUserAdmin() {
       fetch(`${apiRoute}/user/update/addresses/${editorModal.id}`,setRequestConfig("PUT",data)).then(re=>re.json()).then(data=>{
         console.log(data);
         alert("updated")
-        window.location.reload();
+        navigate(addressUserAdminPath);
+        
       })
       .catch(err=>console.log(err))
       .finally(()=>setLoading(false))
@@ -91,7 +93,7 @@ export default function AddressUserAdmin() {
       fetch(`${apiRoute}/user/create/addresses`,setRequestConfig("POST",data)).then(re=>re.json()).then(data=>{
         console.log(data);
         alert("created")
-        window.location.reload();
+        navigate(addressUserAdminPath);
       })
       .catch(err=>console.log(err))
       .finally(()=>setLoading(false))
