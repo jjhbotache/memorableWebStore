@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import styles from './buyItem.module.css';
 import { apiRoute } from '../../const/const';
-import { setRequestConfig } from '../../functions/functions';
+import { convertirFecha, setRequestConfig } from '../../functions/functions';
+import { ponerPuntos } from '../../functions/functions';
 
 // made mostly by chatgpt
 
 const BuyItem = ({ data,token,userId,accordionContainerId }) => {
-  const { id, id_design,id_real_design, amount, delivery_date, id_delivery_place, id_packing_color, id_vaucher } = data;
-  const [nameToUse, setNameToUse] = useState("No design");
+  const { id, id_design,id_real_design, amount, delivery_date, id_delivery_place, id_packing_color, id_vaucher,price } = data;
+  const [design, setDesign] = useState();
+  const [realDesign, setrealDesign] = useState();
+
+  useEffect(() => {
+
+    if (id_real_design) {
+      fetch(apiRoute+"/user/read/real_designs/"+id_real_design,setRequestConfig()).then(re=>re.json())
+      .then(data=>{
+        setrealDesign(data.find(design => design.id==id_real_design))
+      })
+    }else if(id_design){
+      fetch(apiRoute+"/read-anyone/designs").then(re=>re.json())
+      .then(data=>{
+        setDesign(data.find(design => design.id==id_design))
+      })
+    }
+  }, []);
 
   // useEffect(() => {
   //   console.log("id_design",id_design);
   // }, [data])
 
-  if (id_real_design) {
-    fetch(apiRoute+"/user/read/real_designs/"+id_real_design,setRequestConfig()).then(re=>re.json())
-    .then(data=>{
-      const design = data.find(design => design.id==id_real_design)
-      setNameToUse(design.name)
-    })
-  }else if(id_design){
+  function loadData() {
     fetch(apiRoute+"/read-anyone/designs").then(re=>re.json())
-    .then(data=>{
-      // console.log(data);
-      const design = data.find(design => design.id==id_design)
-      setNameToUse(design.name)
-    })
-  }else{
-    console.log("no design");
+      .then(data=>{
+        setDesign(data.find(design => design.id==id_design))
+      })
   }
   
 
@@ -42,8 +49,9 @@ const BuyItem = ({ data,token,userId,accordionContainerId }) => {
           data-bs-target={`#collapse${id}`}
           aria-expanded="false"
           aria-controls={`collapse${id}`}
+          onClick={loadData}
         >
-          {`${id} - ${nameToUse}`}
+          {`${id}) ${realDesign?realDesign.name:design?design.name:""}`}
         </button>
       </h2>
       <div
@@ -53,11 +61,42 @@ const BuyItem = ({ data,token,userId,accordionContainerId }) => {
         data-bs-parent={`#${accordionContainerId}`}
       >
         <div className={`accordion-body ${styles.bg}`}>
-          <img className={`${styles.vaucher}`} src={apiRoute +"/get_file/"+id_vaucher+"/"+token} alt="Vaucher" />
-          <p>Amount: {amount}</p>
-          <p>Delivery Date: {delivery_date}</p>
-          <p>Delivery Place ID: {id_delivery_place}</p>
-          <p>Packing Color ID: {id_packing_color}</p>
+          
+          <div className="container">
+            {
+              realDesign?
+              <div className="row">
+                <div className="col-12">
+                  <p>Real design:</p>
+                  <img className={`mb-4 ${styles.vaucher}`} src={apiRoute +"/get_file/"+realDesign?.img+"/"+token} alt="Vaucher" />
+                </div>
+              </div>
+              :
+              <>
+              <hr />
+              <h2>
+                We still making your design!
+              </h2>
+              <hr />
+              </>
+            }
+            <div className="row">
+              <div className="col-12 col-md-6">
+                <p>Voucher:</p>
+                <img className={`mb-4 ${styles.vaucher}`} src={apiRoute +"/get_file/"+id_vaucher+"/"+token} alt="Vaucher" />
+              </div>
+              <div className="col-12 col-md-6">
+                <p>Base design:</p>
+                {design && <img className={`mb-4 ${styles.vaucher}`} src={apiRoute +"/get_file/"+design?.img+"/"+token} alt="Vaucher" />}
+              </div>
+            </div>
+          </div>
+          <ul>
+
+            <li>Price: {"$"+ponerPuntos(price)}</li>
+            <li>Payment confirm: {data.paid?<span className="badge bg-success">Paid</span>:<span className="badge bg-danger">Not paid</span>}</li>
+            <li>Delivery Date: {convertirFecha(delivery_date)}</li>
+          </ul>
         </div>
       </div>
     </div>

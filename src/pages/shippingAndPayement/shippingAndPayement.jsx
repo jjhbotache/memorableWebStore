@@ -29,7 +29,8 @@ export default function ShippingAndPayement() {
 
   useEffect(() => {
     getUserToken().then(t=>{
-      (!t)&&navigate(shippingAndPayementPath)
+      (!t)&&window.location.reload();
+      // navigate(shippingAndPayementPath)
       fetch(apiRoute + "/open-csv-data/bottle_price",setRequestConfig()).then(re=>re.json()).then(d=>{
         const localPrice = parseInt(d.data[0])
         setPrice(localPrice)
@@ -53,7 +54,7 @@ export default function ShippingAndPayement() {
         console.log("shippingPrice",sp);
       }).catch(e=>console.log(e))
       
-    }).catch(e=>navigate(shippingAndPayementPath))
+    }).catch(e=>window.location.reload())
   }, []);
 
   function handleSetShipping (shipping){
@@ -105,7 +106,7 @@ export default function ShippingAndPayement() {
                   id_design:order.design.id,
                   id_packing_color:order.primaryColor.id,
                   id_secondary_packing_color:order.primaryColor.id,
-                  id_wine:order.wine.id_wine,
+                  id_wine:order.wine.id,
                   msg:`"${order.msg||""}"`,
                   price:price*order.amount+(!(wayOfShiping==1)?shippingPrice:0),
     
@@ -162,7 +163,8 @@ export default function ShippingAndPayement() {
                 
                     // delete the order from the local storage
                     localStorage.removeItem("order");
-                    navigate(userDashboardPath);
+                    // navigate(userDashboardPath);
+                    // window.location.reload();
                   } catch (error) {
                     console.log(error);
                     alert("There was an error saving your voucher, try changing the file name");
@@ -184,6 +186,7 @@ export default function ShippingAndPayement() {
                 createPurchaseOrders(finalOrders).then((error) => {
                     shoppingCartSync([])
                     alert("Remember that if there is any problem, you will be notified to your registered phone or email");
+                    navigate(userDashboardPath);
                 }).catch(e=>{
                   console.log(e);
                   alert("There was an error. Try changing the file name and try againg");

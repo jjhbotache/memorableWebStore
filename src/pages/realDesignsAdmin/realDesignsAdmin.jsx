@@ -103,7 +103,8 @@ export default function RealDesignsAdmin() {
           setLoading(false)
         })
       }
-      navigate(realDesignsAdminPath);
+      // navigate(realDesignsAdminPath);
+      window.location.reload();
     }else{
       // create
       if (
@@ -123,7 +124,8 @@ export default function RealDesignsAdmin() {
         .then(respuesta=>respuesta.text())
         .then(data=>{
           alert(data);
-          navigate(realDesignsAdminPath);
+          // navigate(realDesignsAdminPath);
+          window.location.reload();
         }).catch(e=>{alert("somethig went wrong:",e);
         }).finally(()=>{
           setLoading(false);

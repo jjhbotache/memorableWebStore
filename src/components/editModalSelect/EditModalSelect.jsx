@@ -7,12 +7,13 @@ export default function EditModalSelect({children,readOnly,label,tableName,label
 
   useEffect(() => {
     getOptions(tableName).then(options=>{
-      const finalOptions = optional?
+      const finalOptions = optional || firstObj.id==""?
       // if its optional, add the firstObj to the options
         [{id:"",[labelProperty]:"Choose an option"},...options]
         :options
       setOptions(finalOptions)
-      onChangeValue(optional?finalOptions[1]:finalOptions[0])  
+      onChangeValue(finalOptions[0])  
+
     })
   }, []);
 

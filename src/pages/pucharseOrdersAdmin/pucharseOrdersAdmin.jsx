@@ -175,7 +175,7 @@ export default function PucharseOrdersAdmin() {
               {/* address */}
               {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,deliveryPlace:obj})} label="Address:" tableName="addresses" labelProperty="id" firstObj={orderInEditModal.deliveryPlace}>
-                <Link to={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</Link>
+                {orderInEditModal.deliveryPlace?.id?<Link to={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</Link>:<Link to={addresesViewerPath} target="_blank">See addresses</Link>}
               </EditModalSelect>
               
               {/* vaucher */}
@@ -236,7 +236,6 @@ export default function PucharseOrdersAdmin() {
       formData.append("oldVaucher", oldVaucher.current);
       formData.append("vaucher",  orderInEditModal.vaucher instanceof File?orderInEditModal.vaucher:oldVaucher.current);
       formData.append("truly_paid", orderInEditModal.trulyPaid?1:0);
-      console.log(orderInEditModal.user);
       setLoading(true);
       fetch(apiRoute + "/update_pucharse_orders/" + orderInEditModal.id, setRequestConfig("PUT", formData, true)).then((response) => response.json()).then((data) => {
         console.log(data);
@@ -254,7 +253,8 @@ export default function PucharseOrdersAdmin() {
         if(confirm("Order updated successfully\n this is the user info to notify him/her:\n" + infoStr + "\nDo u whant to copy the user info?")){
           copyToClipboard(infoStr)
         }
-        navigate(pucharseOrdersAdminPath);
+        // navigate(pucharseOrdersAdminPath);
+        window.location.reload();
         
       }).catch((error) => {
         alert("check all the fields needed");
@@ -318,7 +318,8 @@ export default function PucharseOrdersAdmin() {
       setLoading(true);
       fetch(apiRoute + "/create/pucharse_orders", setRequestConfig("POST", formData, true)).then((response) => response.json()).then((data) => {
         console.log(data);
-        navigate(pucharseOrdesAdminPath);
+        // navigate(pucharseOrdesAdminPath);
+        window.location.reload();
       } 
       ).catch((error) => {
         console.error(error);
@@ -366,7 +367,7 @@ export default function PucharseOrdersAdmin() {
             <button onClick={e=>setOrderInEditModal({})} className="btn ">Add</button>
           </div>
         </div>
-        <div className="row h-100 d-flex justify-content-around gap-2 gap-sm-1">
+        <div className="row h-100 d-flex justify-content-around gap-2 gap-sm-4">
           {
           loadingData?
           <Spinner></Spinner>

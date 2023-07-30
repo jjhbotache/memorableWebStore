@@ -11,6 +11,7 @@ import { catalogPath, customiseBottlePath, linksToShowInNavbar, whereNotToDispla
 
 
 
+
 // if any img is clicked, open it in a new tab (not in catalog)
 document.addEventListener('click', (e) => {
   // get the las part of the url

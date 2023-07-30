@@ -76,7 +76,8 @@ export default function AddressUserAdmin() {
       fetch(`${apiRoute}/user/update/addresses/${editorModal.id}`,setRequestConfig("PUT",data)).then(re=>re.json()).then(data=>{
         console.log(data);
         alert("updated")
-        navigate(addressUserAdminPath);
+        // navigate(addressUserAdminPath);
+        window.location.reload();
         
       })
       .catch(err=>console.log(err))
@@ -93,7 +94,8 @@ export default function AddressUserAdmin() {
       fetch(`${apiRoute}/user/create/addresses`,setRequestConfig("POST",data)).then(re=>re.json()).then(data=>{
         console.log(data);
         alert("created")
-        navigate(addressUserAdminPath);
+        // navigate(addressUserAdminPath);
+        window.location.reload();
       })
       .catch(err=>console.log(err))
       .finally(()=>setLoading(false))

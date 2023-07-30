@@ -112,8 +112,8 @@ export default function LoginAndRegister() {
         }
         alert("Se ha creado tu usuario correctamente")
         // reload
-        // window.location.reload()
-        navigate(loginAndRegisterPath)
+        window.location.reload()
+        // navigate(loginAndRegisterPath)
       })
       .catch(error => 
         {console.error(error);

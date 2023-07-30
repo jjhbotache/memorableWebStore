@@ -53,7 +53,8 @@ export default function ShoppingCart() {
     const newPreOrders = preOrders.filter(p=>p.id!==id);
     setPreOrders(newPreOrders);
     shoppingCartSync(newPreOrders).then(
-      ()=>navigate(shoppingCartPath)
+      ()=>window.location.reload()
+      // navigate(shoppingCartPath)
     )
 
   }

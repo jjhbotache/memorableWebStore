@@ -86,8 +86,9 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
       fetch(apiRoute + "/update/"+tableToAdmin+"/"+dataInEditor.id,setRequestConfig("PUT",dataObj)).then(re=>re.json()).then(data=>{
         console.log(data);
         // reload the window usign the navigate hook
-        const url = "/"+window.location.href.split('/').pop()
-        navigate(url)
+        // const url = "/"+window.location.href.split('/').pop()
+        // navigate(url)
+        window.location.reload();
       }).catch(err=>{
         console.log(err);
       });
@@ -95,8 +96,9 @@ export default function DataAdmin({title="no title",tableToAdmin="", onDisplayPr
       // adding
       fetch(apiRoute + "/insert/"+tableToAdmin,setRequestConfig("POST",dataObj)).then(re=>re.json()).then(data=>{
         console.log(data);
-        const url = "/"+window.location.href.split('/').pop()
-        navigate(url)
+        // const url = "/"+window.location.href.split('/').pop()
+        // navigate(url)
+        window.location.reload();
       }).catch(err=>{console.log(err);});
     }
 

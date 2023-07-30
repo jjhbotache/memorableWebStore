@@ -280,3 +280,19 @@ export function getRedirectUrl(permissionsNeeded={name:"public",adminLevel:0}) {
  return null     
 
 }
+
+export function convertirFecha(fechaStr) {
+  // made by chat gpt
+  const meses = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+  ];
+
+  const fecha = new Date(fechaStr);
+  const dia = fecha.getUTCDate();
+  const mes = meses[fecha.getUTCMonth()];
+  const año = fecha.getUTCFullYear();
+
+  // return `${dia} de ${mes} de ${año}`;
+  return `${dia} / ${mes} / ${año}`;
+}

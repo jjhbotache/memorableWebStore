@@ -148,7 +148,8 @@ const DesignsAdmin = () => {
 
           }
       });
-      navigate(designsAdminPath);
+      // navigate(designsAdminPath);
+      window.location.reload();
       
     }else{
       // create
@@ -180,7 +181,8 @@ const DesignsAdmin = () => {
             .catch(error => console.log(error))
           });
 
-          navigate(designsAdminPath);
+          // navigate(designsAdminPath);
+          window.location.reload();
         }).catch(e=>{alert("somethig went wrong:",e);
         }).finally(()=>{
           setLoading(false);
