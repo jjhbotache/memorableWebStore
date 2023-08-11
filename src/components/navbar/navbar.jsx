@@ -10,9 +10,9 @@ export default function Navbar({links,pathsWhereNotToDisplay}) {
   const pathname = window.location.pathname;
   const pagesToShow = links.map(link => {
     link.active = link.path === pathname;
-    if (localStorage.getItem("id")&&link.path===loginAndRegisterPath){
+    if (!(localStorage.getItem("id")==null)&&link.path===loginAndRegisterPath){
       link.name="Dashboard"
-      link.path=localStorage.getItem("password")?adminDashboardPath:userDashboardPath
+      link.path=localStorage.getItem("password")==null?userDashboardPath:adminDashboardPath
     }
 
     return(

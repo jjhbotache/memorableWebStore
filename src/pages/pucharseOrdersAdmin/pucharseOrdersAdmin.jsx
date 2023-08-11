@@ -21,6 +21,8 @@ export default function PucharseOrdersAdmin() {
   const [search, setSearch] = useState("");
 
   const preview = useRef();
+
+  const [addresesOptions, setAddresesOptions] = useState([]);
   
   
 
@@ -39,6 +41,20 @@ export default function PucharseOrdersAdmin() {
     }).finally(
       setLoadingData(false)
     )
+
+    // get the addreses
+    fetch(apiRoute + "/read/addresses", setRequestConfig()).then((response) => response.json()).then((addreses) => {
+      console.log(addreses);
+      setAddresesOptions(addreses)
+    }
+    ).catch((error) => {
+      console.log(error);
+    }
+    ).finally(
+      setLoadingData(false)
+    )
+
+
   }, []);
 
   useEffect(() => { 
@@ -104,8 +120,9 @@ export default function PucharseOrdersAdmin() {
         order.id_delivery_place ? fetch(apiRoute + "/read/addresses/" + order.id_delivery_place, setRequestConfig()).then(re => re.json()).then(d => d[0]) : {},
       ]);
       const date = getDateFromStrign(order.delivery_date);
-  
-  
+
+
+      
       const orderInfo = {
         id  : order.id,
         user  : user,
@@ -128,6 +145,7 @@ export default function PucharseOrdersAdmin() {
   }
 
   useEffect(() => {
+    console.log("deliveryPlace----------",orderInEditModal.deliveryPlace);
     if (orderInEditModal) {
       const editingOrder = !!orderInEditModal.id;
       setEditModal( 
@@ -146,7 +164,6 @@ export default function PucharseOrdersAdmin() {
               <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,design:obj})} label="Design: " tableName="designs" labelProperty="name" firstObj={orderInEditModal.design}/>
               {/* real design */}
               <EditModalSelect optional onChangeValue={obj=>{
-                console.log(obj);
                 setOrderInEditModal({...orderInEditModal,realDesign:obj})
               }} label="Real Design: " tableName="real_designs" labelProperty="name" firstObj={orderInEditModal.realDesign}/>
               {/* amount */}
@@ -174,9 +191,19 @@ export default function PucharseOrdersAdmin() {
               </div>
               {/* address */}
               {/* <EditModalSelect label="Adress:" tableName="addresses" labelProperty="name" firstObj={order.adress}/> */}
-              <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,deliveryPlace:obj})} label="Address:" tableName="addresses" labelProperty="id" firstObj={orderInEditModal.deliveryPlace}>
+              {/* <EditModalSelect readOnly={editingOrder} onChangeValue={obj=>setOrderInEditModal({...orderInEditModal,deliveryPlace:obj})} label="Address:" tableName="addresses" labelProperty="id" firstObj={orderInEditModal.deliveryPlace}>
                 {orderInEditModal.deliveryPlace?.id?<Link to={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</Link>:<Link to={addresesViewerPath} target="_blank">See addresses</Link>}
-              </EditModalSelect>
+              </EditModalSelect> */}
+
+              <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2">
+                <label htmlFor="address" className="form-label mb-0 align-baseline">Adress id: </label>
+                <select disabled={editingOrder} className="form-select form-select" value={orderInEditModal.deliveryPlace?.id?orderInEditModal.deliveryPlace?.id:""} onChange={e=>setOrderInEditModal({...orderInEditModal,deliveryPlace:(addresesOptions.find(address=>address.id==e.target.value))})}>
+                  {/* render the options from addresesOptions with value and id */}
+                  {addresesOptions.map((address,index)=><option key={index} value={address.id}>{address.id}</option>)}
+                </select>
+              
+                {orderInEditModal.deliveryPlace?.id?<Link to={addresesViewerPath+"?id="+orderInEditModal.deliveryPlace.id} target="_blank">See address details</Link>:<Link to={addresesViewerPath} target="_blank">See addresses</Link>}
+              </div>
               
               {/* vaucher */}
               <div className="mb-3 d-flex flex-column align-content-center justify-content-start gap-2" >

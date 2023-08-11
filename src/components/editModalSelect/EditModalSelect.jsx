@@ -5,6 +5,7 @@ import {setRequestConfig} from "../../functions/functions"
 export default function EditModalSelect({children,readOnly,label,tableName,labelProperty,valueProperty="id",firstObj={id:"",[labelProperty]:"Choose an option"},onChangeValue,optional}) {
   const [options, setOptions] = useState([firstObj]);
 
+
   useEffect(() => {
     getOptions(tableName).then(options=>{
       const finalOptions = optional || firstObj.id==""?
