@@ -327,17 +327,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: (() => {
+    loader: () => {
       const navigate = useNavigate();
       navigate('/catalog');
       return null;
-    })(),
-    children: [
-      {
-        index:true,
-        element: <h1>page not found</h1>
-      }
-    ]
+    },
   },
 ]);
 
