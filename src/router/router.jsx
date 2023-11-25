@@ -302,12 +302,6 @@ const router = createBrowserRouter([
       }
     ]
   },
-  {
-    path: "*",
-    loader: () => {
-      window.location.href = "/"
-    },
-  },
 ]);
 
 
