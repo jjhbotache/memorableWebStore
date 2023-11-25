@@ -20,6 +20,7 @@ import { catalogPath, linksToShowInNavbar, whereNotToDisplay } from "../const/co
 import ShoppingCart from "../pages/shoppingCart/shoppingCart";
 import RoutesLocker from "../components/routesLocker/routesLocker";
 import Navbar from "../components/navbar/navbar";
+import { useNavigate } from 'react-router-dom';
 
 const router = createBrowserRouter([
   // {
@@ -326,11 +327,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <>
-      <RoutesLocker/>
-      <Navbar links={linksToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />
-      <Outlet/>
-    </>,
+    element: (() => {
+      const navigate = useNavigate();
+      navigate('/catalog');
+      return null;
+    })(),
     children: [
       {
         index:true,
