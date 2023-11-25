@@ -73,7 +73,7 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "/loginAndRegister",
+    path: "/loginAndRegister/:id?",
     element: <>
       <RoutesLocker/>
       <Navbar links={linksToShowInNavbar} pathsWhereNotToDisplay={whereNotToDisplay} />

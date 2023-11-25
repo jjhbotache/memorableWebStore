@@ -5,14 +5,26 @@ import LoginForm from "../../components/loginForm/loginForm";
 import RegisterForm from "../../components/registerForm/registerForm";
 import { adminDashboardPath, apiRoute, catalogPath, loginAndRegisterPath, shippingAndPayementPath, userDashboardPath} from "../../const/const";
 import {checkLastName, checkMail, checkName, setRequestConfig, verifyIsWhereItShould } from "../../functions/functions"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 export default function LoginAndRegister() {
+  // get the parameters from the url
+  const urlParams = new URLSearchParams(window.location.search);
+  const valid = urlParams.get('valid');
+  
+  console.log(valid);
+
+
+
   const [login, setLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   verifyIsWhereItShould()
+  // get the valid param from the url with get params
+  
+
+
 
   function loginAction(e) {
     e.preventDefault()
@@ -137,6 +149,31 @@ export default function LoginAndRegister() {
   
   return(
     <>
+      {/* if the param valid is true or false
+      if its true
+      say, welcome to our comunity, login
+      if its false
+       */}
+
+       {/* get all the parameters
+        */}
+       {
+          valid=== "true"?
+          <div className="mt-2 alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Te has registrado correctamente!</strong> Ya puedes iniciar sesion
+          </div>
+
+          // get all the parameters
+
+          :
+          valid === "false"?
+          <div className="mt-2 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Algo salio mal!</strong> No se ha podido registrar tu usuario, intenta de nuevo
+            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          :
+          undefined
+       }
       {
         loading
         ?<Spinner></Spinner>
