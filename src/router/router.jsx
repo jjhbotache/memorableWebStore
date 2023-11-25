@@ -23,29 +23,6 @@ import Navbar from "../components/navbar/navbar";
 import { useNavigate } from 'react-router-dom';
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: (
-  //     <>
-  //       <h1>holi</h1>
-  //       <Outlet/>
-  //     </>
-  //   ),
-  //   loader:()=> {
-  //     const permissions = "public";
-  //     if (permissions==="public") {
-  //       window.location.assign(catalogPath);
-  //     }
-  //     return null
-  //   },
-  //   children: [
-  //     { 
-  //       index:true,
-  //       element: <LandingPage/> 
-  //     },
-  //   ],
-  //   // use children property
-  // },
   {
     path: "/",
     element: <>
@@ -328,9 +305,7 @@ const router = createBrowserRouter([
   {
     path: "*",
     loader: () => {
-      const navigate = useNavigate();
-      navigate('/catalog');
-      return null;
+      window.location.href = "/"
     },
   },
 ]);
