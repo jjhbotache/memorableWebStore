@@ -76,121 +76,76 @@ const DesignsAdmin = () => {
     setLoading(false)
   }
 
-  async function editorModalSubmited(e){
+  async function editorModalSubmited(e) {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
     const dataObj = Object.fromEntries(data.entries());
 
-    console.log(dataObj);
-    console.log(dataInEditor);
+    const fetchPromises = []; // Array to store all fetch promises
 
     if (dataInEditor.id) {
-      // update
       if (dataObj.ai.size > 0) {
-        console.log(`Changing ai file`);
-      
         const data = new FormData();
-        data.append("ai",dataObj.ai)
-        console.log(data);
-        setLoading(true);
-        await fetch(`${apiRoute}/update_design/${dataInEditor.id}/ai`,setRequestConfig())
-        .then(response => response.json())
-        .then((data) => {console.log(data);})  
-        .catch(error => console.log(error))
-        .finally(()=>{
-          setLoading(false)
-        })
+        data.append("ai", dataObj.ai);
+        fetchPromises.push(fetch(`${apiRoute}/update_design/${dataInEditor.id}/ai`, setRequestConfig()));
       }
       if (dataObj.img.size > 0) {
-        console.log(`Changing img file`);
-    
         const data = new FormData();
-        data.append("img",dataObj.img)
-        setLoading(true);
-        await fetch(`${apiRoute}/update_design/${dataInEditor.id}/img`,setRequestConfig())
-        .then(response => response.json())
-        .then((data) => {console.log(data);})  
-        .catch(error => console.log(error))
-        .finally(()=>{
-          setLoading(false)
-        })
+        data.append("img", dataObj.img);
+        fetchPromises.push(fetch(`${apiRoute}/update_design/${dataInEditor.id}/img`, setRequestConfig()));
       }
-      if (!dataObj.name == "" ) {
-        await fetch(
+      if (!dataObj.name == "") {
+        fetchPromises.push(fetch(
           `${apiRoute}/update_design/${dataInEditor.id}/name`,
-          setRequestConfig("POST",JSON.stringify({new_data:`"${dataObj.name}"`}))
-        )
-        .then(response => response.json())
-        .then((data) => console.log(data))  
-        .catch(error => document.html.innerHTML = error)
-        .finally(()=>{
-          setLoading(false)
-        })
+          setRequestConfig("POST", JSON.stringify({ new_data: `"${dataObj.name}"` }))
+        ));
       }
 
-      tagOptions.forEach(async (tag) => {
-        
+      tagOptions.forEach((tag) => {
         const inEditor = dataInEditor.tags.has(tag.id);
         const inBefore = tags.current.some(t => t.id_tag == tag.id);
-          if (!(inEditor == inBefore)) {
-            console.log("hola entre a cambiar tags");
-            inBefore?
-            await fetch(`${apiRoute}/delete/tag_list/${tags.current.find(t=>t.id_tag == tag.id).id}`,setRequestConfig("DELETE"))
-            .then(response => response.json())
-            .then((data) => console.log(data))
-            .catch(error => console.log(error))
-            :
-            await fetch(`${apiRoute}/insert/tag_list`,setRequestConfig("POST",JSON.stringify({id_design:dataInEditor.id,id_tag:tag.id})))
-            .then(response => response.json())
-            .then((data) => console.log(data))
-            .catch(error => console.log(error))
-
-          }
+        if (!(inEditor == inBefore)) {
+          console.log(`${apiRoute}/insert/tag_list`);
+          console.log(JSON.stringify({ id_design: dataInEditor.id, id_tag: tag.id }));
+          inBefore 
+            ?fetchPromises.push(fetch(`${apiRoute}/delete/tag_list/${tags.current.find(t => t.id_tag == tag.id).id}`, setRequestConfig("DELETE")))
+            :fetchPromises.push(fetch(`${apiRoute}/insert/tag_list`, setRequestConfig("POST", JSON.stringify({ id_design: dataInEditor.id, id_tag: tag.id }))));
+        }
       });
-      // navigate(designsAdminPath);
-      window.location.reload();
-      
-    }else{
-      // create
+
+    } else {
       if (
-        !(["",undefined].includes(dataObj.name))  &&
-        (dataObj.img.size > 0)  &&
-        (dataObj.ai.size > 0) 
-        ) 
-      {
-        
+        !(["", undefined].includes(dataObj.name)) &&
+        (dataObj.img.size > 0) &&
+        (dataObj.ai.size > 0)
+      ) {
         const data = new FormData();
         data.append('name', dataObj.name);
         data.append('filesName', convertToFileName(dataObj.name));
         data.append('img', dataObj.img);
         data.append('ai', dataObj.ai);
 
-        setLoading(true);
-        fetch(apiRoute+"/design",setRequestConfig("POST",data,true))
-        .then(respuesta=>respuesta.json())
-        .then(data=>{
-          // alert("Created design");
-          // asociate tags
-          const designId = data.id;
-
-          dataInEditor.tags.forEach(tagId => {
-            fetch(`${apiRoute}/insert/tag_list`,setRequestConfig("POST",JSON.stringify({id_design:designId,id_tag:tagId})))
-            .then(response => response.json())
-            .then((data) => console.log(data))
-            .catch(error => console.log(error))
-          });
-
-          // navigate(designsAdminPath);
-          window.location.reload();
-        }).catch(e=>{alert("somethig went wrong:",e);
-        }).finally(()=>{
-          setLoading(false);
-        });
-      }else{
+        fetchPromises.push(fetch(apiRoute + "/design", setRequestConfig("POST", data, true)));
+      } else {
         alert("Please fill all the fields");
       }
     }
+
+    setLoading(true);
+    Promise.all(fetchPromises)
+      .then(responses => Promise.all(responses.map(response => response.json())))
+      .then(dataArray => {
+        console.log(dataArray);
+        window.location.reload();
+      })
+      .catch(e => {
+        alert("somethig went wrong:", e);
+        console.log(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   function deleteDesign(design){
@@ -268,7 +223,7 @@ const DesignsAdmin = () => {
           <div className="mb-3">
             <img
               ref={imgPreview}
-              src={apiRoute + "/" + dataInEditor.img + `/${localStorage.getItem("token")}`}
+              src={apiRoute + "/get_file/" + dataInEditor.img + `/${localStorage.getItem("token")}`}
               className={`img-fluid rounded-top ${styles.imgPreview}`}
             />
             <br/>
